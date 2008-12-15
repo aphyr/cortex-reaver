@@ -34,7 +34,9 @@ When you visit your new site, hit control-x (or visit /users/login) to bring up
 a login prompt. The default username and password are both 'shodan'. Then start
 posting journals, photographs, projects, and pages!
 
-Presumably you'll want to start changing images, stylesheets, etc. around. Just create a directory called 'public' and specify its path in your config file. Anything in that directory overrides Cortex Reaver's default public files.
+Presumably you'll want to start changing images, stylesheets, etc. around. Just
+create a directory called 'public' and specify its path in your config file.
+Anything in that directory overrides Cortex Reaver's default public files.
 
 CREDITS
 
