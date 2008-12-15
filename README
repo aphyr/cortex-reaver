@@ -8,10 +8,13 @@ attachment references, BlueCloth, etc), and custom pages.
 
 GETTING STARTED
 
+Dependencies
+
 First, you'll need a database. For MySQL:
 
 create database cortex_reaver;
-grant all privileges on cortex_reaver.* to 'cortex_reaver'@'localhost' identified by 'some-password' with grant option;
+grant all privileges on cortex_reaver.* to 'cortex_reaver'@'localhost' 
+  identified by 'some-password' with grant option;
 
 You'll need a YAML configuration file to define Cortex Reaver's configuration.
 See proto/cortex_reaver.yaml. If no config file is specified on the command
@@ -27,7 +30,9 @@ bin/cortex_reaver -s path/to/cortex_reaver.yaml
 To start the server. Cortex Reaver runs on port 7000 by default, and uses the
 Mongrel adapter; you can change both of those in your configuration file.
 
-When you visit your new site, hit control-x (or visit /users/login) to bring up a login prompt. The default username and password are both 'shodan'. Then start posting journals, photographs, projects, and pages!
+When you visit your new site, hit control-x (or visit /users/login) to bring up
+a login prompt. The default username and password are both 'shodan'. Then start
+posting journals, photographs, projects, and pages!
 
 Presumably you'll want to start changing images, stylesheets, etc. around. Just
 copy lib/cortex_reaver/public somewhere, and specify its path in the config as
