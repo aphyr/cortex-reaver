@@ -48,8 +48,8 @@ module CortexReaver
   # Load libraries
   def self.load
     # Prepare Ramaze
-    Ramaze::Global.public_root = config[:public_root] || PUBLIC_DIR.to_s
-    Ramaze::Global.view_root = config[:view_root] || VIEW_DIR.to_s
+    Ramaze::Global.public_root = LIB_DIR/:public
+    Ramaze::Global.view_root = config[:view_root]
 
     # Load controllers and models
     acquire LIB_DIR/:snippets/'**'/'*'
