@@ -1,0 +1,38 @@
+<div class="project text-entry">
+  <h2><a id="project_<%= @project.name %>" href="<%= @project.url %>"><%=h @project.title %></a></h2>
+  <div class="byline">
+    <span class="written">
+      <%= user_link @project.user %> on <%= date_line @project %>
+    </span>
+    <%= tags_on @project %>
+  </div>
+  <div class="body">
+    <%= @project.body_cache %>
+  </div>
+  <%= attachment_list @project %>
+  <div class="footer">
+    <ul class="actions">
+      <li><a href="<%= @project.url %>#comments">
+        <img src="/images/comment.gif" class="icon" alt="comment" />
+        <%= @project.comment_count %> <%= @project.comment_count == 1 ? 'comment' : 'comments' %>
+      </a></li>
+      <% if admin? %>
+        <li><a href="/projects/edit/<%= @project.name %>">
+          <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
+        </a></li>
+        <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/projects/delete/#{@project.name}", :onclick => "return confirm('Are you sure you want to delete this project?');" %></li>
+      <% end %>
+    </ul> 
+  </div>
+
+  <% unless @hide_comments %>
+    <div class="comments">
+      <a id="comments" />
+      <% @project.comments_dataset.order(:created_on).all.each do |comment| %>
+        <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
+      <% end %>
+    </div>
+
+    <%= render_template '../comments/post_form.rhtml', 'comment' => @new_comment %>
+  <% end %>
+</div>

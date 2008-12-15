@@ -1,0 +1,110 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'optparse'
+require 'ramaze'
+require __DIR__ + '/../lib/cortex_reaver'
+
+module CortexReaver
+  # Asks a question and returns a true_false answer
+  def self.confirm(question)
+    return true if @values[:force]
+
+    puts question + " (yes/no)"
+    print '> '
+    STDOUT.flush
+
+    if STDIN.gets.strip =~ /^y(?:es)?/i
+      true
+    else
+      false
+    end
+  end
+
+  # Parse options
+  @values = {}
+  parser = OptionParser.new do |o|
+    o.on '-c', '--config', 'Configuration file' do |file|
+      @values[:config_file] = file
+    end
+
+    o.on '-f', '--force', 'Just do it' do
+      @values[:force] = true
+    end
+
+    o.on '-h', '--help', 'Show help' do
+      @action = :help
+    end
+
+    o.on '-s', '--start',
+      'Start the CortexReaver server.' do
+      @action = :start
+    end
+
+    o.on '-m', '--migrate [version]',
+      'Migrate the database to schema version, or to the latest version.' do |version|
+      @action = :migrate
+      @values[:schema_version] = version ? version.to_i : nil
+    end
+
+    o.on '-r', '--reset',
+      'Wipes the database and sets up a clean copy of the latest version.' do
+      @action = :reset
+    end
+  end
+
+  parser.parse! ARGV
+
+  # Main
+  case @action
+  when :migrate
+    version = @values[:schema_version]
+
+    self.config_file = @values[:config_file]
+    self.reload_config
+    self.setup_db
+
+    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
+
+    current_version = Sequel::Migrator.get_current_migration_version(db)
+    latest_version = Sequel::Migrator.latest_migration_version(LIB_DIR/:migrations)
+
+    if version == current_version and current_version == latest_version
+      puts "The database is already at the latest version (#{latest_version})."
+      exit
+    elsif version == current_version
+      puts "The database is already at version #{version}."
+      exit
+    end
+
+    if version == 0
+      message = "You are migrating to version 0. This will drop your cortex_reaver database! Are you sure you want to do this?"
+    elsif version
+      message = "Ready to migrate from version #{current_version} to version #{version}?"
+    else
+      message = "Ready to migrate from version #{current_version} to latest version (#{latest_version})?"
+    end
+
+    if confirm message
+      puts "Migrating database from version #{current_version} to version #{version}..."
+      Sequel::Migrator.apply(db, LIB_DIR/:migrations, version)
+      puts "Done."
+    else
+      exit
+    end
+
+  when :reset
+    if confirm "Are you sure you wish to wipe the database?"
+      # Strangely, calling Migrator.apply to go down and then up doesn't seem to work. :-/
+      system($0, '-f', '-m', '0')
+      system($0, '-f', '-m')
+    end
+
+  when :start
+    self.config_file = @values[:config_file]
+    start
+
+  else
+    abort("Unknown action: #{@action}")
+  end
+end

@@ -1,0 +1,45 @@
+#adminbox {
+  display: none;
+  padding: 0.5em;
+  margin: 0 0 1em 0;
+  background-color: #eaeaea;
+  border: 1px solid #aaa;
+  border-top: none;
+  font-size: 80%;
+}
+
+#main #adminbox {
+  margin: -0.8em 0em 1em 0em;
+}
+
+#adminbox .actions-table {
+  width: 100%;
+}
+
+#adminbox p {
+  margin: 0;
+  padding: 0;
+}
+
+#adminbox td.title {
+  font-weight: bold;
+}
+
+#adminbox input[type=text] {
+  width: 160px;
+}
+
+#admin_section_actions {
+  text-align: center;
+}
+
+#admin_page_actions {
+}
+
+#admin_new_actions {
+  float: left;
+}
+
+#admin_user_actions {
+  float: right;
+}

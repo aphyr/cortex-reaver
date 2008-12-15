@@ -1,0 +1,12 @@
+<% if admin? %>
+  <ul class="actions">
+    <li><a href="/pages/edit/<%= @page.name %>">Edit</a></li>
+    <li><a href="/pages/delete/<%= @page.name %>">Delete</a></li>
+  </ul>
+<% end %>
+
+<div class="page" id="page_<%= @page.name %>">
+  <div class="body">
+    <%= @page.body_cache %>
+  </div>
+</div>

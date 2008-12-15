@@ -1,0 +1,56 @@
+<div id="adminbox">
+  <% if admin? %>
+    <table class="actions-table">
+      <tr>
+        <td class="title">Sections</td>
+        <td>
+          <ul class="actions">
+            <li><a href="/pages">Pages</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/journals">Journals</a></li>
+            <li><a href="/photographs">Photographs</a></li>
+            <li><a href="/comments">Comments</a></li>
+            <li><a href="/tags">Tags</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/config">Config</a></li>
+          </ul>
+        </td>
+      </tr>
+      <% if workflows %>
+        <tr>
+          <td class="title">Actions</td>
+          <td>
+            <ul class="actions">
+              <% workflows.each do |name, href| %>
+                <li>
+                  <a href="<%= href %>"
+                    <%= name.to_s[/delete|destroy/i] ? "onclick = \"return confirm('Are you sure you want to delete #{@title.gsub(/'"/, '')}?');\"" : '' %>>
+                    <%= name %>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+    <div id="admin_user_actions">
+      <a href="/users/logout">Log out</a>
+    </div>
+  <% elsif session[:user] %>
+    <div id="admin_user_actions">
+      <a href="/users/logout">Log out</a>
+    </div>
+  <% else %>
+    <form action="/users/login" method="post">
+      <p>
+        <label for="admin_login">Login</label> <input type="text" name="login" id="admin_login" />
+        <label for="admin_password">Password</label> <input type="password" name="password" id="admin_password" />
+        <input type="hidden" id="target_uri" name="target_uri" value="<%= request.request_uri %>" />
+        <input type="submit" name="action" value="Log in" />
+      </p>
+    </form>
+  <% end %>
+  <div class="clear"></div>
+</div>

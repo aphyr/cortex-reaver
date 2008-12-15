@@ -1,0 +1,19 @@
+<h2><%= @form_action[/\/new$/] ? 'New' : 'Edit' %> Photograph</h2>
+
+<%= errors_on @photograph %>
+
+<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+  <%= form_p :title, :model => @photograph %>
+  <%= live_name_field @photograph %>
+  <%= live_tags_field @photograph %>
+  <p>
+    <label for="image">Image:</label>
+    <input id="image" name="image" size="30" type="file" />
+    </p>
+  <p>
+  <label for="infer_date">Infer date from EXIF tag?</label>
+    <input id="infer_date" name="infer_date" type="checkbox" value="1" checked="checked" />
+  </p>
+
+  <input type="submit" name="submit" />
+</form>

@@ -1,0 +1,28 @@
+<div class="tags">
+  <h2>Tags</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tag</th>
+        <% if admin? %>
+          <th></th>
+          <th></th>
+        <% end %>
+        <th>Popularity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% max_count = (@tags.order(:count).reverse.first || []).count %>
+      <% @tags.each do |tag| %>
+        <tr>
+          <td class="title"><%= A(tag.title, :href => tag.url) %></td>
+           <% if admin? %>
+            <td><a href="/tags/edit/<%= tag.name %>">Edit</a></td>
+            <td><%= A 'Delete', :href => "/tags/delete/#{tag.name}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></td>
+          <% end %>
+         <td class="count" style="width: <%= admin? ? 60 : 80 %>%"><div class="percent-bar" style="width: <%= tag.count.to_f / max_count * 100 %>%"><%= tag.count %></div></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

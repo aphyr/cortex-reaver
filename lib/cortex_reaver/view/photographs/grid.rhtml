@@ -1,0 +1,36 @@
+<% columns = 4 %>
+<% i = 0 %>
+<table class="photographs grid">
+  <tr>
+    <% @photographs.all.each do |photograph| %>
+      <td>
+        <table class="thumbnail frame" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="border_top_left"></td>
+            <td class="border_top"></td>
+            <td class="border_top_right"></td>
+          </tr>
+          <tr>
+            <td class="border_left"></td>
+            <td id="photograph_<%= photograph.name %>" class="content">
+              <a href="<%= photograph.url %>">
+                <img src="<%= photograph.thumbnail_public_path %>" class="grid thumbnail" alt="<%=h photograph.title %>" />
+              </a>
+            </td>
+            <td class="border_right"></td>
+          </tr>
+          <tr>
+            <td class="border_bottom_left"></td>
+            <td class="border_bottom"></td>
+            <td class="border_bottom_right"></td>
+          </tr>
+        </table>
+      </td>
+      <% if (i += 1) == 4 %>
+    </tr>
+    <tr>
+      <% i = 0 %>
+      <% end %>
+    <% end %>
+  </tr>
+</table>

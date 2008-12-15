@@ -1,0 +1,27 @@
+<div class="projects">
+  <h2>Projects</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <% if admin? %>
+          <th></th>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projects.each do |project| %>
+        <tr>
+          <td><%= A(project.title, :href => project.url) %></td>
+          <td><%= project.description %></td>
+          <% if admin? %>
+            <td><a href="/projects/edit/<%= project.name %>">Edit</a></td>
+            <td><%= A 'Delete', :href => "/projects/delete/#{project.name}", :onclick => "return confirm('Are you sure you want to delete this project?');" %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

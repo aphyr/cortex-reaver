@@ -1,0 +1,25 @@
+.text-entry .byline {
+  color: #666;
+  position: relative;
+}
+
+.text-entry .footer {
+  background: #eee;
+  border-bottom: 1px dashed #aaa;
+  margin-bottom: 1.5em;
+  padding: 2px;
+}
+
+.text-entry .tags {
+  position: absolute;
+  right: 0px;
+}
+
+.text-entry .written {
+  position: absolute;
+  left: 0px;
+}
+
+.text-entry .byline {
+  margin-bottom: 2em;
+}

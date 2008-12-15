@@ -1,0 +1,325 @@
+body {
+  font-family: sans-serif;
+  font-size: 90%;
+  margin: 0;
+  padding: 0;
+  background: #f6f6f6 url(/images/body.png) repeat-x scroll 0px 0px;
+}
+
+body.blank {
+  padding: 0em 1em;
+}
+
+img {
+  border: none;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a[href]:hover {
+  text-decoration: underline;
+}
+
+a > img {
+  display: block;
+}
+
+h2 {
+  font-size: 140%;
+  border-bottom: 1px solid #aaa;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.comment h2 {
+  font-size: 120%;
+}
+
+h3 {
+  font-size: 120%;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  color: #000;
+}
+
+th {
+  text-align: left;
+}
+
+#top {
+  margin: 0px auto;
+  width: 760px;
+  height: 210px;
+  background: transparent;
+  text-align: center;
+  border-width: 0px 1px;
+  border-style: solid;
+  border-color: #666;
+}
+
+
+#sections {
+  margin: 0px auto;
+  width: 760px;
+  background: url(/images/sections.png) repeat-x;
+  height: 24px;
+  font-size: 12px;
+  text-align: center;
+  border-width: 0px 1px;
+  border-style: solid;
+  border-color: #666;
+}
+
+#sections ul {
+  margin: 0px;
+  padding: 4px 0px;
+}
+
+#sections li {
+  margin: 1em 1em;
+  display: inline;
+}
+
+#sections a, #sections a:hover, #sections a:visited, #sections a:active {
+  color: #fff;
+}
+
+#middle {
+  margin: 0px auto;
+  width: 760px;
+  border: 1px solid #666;
+}
+
+#columns {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#main {
+  vertical-align: top;
+  background: #fff;
+  padding: 0.8em;
+  border-top: none;
+}
+
+#sidebar {
+  vertical-align: top;
+  background: #c6c6c6;
+  padding: 6px;
+  border-left: 1px solid #bbb;
+}
+
+#sidebar .box {
+  background-color: #fff;
+  margin-top: 6px;
+  padding: 4px;
+}
+
+#sidebar .box:first-child {
+  margin: 0;
+}
+
+#colophon {
+  font-size: 80%;
+  margin: 2em;
+  padding: 2em; 
+  text-align: center;
+}
+
+
+
+/* Actions */
+.actions {
+  margin: 0px;
+  padding: 0px;
+}
+
+.actions li {
+  display: inline;
+}
+
+.actions li:before {
+  content: ' | ';
+}
+
+.actions li:first-child:before {
+  content: none;
+}
+
+
+/* Navigation actions */
+
+.actions.navigation {
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+.actions.navigation:first-child {
+  margin-bottom: 1em;
+}
+
+.actions.navigation .previous {
+  position: absolute;
+  left: 0px;
+}
+
+.actions.navigation .up {
+}
+
+.actions.navigation .next {
+  position: absolute;
+  right: 0px;
+}
+
+
+/* Nav styles */
+.pagination.actions {
+  text-align: center; 
+}
+
+.pagination.actions li {
+  margin-right: 0.15em;
+  margin-left: 0.15em;
+}
+
+.pagination.actions li:before {
+  content: none;
+}
+
+
+/* Flash */
+.flash {
+  padding: 0.5em;
+  margin: 1em 0;
+}
+
+#flash_notice {
+  border: 1px solid #00b;
+  color: #00b;
+  background: #e6e6ff;
+}
+
+#flash_error {
+  border: 1px solid #b00;
+  color: #b00;
+  background: #ffe6e6;
+}
+
+
+/* Table of Contents */
+.table-of-contents {
+  margin: 1em auto 2em auto;
+  border: 1px solid #ccc;
+  padding: 0 0.6em 0.6em 0.6em;
+  font-size: 80%;
+}
+
+.table-of-contents h2 {
+  position: relative;
+  top: -0.6em;
+  left: 2em;
+  padding: 0 0.25em;
+  background-color: #fff;
+  border: none;
+  display: inline;
+  width: auto;
+}
+
+.table-of-contents .date {
+  padding-right: 1em;
+}
+
+
+/* Misc */
+.clear {
+  height: 0px;
+  width: 0px;
+  clear: both;
+}
+
+.current {
+  font-weight: bolder;
+}
+
+.byline {
+  font-size: 75%;
+}
+
+.tags {
+  margin: 0px;
+  padding: 0px;
+}
+
+.tags li {
+  display: inline;
+}
+
+.tags li:before {
+  content: ', '
+}
+
+.tags li:first-child:before {
+  content: none;
+}
+
+/* Icons */
+.footer .icon, .icon {
+  display: inline;
+  margin: 2px 0px -1px 0px;
+}
+
+/* Attachments */
+.attachments {
+  margin-bottom: 1em;
+}
+
+.attachments table {
+  width: 100%;
+}
+
+.attachments td.date {
+  text-align: right;
+}
+
+/* Tags */
+.tags > table {
+  width: 100%;
+}
+
+.tags > table thead {
+  display: none;
+}
+
+/* Projects */
+.projects > table {
+  width: 100%;
+}
+.projects > table thead {
+  display: none;
+}
+
+/* Users */
+table.users {
+  width: 100%;
+}
+
+/* Percentage Bar */
+.percent-bar {
+  display: block;
+  background-color: #3366ff;
+  color: #fff;
+  font-size: 75%;
+  padding: 0.2em;
+}
+
+/* Page Footer */
+.footer {
+  font-size: 75%;
+}
