@@ -1,9 +1,8 @@
 $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
-
+ 
 require 'rubygems'
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
 require 'cortex_reaver/version'
+require 'rake/gempackagetask'
 require 'find'
  
 # Gemspec
@@ -34,5 +33,5 @@ Gem::Specification.new do |s|
   s.add_dependency('mongrel', '~> 1.1.5')
   s.add_dependency('exifr', '~> 0.10.7')
 # This doesn't work right on Debian yet
-#  s.add_dependency('RMagick', '~> 2.5.1')
+# s.add_dependency('RMagick', '~> 2.5.1')
 end
