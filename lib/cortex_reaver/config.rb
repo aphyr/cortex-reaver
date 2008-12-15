@@ -6,16 +6,8 @@ module CortexReaver
     # or database = "sequel_connect_string"
     def initialize(file)
       # Defaults
-      unless File.exist?(dir = File.join(Dir.pwd, 'public'))
-        dir = File.join(CortexReaver::LIB_DIR, 'public')
-      end
-      self[:public_root] = dir
-
-      unless File.exist?(dir = File.join(Dir.pwd, 'view'))
-        dir = File.join(CortexReaver::LIB_DIR, 'view')
-      end
-      self[:view_root] = dir
-
+      self[:public_root] = File.join(CortexReaver::LIB_DIR, 'public')
+      self[:view_root] = File.join(CortexReaver::LIB_DIR, 'view')
       self[:adapter] = 'mongrel'
       self[:port] = 7000
 

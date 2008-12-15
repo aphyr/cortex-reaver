@@ -14,6 +14,10 @@
     :keywords: 'Cortex Reaver, Citadel Station'
     :author: 'Shodan'
 
+# Ramaze port and adapter
+#  :adapter: 'ramaze'
+#  :port: 7000
+
 # The static files root of your site. You need to own this directory if you
 # want to use attachments.
 #  :public_root: '/var/www/public'
