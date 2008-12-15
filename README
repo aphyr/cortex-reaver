@@ -21,11 +21,11 @@ See proto/cortex_reaver.yaml. If no config file is specified on the command
 line, Cortex Reaver assumes you mean cortex_reaver.yaml in the working
 directory. Copy lib/proto/cortex_reaver.yaml to a fresh directory, and run
 
-bin/cortex_reaver -m path/to/cortex_reaver.yaml
+bin/cortex_reaver -m -c path/to/cortex_reaver.yaml
 
 To wipe the database and set up a fresh schema. Then run
 
-bin/cortex_reaver -s path/to/cortex_reaver.yaml
+bin/cortex_reaver -s -c path/to/cortex_reaver.yaml
 
 To start the server. Cortex Reaver runs on port 7000 by default, and uses the
 Mongrel adapter; you can change both of those in your configuration file.
