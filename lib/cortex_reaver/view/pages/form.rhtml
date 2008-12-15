@@ -1,0 +1,12 @@
+<h2><%= @form_action[/\/new$/] ? 'New' : 'Edit' %> Page</h2>
+
+<%= errors_on @page %>
+
+<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+  <%= form_p 'title', :model => @page %>
+  <%= live_name_field @page %>
+  <%= live_tags_field @page %>
+  <%= form_p :body, :model => @page, :type => 'textarea' %>
+  <%= attachment_form @page %>
+  <input type="submit" name="submit" />
+</form>

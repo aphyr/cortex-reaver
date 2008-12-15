@@ -1,0 +1,44 @@
+CORTEX REAVER - A dangerous Ruby blog engine, with a photographic memory.
+
+Cortex Reaver is a blog engine for textual journals, photographs, and projects;
+written using Ramaze and Sequel. Supports tags, comments, and simple
+attachments. Features canonically named URLs (/journals/show/a-post-title) with
+conflict resolution, useful formatting modules for content (HTML sanitizing,
+attachment references, BlueCloth, etc), and custom pages.
+
+GETTING STARTED
+
+First, you'll need a database. For MySQL:
+
+create database cortex_reaver;
+grant all privileges on cortex_reaver.* to 'cortex_reaver'@'localhost' identified by 'some-password' with grant option;
+
+You'll need a YAML configuration file to define Cortex Reaver's configuration.
+See proto/cortex_reaver.yaml. If no config file is specified on the command
+line, Cortex Reaver assumes you mean cortex_reaver.yaml in the working
+directory. Copy lib/proto/cortex_reaver.yaml to a fresh directory, and run
+
+bin/cortex_reaver -m path/to/cortex_reaver.yaml
+
+To wipe the database and set up a fresh schema. Then run
+
+bin/cortex_reaver -s path/to/cortex_reaver.yaml
+
+To start the server. Cortex Reaver runs on port 7000 by default, and uses the
+Mongrel adapter; you can change both of those in your configuration file.
+
+When you visit your new site, hit control-x (or visit /users/login) to bring up a login prompt. The default username and password are both 'shodan'. Then start posting journals, photographs, projects, and pages!
+
+Presumably you'll want to start changing images, stylesheets, etc. around. Just
+copy lib/cortex_reaver/public somewhere, and specify its path in the config as
+:public_root. Cortex Reaver will also use 'public' in the working directory, if
+it is available; otherwise, it falls back to the builtin distribution.
+
+CREDITS
+
+I am indebted to the good folks of #sequel and #ramaze for their many
+suggestions in writing Cortex Reaver, and also to Ryan Grove
+(http://wonko.com), the author of the excellent (and very similar) blog system
+Thoth, for invaluable advice and code. Cortex Reaver should have been a fork
+of Thoth, but my schema is just too complex for the changes to be maintainable
+going forward.

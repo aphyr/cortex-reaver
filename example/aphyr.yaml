@@ -1,0 +1,7 @@
+---
+  :database:
+    :driver: 'mysql'
+    :host: 'localhost'
+    :user: 'cortex_reaver'
+    :password: 'RyReajOuc7'
+    :database: 'cortex_reaver'

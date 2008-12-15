@@ -1,0 +1,26 @@
+<div class="pages">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Title</th>
+        <% if admin? %>
+          <th></th>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pages.each do |page| %>
+        <tr>
+          <td><%= A(page.name, :href => page.url) %></td>
+          <td><%= page.title %></td>
+          <% if admin? %>
+            <td><a href="/pages/edit/<%= page.name %>">Edit</a></td>
+            <td><%= A 'Delete', :href => "/page/delete/#{page.name}", :onclick => "return confirm('Are you sure you want to delete this page?');" %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

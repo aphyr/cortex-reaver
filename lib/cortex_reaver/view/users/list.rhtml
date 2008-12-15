@@ -1,0 +1,38 @@
+<% if @page %>
+  <%= page_nav CortexReaver::User, @page %>
+<% end %>
+
+<table class="users">
+  <thead>
+    <tr>
+      <th>Login</th>
+      <th>Name</th>
+      <% if admin? %>
+        <th></th>
+        <th></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= A(user.login, :href => user.url) %></td>
+        <td><%= h user.name %></td>
+        <% if admin? %>
+          <td>
+            <a class="edit-link" href="/users/edit/<%= user.login %>">
+              <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
+            </a>
+          </td>
+          <td>
+            <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{user.login}", :onclick => "return confirm('Are you sure you want to delete this user?');" %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @page %>
+  <%= page_nav CortexReaver::User, @page %>
+<% end %>

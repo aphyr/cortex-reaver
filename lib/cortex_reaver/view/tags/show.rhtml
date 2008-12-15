@@ -1,0 +1,51 @@
+<div class="tag">
+  <h2><%= h @title %></h2>
+  <div class="body">
+    <% unless (pages = CortexReaver::Page.tagged_with(@tags)).empty? %>
+      <div class="pages">
+        <h3>Pages</h3>
+        <ul>
+          <% pages.each do |page| %>
+            <li><%= A(page.title, :href => page.url) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <% unless (projects = CortexReaver::Project.tagged_with(@tags)).empty? %>
+      <div class="projects">
+        <h3>Projects</h3>
+        <ul>
+          <% projects.each do |project| %>
+            <li><%= A(project.title, :href => project.url) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <% unless (journals = CortexReaver::Journal.tagged_with(@tags)).empty? %>
+      <div class="journals">
+        <h3>Journals</h3>
+        <ul>
+          <% journals.each do |journal| %>
+            <li><%= A(journal.title, :href => journal.url) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <% unless (photographs = CortexReaver::Photograph.tagged_with(@tags)).empty? %>
+      <div class="photographs">
+        <h3>Photographs</h3>
+        <%= render_template '../photographs/grid.rhtml', :photographs => photographs %>
+      </div>
+    <% end %>
+  </div>
+  <div class="footer">
+    <ul class="actions">
+      <% if admin? and @tags.size == 1 %>
+        <li><a href="/tags/edit/<%= @tags.first.name %>">
+          <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
+        </a></li>
+        <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/tags/delete/#{@tags.first.name}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></li>
+      <% end %>
+    </ul> 
+  </div>
+</div>

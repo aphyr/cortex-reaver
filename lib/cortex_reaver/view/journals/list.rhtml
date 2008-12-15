@@ -1,0 +1,33 @@
+<% if @page %>
+  <%= page_nav CortexReaver::Journal, @page %>
+<% end %>
+
+<% if @page %>
+  <div class="table-of-contents">
+    <h2>On this page</h2>
+    <table>
+      <tbody>
+        <% @journals.all.each do |journal| %>
+          <tr>
+            <td class="date"><%= journal.created_on.strftime('%e %B %Y') %></td>
+            <td class="title"><a href="#journal_<%= attr_h journal.name %>"><%=h journal.title %></a><td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div class="journals">
+  <% @journals.all.each do |journal| %>
+    <%= render_template Ramaze::Global.view_root + '/journals/journal.rhtml', 'journal' => journal, 'hide_comments' => true %>
+  <% end %>
+
+  <% if @page.nil? and @journals.size > 0 and @journals.all.last.previous %>
+    <p><a href="<%= @journals.all.last.previous.absolute_window_url %>">Continue reading on journal page <%= @journals.all.last.previous.absolute_window_index %></a></p>
+  <% end %>
+</div>
+
+<% if @page %>
+  <%= page_nav CortexReaver::Journal, @page %>
+<% end %>

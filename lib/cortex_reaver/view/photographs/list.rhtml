@@ -1,0 +1,9 @@
+<% if @page %>
+  <%= page_nav CortexReaver::Photograph, @page %>
+<% end %>
+
+<%= render_template '../photographs/grid.rhtml', :photographs => @photographs %>
+
+<% if @page %>
+  <%= page_nav CortexReaver::Photograph, @page %>
+<% end %>

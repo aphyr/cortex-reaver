@@ -1,0 +1,39 @@
+<div class="journal text-entry">
+  <h2><a id="journal_<%= @journal.name %>" href="<%= @journal.url %>"><%=h @journal.title %></a></h2>
+  <div class="byline">
+    <span class="written">
+      <%= user_link @journal.user %> on <%= date_line @journal %>
+    </span>
+    <%= tags_on @journal %>
+  </div>
+  <div class="body">
+    <%= @journal.body_cache %>
+  </div>
+  <div class="footer">
+    <ul class="actions">
+      <li><a href="<%= @journal.url %>#comments">
+        <img src="/images/comment.gif" class="icon" alt="comment" />
+        <%= @journal.comment_count %> <%= @journal.comment_count == 1 ? 'comment' : 'comments' %>
+      </a></li>
+      <% if admin? %>
+        <li><a class="edit-link" href="/journals/edit/<%= @journal.name %>">
+          <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
+        </a></li>
+        <li >
+          <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/journals/delete/#{@journal.name}", :onclick => "return confirm('Are you sure you want to delete this journal?');" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <% unless @hide_comments %>
+    <div class="comments">
+      <a id="comments" />
+      <% @journal.comments_dataset.order(:created_on).all.each do |comment| %>
+        <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
+      <% end %>
+    </div>
+
+    <%= render_template '../comments/post_form.rhtml', 'comment' => @new_comment %>
+  <% end %>
+</div>

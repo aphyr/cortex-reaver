@@ -1,0 +1,7 @@
+<% @photographs.all.each do |photograph| %>
+  <div class="box" id="photograph_<%= photograph.name %>">
+    <a href="<%= photograph.url %>">
+      <img src="<%= photograph.thumbnail_public_path %>" class="grid thumbnail" alt="<%=h photograph.title %>" />
+    </a>
+  </div>
+<% end %>

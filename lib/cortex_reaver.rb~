@@ -1,0 +1,77 @@
+#!/usr/bin/ruby
+
+begin
+  require 'rubygems'
+  require 'ramaze'
+  require 'sequel'
+rescue LoadError => e
+  puts e
+  puts "You probably need to install some packages Cortex Reaver needs. Try: 
+apt-get install librmagick-ruby;
+gem install mongrel ramaze sequel erubis bluecloth rmagick exifr hpricot;"
+  exit 255
+end
+
+module CortexReaver
+  VERSION = 0.1
+  ROOT = __DIR__/'..'
+  PUBLIC_DIR = ROOT/:public
+  LIB_DIR = ROOT/:lib/:cortex_reaver
+  AFTER_LOAD_CALLBACKS = []
+
+  # Returns the site configuration
+  def self.config
+    @config
+  end
+
+  def self.db
+    @db
+  end
+
+  # Load libraries
+  def self.load
+
+    # Load controllers and models
+    acquire LIB_DIR/:snippets/'**'/'*'
+    acquire LIB_DIR/:model_mixins/'*'
+    acquire LIB_DIR/:model/'*'
+    acquire LIB_DIR/:helper/'*'
+    acquire LIB_DIR/:controller/'*'
+
+    # Everything else
+    acquire LIB_DIR/'**'/'*'
+
+    # Run after-loading callbacks
+    AFTER_LOAD_CALLBACKS.each do |c|
+      c.call
+    end
+  end
+
+  # Reloads the site configuration
+  def self.reload_config
+    @config = CortexReaver::Config.first
+  end
+
+  def self.start
+    # Connect to db
+    setup_db
+
+    # Load library
+    self.load
+    reload_config
+
+    # Go!
+    Ramaze.start :adapter => :mongrel, :port => 7000
+  end
+
+  # Connect to DB
+  def self.setup_db
+    @db = Sequel.connect('mysql://cortex_reaver:RyReajOuc7@localhost/cortex_reaver')
+  end
+
+  # Disconnect from DB
+  def self.shutdown_db
+    @db.disconnect
+    @db = nil
+  end
+end

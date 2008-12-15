@@ -1,0 +1,25 @@
+<div class="post comment-form">
+  <a id="post-comment">
+  <h2>Edit Comment</h2>
+
+  <% unless @comment.errors.empty? %>
+    <div class="form-errors">
+      <ul>
+      <% @comment.errors.each do |attribute, error| %>
+        <li><%= attribute.to_s.titleize %> <%= error %>.</li>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_for @comment, Rs(@form_action), [
+      :title,
+      :name,
+      :email,
+      :http,
+      [:body, {:type => 'textarea'}],
+      [:comment_id, {:type => 'hidden'}],
+      [:journal_id, {:type => 'hidden'}],
+      [:photograph_id, {:type => 'hidden'}],
+      [:project_id, {:type => 'hidden'}]
+  ] %>
+</div>

@@ -1,0 +1,34 @@
+<div class="comment text-entry">
+  <h2><a id="comment_<%= @comment.id %>" href="<%= @comment.url %>"><%=h @comment.title %></a></h2>
+  <div class="byline">
+    <span class="written">
+      <%= user_link @comment %> on <%= date_line @comment %>
+    </span>
+  </div>
+  <div class="body">
+    <%= @comment.body_cache %>
+  </div>
+  <div class="footer">
+    <ul class="actions">
+      <li><a href="<%=@comment.url %>_comments">
+        <img src="/images/comment.gif" class="icon" alt="comment" />
+        <%= @comment.comment_count %> <%= @comment.comment_count == 1 ? 'comment' : 'comments' %>
+      </a></li>
+      <% if admin? %>
+        <li><a href="/comments/edit/<%= @comment.id %>">
+          <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
+        </a></li>
+        <li>
+          <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/comments/delete/#{@comment.id}", :onclick => "return confirm('Are you sure you wish to delete this comment?');" %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% unless @hide_comments %>
+    <a id="comment_<%= @comment.id %>_comments" ></a>
+    <div class="comments">
+      <% @comment.comments_dataset.order(:created_on).all.each do |comment| %>
+        <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

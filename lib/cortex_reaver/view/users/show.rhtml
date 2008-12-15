@@ -1,0 +1,37 @@
+<div class="user">
+  <h2><a id="user_<%= @user.login %>" href="<%= @user.url %>">User <%=h @user.name %></a></h2>
+  <div class="byline">
+    <% if @user.admin %>
+      Administrator,
+    <% end %>
+    Created on <%= date_line @user %>
+  </div>
+  <div class="body">
+    <table>
+      <tbody>
+        <tr>
+          <th>Name</td>
+          <td><%=h @user.name %></td>
+        </tr>
+         <tr>
+          <th>E-Mail Address</td>
+          <td><a href="mailto:<%= attr_h @user.email %>"><%= h @user.email %></td>
+        </tr>
+          <tr>
+          <th>HTTP Address</td>
+          <td><a href="<%= attr_h @user.http %>"><%= h @user.http %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">
+    <ul class="actions">
+      <% if admin? %>
+        <li><a href="/users/edit/<%= @user.login %>">
+          <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
+        </a></li>
+        <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{@user.login}", :onclick => "return confirm('Are you sure you want to delete this user?');" %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+textarea {
+  width: 90%;
+  height: 400px;
+}
+
+.comment-form label {
+  width: 4em;
+  margin-top: 2px;
+  float: left;
+}
+.comment-form label[for=body] {
+  display: none;
+  float: none;
+  margin-top: auto;
+  width: auto;
+}
+
+.comment-form textarea[name=body] {
+  margin-top: -1.5em;
+}
+
+.edit-form label {
+  width: 6em;
+  margin-top: 2px;
+  float: left;
+}
+
+.form-errors {
+  padding: 0.5em;
+  margin: 1em;
+  border: 1px solid #b00;
+  color: #b00;
+  background: #ffe6e6;
+}
+
+.form-errors h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.form-errors ul {
+  padding: 0;
+  padding-left: 1em;
+  margin: 0;
+}
+
+/* Autocomplete */

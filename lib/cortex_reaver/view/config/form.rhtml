@@ -1,0 +1,10 @@
+<h2>Edit Config</h2>
+
+<%= errors_on @config %>
+
+<%= form_for(@config, Rs(@form_action), [
+  [:name],
+  [:author],
+  [:keywords],
+  [:description, {:type => 'textarea'}]
+]) %>

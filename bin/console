@@ -1,0 +1,9 @@
+#!/usr/bin/ruby
+
+require File.dirname(__FILE__) + '/../lib/cortex_reaver'
+require 'irb'
+
+CortexReaver.setup ARGV.first
+include CortexReaver
+
+IRB.start

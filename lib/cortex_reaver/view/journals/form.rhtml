@@ -1,0 +1,12 @@
+<h2><%= @form_action[/\/new$/] ? 'New' : 'Edit' %> Journal</h2>
+
+<%= errors_on @journal %>
+
+<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+  <%= form_p :title, :model => @journal %>
+  <%= live_name_field @journal %>
+  <%= live_tags_field @journal %>
+  <%= form_p :body, :model => @journal, :type => 'textarea' %>
+  <%= attachment_form @journal %>
+  <input type="submit" name="submit" />
+</form>

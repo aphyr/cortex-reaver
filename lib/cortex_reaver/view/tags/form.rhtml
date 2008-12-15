@@ -1,0 +1,9 @@
+<h2><%= @form_action[/\/new$/] ? 'New' : 'Edit' %> Tag</h2>
+
+<%= errors_on @tag %>
+
+<form class="edit-form" action="<%= Rs(@form_action) %>" method="post">
+  <%= form_p 'title', :model => @tag %>
+  <%= live_name_field @tag %>
+  <input type="submit" name="submit" />
+</form>

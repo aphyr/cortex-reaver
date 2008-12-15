@@ -1,0 +1,35 @@
+<div class="user">
+  <h2><%= A(@user.to_s, :href => @user.url) %></h2>
+  <table>
+    <tr>
+      <td>Name</td>
+      <td><%= @user.name %></td>
+    </tr>
+    <tr>
+      <td>Login</td>
+      <td><%= @user.login %></td>
+    </tr>
+    <tr>
+      <td>HTTP address</td>
+      <td><%= @user.http %></td>
+    </tr>
+    <tr>
+      <td>Email address</td>
+      <td><%= @user.email %></td>
+    </tr>
+    <tr>
+      <td>Created</td>
+      <td><%= @user.created_on %></td>
+    </tr>
+    <tr>
+      <td>Updated</td>
+      <td><%= @user.updated_on %></td>
+    </tr>
+  </table>
+  <div class="footer">
+    <ul class="actions">
+      <li><%= A('Edit', :href => Rs(:edit, @user.login)) %></li>
+      <li><%= A('Delete', :href => Rs(:delete, @user.login), :onclick => "return confirm('Are you sure you want to delete user #{@user.login}?');") %></li>
+    </ul>
+  </div>
+</div>
