@@ -33,7 +33,7 @@ module Ramaze
         else
           flash[:notice] = "Please log in first."
           session[:target_uri] = request.request_uri
-          redirect R(CortexReaver::UserController, :login)
+          redirect R('/users', :login)
         end
       end
 
