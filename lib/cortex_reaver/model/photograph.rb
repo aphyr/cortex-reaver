@@ -36,7 +36,7 @@ module CortexReaver
     end
 
     def self.recent
-      reverse_order(:updated_on).limit(16)
+      reverse_order(:created_on).limit(16)
     end
 
     def atom_url

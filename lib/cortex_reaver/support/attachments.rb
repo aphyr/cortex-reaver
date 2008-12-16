@@ -3,6 +3,7 @@ require 'fileutils'
 module CortexReaver
   module Model
     module Attachments
+
       # Attachments allows records to manipulate files associated with them.
       #
       # For our purposes, an attachment represents an object that is associated

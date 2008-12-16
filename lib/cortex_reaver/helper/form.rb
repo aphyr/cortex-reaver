@@ -95,7 +95,7 @@ module Ramaze
         end
 
         if type == 'checkbox'
-          f << "<label for=\"#{id}\">#{description}</label>"
+          f << "<label class=\"checkbox\" for=\"#{id}\">#{description}</label>"
         end
 
         f << "</p>\n"
