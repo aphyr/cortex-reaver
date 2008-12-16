@@ -9,6 +9,7 @@ module CortexReaver
     module Renderer
       require 'bluecloth'
       require 'hpricot'
+      require 'syntax'
 
       # Elements to allow in sanitized HTML.
       ELEMENTS = [
@@ -107,6 +108,16 @@ module CortexReaver
         end
        
         copy
+      end
+
+      def syntax_highlight(text)
+        return text if text.nil?
+
+        h = Hpricot(text)
+
+        h.search('cr:code').replace do |code|
+          code[:lang]
+        end
       end
 
       # Stolen wholesale from Ryan's Thoth (http://github.com/rgrove/thoth/)
