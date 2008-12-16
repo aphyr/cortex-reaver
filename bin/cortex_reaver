@@ -25,7 +25,7 @@ module CortexReaver
   @values = {}
   parser = OptionParser.new do |o|
     o.on '-c', '--config file', 'Configuration file' do |file|
-      @values[:config_file] = file
+      self.config_file = file
     end
 
     o.on '-f', '--force', 'Just do it' do
@@ -47,9 +47,17 @@ module CortexReaver
       @values[:schema_version] = version ? version.to_i : nil
     end
 
-    o.on '-r', '--reset',
+    o.on '-b', '--blank',
       'Wipes the database and sets up a clean copy of the latest version.' do
-      @action = :reset
+      @action = :blank
+    end
+
+    o.on '-r', '--restart', 'Restart CortexReaver' do
+      @action = :restart
+    end
+
+    o.on '-k', '--stop', 'Stop CortexReaver' do
+      @action = :stop
     end
   end
 
@@ -60,7 +68,6 @@ module CortexReaver
   when :migrate
     version = @values[:schema_version]
 
-    self.config_file = @values[:config_file]
     self.reload_config
     self.setup_db
 
@@ -93,16 +100,21 @@ module CortexReaver
       exit
     end
 
-  when :reset
+  when :blank
     if confirm "Are you sure you wish to wipe the database?"
       # Strangely, calling Migrator.apply to go down and then up doesn't seem to work. :-/
       system($0, '-f', '-m', '0')
       system($0, '-f', '-m')
     end
 
+  when :restart
+    restart
+
   when :start
-    self.config_file = @values[:config_file]
     start
+
+  when :stop
+    stop
 
   else
     abort("Unknown action: #{@action}")

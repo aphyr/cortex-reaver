@@ -1,2 +1,15 @@
-Version 0.1.1 (2008-12-14)
+Version 0.0.2 (2008-12-14)
+  * Server
+    * Added daemonization support
+    * Reworked configuration file defaults
+    * Support for multiple environments
+    * Smart console/file logging
+    * Automatic creation of public & log directories
+  * Models
+    * Model update hooks don't update timestamps on other models they change.
+    * Changed some callbacks from delete to destroy
+  * View
+    * Style fixes
+    * Minor tweaks
+Version 0.0.1 (2008-12-14)
   * First release
