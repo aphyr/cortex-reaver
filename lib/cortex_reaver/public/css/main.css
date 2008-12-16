@@ -61,7 +61,6 @@ th {
   border-color: #666;
 }
 
-
 #sections {
   margin: 0px auto;
   width: 760px;
@@ -113,6 +112,7 @@ th {
   background: #c6c6c6;
   padding: 6px;
   border-left: 1px solid #bbb;
+  width: 170px;
 }
 
 #sidebar .box {
