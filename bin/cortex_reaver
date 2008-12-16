@@ -24,7 +24,7 @@ module CortexReaver
   # Parse options
   @values = {}
   parser = OptionParser.new do |o|
-    o.on '-c', '--config', 'Configuration file' do |file|
+    o.on '-c', '--config file', 'Configuration file' do |file|
       @values[:config_file] = file
     end
 

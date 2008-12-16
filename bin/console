@@ -6,4 +6,6 @@ require 'irb'
 CortexReaver.setup ARGV.first
 include CortexReaver
 
+# Don't let ARGV hit IRB, or it will try to run it!
+ARGV.clear
 IRB.start
