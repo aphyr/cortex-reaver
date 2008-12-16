@@ -16,6 +16,7 @@ end
 module CortexReaver
   ROOT = File.expand_path(__DIR__/'..')
   LIB_DIR = ROOT/:lib/:cortex_reaver
+  HOME_DIR = Dir.pwd
   
   # We need the configuration class before everything.
   require LIB_DIR/:config
@@ -33,24 +34,77 @@ module CortexReaver
     @config_file = file
   end
 
-  # Sets the configuration file and reloads
-  def self.configure(file = nil)
-    if file
-      self.config_file = file
-    end
-    reload_config
-  end
-
   def self.db
     @db
   end
 
-  # Load libraries
-  def self.load
-    # Prepare Ramaze
+  # Prepare Ramaze, create directories, etc.
+  def self.init
+    # Tell Ramaze where to find public files and views
     Ramaze::Global.public_root = LIB_DIR/:public
     Ramaze::Global.view_root = config[:view_root]
 
+    # Check directories
+    if config[:public_root] and not File.directory? config[:public_root]
+      # Try to create a public directory
+      begin
+        FileUtils.mkdir_p config[:public_root]
+      rescue => e
+        Ramaze::Log.warn "Unable to create a public directory at #{config[:public_root]}: #{e}."
+      end
+    end
+    if config[:log_root] and not File.directory? config[:log_root]
+      # Try to create a log directory
+      begin
+        FileUtils.mkdir_p config[:log_root]
+        File.chmod 0750, config[:log_root]
+      rescue => e
+        Ramaze::Log.warn "Unable to create a log directory at #{config[:log_root]}: #{e}. File logging disabled."
+        # Disable logging
+        config[:log_root] = nil
+      end
+    end
+
+    # Clear loggers
+    Ramaze::Log.loggers.clear
+
+    unless config[:daemon]
+      # Log to console
+      Ramaze::Log.loggers << Ramaze::Logger::Informer.new
+    end 
+
+    case config[:mode]
+    when :production
+      if config[:log_root]
+        # Log to file
+        Ramaze::Log.loggers << Ramaze::Logger::Informer.new(
+          File.join(config[:log_root], 'production.log'),
+          [:error, :info, :notice]
+        )
+      end
+
+      # Don't reload source code
+      Ramaze::Global.sourcereload = false
+
+      # Don't expose errors
+      Ramaze::Dispatcher::Error::HANDLE_ERROR.update({
+        ArgumentError => [404, 'error_404'],
+        Exception     => [500, 'error_500']
+      })
+    when :development
+      if config[:log_root]
+        # Log to file
+        Ramaze::Log.loggers << Ramaze::Logger::Informer.new(
+          File.join(config[:log_root], 'development.log')
+        )
+      end
+    else
+      raise ArgumentError.new("unknown Cortex Reaver mode #{config[:mode].inspect}. Expected one of [:production, :development].")
+    end
+  end
+
+  # Load libraries
+  def self.load
     # Load controllers and models
     acquire LIB_DIR/:snippets/'**'/'*'
     acquire LIB_DIR/:support/'*'
@@ -65,28 +119,37 @@ module CortexReaver
     @config = CortexReaver::Config.new(config_file)
   end
 
-  def self.start
-    # Load configuration
-    reload_config
-    
-    # Connect to db
-    setup_db
-
-    # Load library
-    self.load
-
-    # Go!
-    Ramaze.start :adapter => config[:adapter], :port => config[:port]
+  # Restart Cortex Reaver
+  def self.restart
+    stop
+    sleep 1
+    start
   end
 
-  # Load CortexReaver environment; do everything except start Ramaze
-  def self.setup(file)
-    # Load config
-    @config_file = file
-    reload_config
+  # Once environment is prepared, run Ramaze
+  def self.run
+    # Shutdown callback
+    at_exit do
+      FileUtils.rm(config[:pidfile]) if File.exist? config[:pidfile]
+    end
 
+    Ramaze::Log.info "Stalking victims."
+
+    # Run Ramaze
+    Ramaze.startup(
+      :adapter => config[:adapter],
+      :host => config[:host],
+      :port => config[:port]
+    )
+  end
+
+  # Load Cortex Reaver environment; do everything except start Ramaze
+  def self.setup
     # Connect to DB
     setup_db
+
+    # Prepare Ramaze, check directories, etc.
+    init
 
     # Load library
     self.load
@@ -98,17 +161,128 @@ module CortexReaver
       raise RuntimeError.new("no configuration available!")
     end
 
+    # Build Sequel connection string
     unless (string = config[:database]).is_a? String
       d = config[:database]
       string = "#{d[:driver]}://#{d[:user]}:#{d[:password]}@#{d[:host]}/#{d[:database]}"
     end
 
-    @db = Sequel.connect(string)
+    begin
+      @db = Sequel.connect(string)
+    rescue => e
+      Ramaze::Log.error("Unable to connect to database: #{e}.")
+      abort
+    end
+
+    # Check schema
+    if Sequel::Migrator.get_current_migration_version(@db) !=
+       Sequel::Migrator.latest_migration_version(LIB_DIR/:migrations)
+
+      raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
+    end
   end
 
   # Disconnect from DB
   def self.shutdown_db
     @db.disconnect
     @db = nil
+  end
+
+  def self.start
+    reload_config
+
+    # Check PID
+    if File.file? config[:pidfile]
+      pid = File.read(config[:pidfile], 20).strip
+      abort "Cortex Reaver already running? (#{pid})"
+    end
+
+    puts "Activating Cortex Reaver."
+
+    if config[:daemon]
+      fork do
+        # Drop console, create new session
+        Process.setsid
+        exit if fork
+
+        # Write pidfile
+        File.open(config[:pidfile], 'w') do |file|
+          file << Process.pid
+        end
+
+
+        # Move to homedir; drop creation mask
+        Dir.chdir HOME_DIR
+        File.umask 0000
+
+        # Drop stream handles
+        STDIN.reopen('/dev/null')
+        STDOUT.reopen('/dev/null', 'a')
+        STDERR.reopen(STDOUT)
+
+        # Go!
+        setup
+        run
+      end
+    else
+      # Run in foreground.
+      setup
+      run
+    end
+  end
+
+  def self.stop
+    reload_config
+
+    unless config[:pidfile]
+      abort "No pidfile to stop."
+    end
+
+    unless File.file? config[:pidfile]
+      abort "Cortex Reaver not running? (check #{config[:pidfile]})"
+    end
+
+    # Get PID
+    pid = File.read(config[:pidfile], 20).strip
+    unless (pid = pid.to_i) != 0
+      abort "Invalid process ID in pidfile (#{pid})."
+    end
+
+    puts "Shutting down Cortex Reaver #{pid}..."
+    
+    # Attempt to end Ramaze nicely.
+    begin
+      # Try to shut down Ramaze nicely.
+      Process.kill('INT', pid)
+      puts "Shut down."
+      killed = true
+    rescue Errno::ESRCH
+      # The process doesn't exist.
+      puts "No Cortex Reaver with pid #{pid}."
+      killed = true
+    rescue => e
+      begin
+        # Try to end the process forcibly.
+        puts "Cortex Reaver #{pid} has gone rogue (#{e}); forcibly terminating..."
+        Process.kill('KILL', pid)
+        puts "Killed."
+        killed = true
+      rescue => e2
+        # That failed, too.
+        puts "Unable to terminate Cortex Reaver: #{e2}."
+        killed = false
+      end
+    end
+
+    # Remove pidfile if killed.
+    if killed
+      begin
+        FileUtils.rm(config[:pidfile])
+      rescue Errno::ENOENT
+        # Pidfile gone
+      rescue => e
+        puts "Unable to remove pidfile #{config[:pidfile]}: #{e}."
+      end
+    end
   end
 end
