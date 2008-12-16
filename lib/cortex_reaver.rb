@@ -55,9 +55,9 @@ module CortexReaver
     acquire LIB_DIR/:snippets/'**'/'*'
     acquire LIB_DIR/:support/'*'
     acquire LIB_DIR/:model/'*'
-    acquire LIB_DIR/'**'/'*'
-    acquire LIB_DIR/:controller/'*'
     acquire LIB_DIR/:helper/'*'
+    acquire LIB_DIR/:controller/'*'
+    acquire LIB_DIR/'**'/'*'
   end
 
   # Reloads the site configuration
