@@ -62,12 +62,14 @@ module CortexReaver
     before_destroy(:decrement_parent_comment_count) do
       parent = self.parent
       parent.comment_count -= 1
+      parent.skip_timestamp_update = true
       parent.save
     end
     after_save(:refresh_parent_comment_count) do
       # WARNING: If we *reparent* comments as opposed to just posting, this will break.
       parent = self.parent
       parent.comment_count += 1
+      parent.skip_timestamp_update = true
       parent.save
     end
 
@@ -78,7 +80,7 @@ module CortexReaver
     end
 
     def self.recent
-      reverse_order(:updated_on).limit(16)
+      reverse_order(:created_on).limit(16)
     end
 
     def self.url
@@ -90,6 +92,7 @@ module CortexReaver
         if comment.title.blank?
           comment.title = 'Re: ' + comment.parent.title.to_s
           comment.title.gsub!(/^(Re: )+/, 'Re: ')
+          comment.skip_timestamp_update = true
           comment.save
         end
       end

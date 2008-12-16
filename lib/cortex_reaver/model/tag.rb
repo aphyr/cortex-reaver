@@ -56,11 +56,7 @@ module CortexReaver
         projects_dataset.count
       
       # Save and return
-      unless valid?
-        p self
-        p errors
-        exit
-      end
+      self.skip_timestamp_update = true
       self.save
       self[:count]
     end

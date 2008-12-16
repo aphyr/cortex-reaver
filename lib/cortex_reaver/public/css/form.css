@@ -24,6 +24,10 @@ textarea {
   margin-top: 2px;
   float: left;
 }
+.edit-form label.checkbox {
+  width: auto;
+  float: none;
+}
 
 .form-errors {
   padding: 0.5em;

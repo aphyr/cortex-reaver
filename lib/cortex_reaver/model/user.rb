@@ -29,6 +29,14 @@ module CortexReaver
       end
     end
 
+    # Ensure an administrator is always available. TODO: This is probably
+    # subject to a race condition, especially between servers. Backup plan?
+    validates_each :admin do |object, attribute, value|
+      if User.filter(:admin => true).count == 1 and not value
+        object.errors[attribute] << "can't be unset; only one administrator left!"
+      end
+    end
+
     self.window_size = 64
 
     # Returns an authenticated user by login and password, or nil.

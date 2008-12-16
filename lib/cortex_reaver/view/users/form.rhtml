@@ -5,11 +5,11 @@
 <form class="edit-form" action="<%= Rs(@form_action) %>" method="post">
   <%= form_p :login, :model => @user %>
   <%= form_p 'name', :model => @user %>
-  <%= form_p 'http', :description => 'HTTP address', :model => @user %>
-  <%= form_p 'email', :description => 'E-mail address', :model => @user %>
+  <%= form_p 'http', :description => 'HTTP', :model => @user %>
+  <%= form_p 'email', :description => 'E-mail', :model => @user %>
   <%= form_p 'password', :type => 'password'  %>
-  <%= form_p 'password_confirmation', :type => 'password', :description => 'Confirm password' %>
-  <%= form_p :admin, :model => @user, :description => 'Administrator' %>
+  <%= form_p 'password_confirmation', :type => 'password', :description => 'Confirm' %>
+  <%= form_p :admin, :model => @user, :type => 'checkbox', :description => 'Admin?' %>
   <p>
     <input type="submit" />
   </p>
