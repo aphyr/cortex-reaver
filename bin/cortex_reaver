@@ -59,18 +59,28 @@ module CortexReaver
     o.on '-k', '--stop', 'Stop CortexReaver' do
       @action = :stop
     end
+
+    o.on '--status', 'Check CortexReaver status.' do
+      @action = :status
+    end
   end
 
   parser.parse! ARGV
 
+
   # Main
   case @action
+  when :status
+    # Make a quick HTTP request to see how we're doing.
+    require 'open-uri'
+    reload_config
+    response = open("http://#{config[:host] || 'localhost'}:#{config[:port]}/")
+    puts response.status.join(' ');
   when :migrate
     version = @values[:schema_version]
 
-    self.reload_config
-    self.setup_db
-
+    reload_config
+    setup_db false
     puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
 
     current_version = Sequel::Migrator.get_current_migration_version(db)

@@ -5,6 +5,7 @@ begin
   require 'ramaze'
   require 'sequel'
   require 'yaml'
+  require 'socket'
 rescue LoadError => e
   puts e
   puts "You probably need to install some packages Cortex Reaver needs. Try: 
@@ -121,9 +122,12 @@ module CortexReaver
 
   # Restart Cortex Reaver
   def self.restart
-    stop
-    sleep 1
-    start
+    begin
+      stop
+      sleep 5
+    ensure
+      start
+    end
   end
 
   # Once environment is prepared, run Ramaze
@@ -133,7 +137,7 @@ module CortexReaver
       FileUtils.rm(config[:pidfile]) if File.exist? config[:pidfile]
     end
 
-    Ramaze::Log.info "Stalking victims."
+    Ramaze::Log.info "Cortex Reaver #{Process.pid} stalking victims."
 
     # Run Ramaze
     Ramaze.startup(
@@ -141,6 +145,8 @@ module CortexReaver
       :host => config[:host],
       :port => config[:port]
     )
+
+    puts "Cortex Reaver finished."
   end
 
   # Load Cortex Reaver environment; do everything except start Ramaze
@@ -155,8 +161,9 @@ module CortexReaver
     self.load
   end
 
-  # Connect to DB
-  def self.setup_db
+  # Connect to DB. If check_schema is false, doesn't check to see that the schema
+  # version is up to date.
+  def self.setup_db(check_schema = true)
     unless config
       raise RuntimeError.new("no configuration available!")
     end
@@ -175,7 +182,8 @@ module CortexReaver
     end
 
     # Check schema
-    if Sequel::Migrator.get_current_migration_version(@db) !=
+    if check_schema and
+       Sequel::Migrator.get_current_migration_version(@db) !=
        Sequel::Migrator.latest_migration_version(LIB_DIR/:migrations)
 
       raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
@@ -198,6 +206,17 @@ module CortexReaver
     end
 
     puts "Activating Cortex Reaver."
+    setup
+
+    # Check port availability
+    begin
+      socket = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
+      sockaddr = Socket.pack_sockaddr_in(*[config[:port], config[:host]])
+      socket.bind(sockaddr)
+      socket.close
+    rescue => e
+      abort "Unable to bind to port #{config[:host]}:#{config[:port]} (#{e})"
+    end
 
     if config[:daemon]
       fork do
@@ -210,7 +229,6 @@ module CortexReaver
           file << Process.pid
         end
 
-
         # Move to homedir; drop creation mask
         Dir.chdir HOME_DIR
         File.umask 0000
@@ -221,12 +239,10 @@ module CortexReaver
         STDERR.reopen(STDOUT)
 
         # Go!
-        setup
         run
       end
     else
       # Run in foreground.
-      setup
       run
     end
   end
