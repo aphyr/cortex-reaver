@@ -56,12 +56,14 @@ module Ramaze
       #   :description => The label for the field (inferred from id by default)
       #   :model => The model to query for fields
       #   :default => The default value for the field (inferred from model and id)
+      #   :p_class => Class attached to the paragraph
       def form_p(id, params = {})
         type = params[:type]
+        p_class = params[:p_class]
         description = params[:description] || id.to_s.titleize
         model = params[:model]
         default = params[:default]
-        if model and not default
+        if model and not default and model.respond_to? id
           default = model.send(id)
         end
 
@@ -76,7 +78,7 @@ module Ramaze
           end
         end
 
-        f = '<p>'
+        f = "<p #{p_class.nil? ? '' : 'class="' + attr_h(p_class) + '"'}>"
         unless type == 'checkbox' or type == 'hidden'
           f << "<label for=\"#{id}\">#{description}</label>"
         end

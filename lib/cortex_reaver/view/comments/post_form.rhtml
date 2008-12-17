@@ -11,26 +11,32 @@
     </div>
   <% end %>
 
-  <% if @new_comment.user %>
-    <%= form_for @new_comment, R(CortexReaver::CommentController, :post), [
-      :title,
-      [:body, {:type => 'textarea'}],
-      [:comment_id, {:type => 'hidden'}],
-      [:journal_id, {:type => 'hidden'}],
-      [:photograph_id, {:type => 'hidden'}],
-      [:project_id, {:type => 'hidden'}]
-  ] %>
-  <% else %>
-    <%= form_for @new_comment, R(CortexReaver::CommentController, :post), [
-      :title,
-      :name,
-      :email,
-      :http,
-      [:body, {:type => 'textarea'}],
-      [:comment_id, {:type => 'hidden'}],
-      [:journal_id, {:type => 'hidden'}],
-      [:photograph_id, {:type => 'hidden'}],
-      [:project_id, {:type => 'hidden'}]
-  ] %>
-  <% end %>
+  <form class="comment-form" action="<%= R(CortexReaver::CommentController, :post) %>" method="post">
+    <%= form_p :title, :model => @new_comment %>
+    <p class="dont-read-me">
+      Please avoid writing anything here unless you are a computer:
+      <label for="captcha">Captcha</label>
+      <input type="text" name="captcha" id="captcha" />
+
+      <br />
+      <br />
+      
+      This is also a trap:
+      <label for="comment">Comment</label>
+      <textarea name="comment" id="comment"></textarea>
+    </p>
+    
+    <% unless @new_comment.user %>
+      <%= form_p :name, :model => @new_comment %>
+      <%= form_p :email, :model => @new_comment %>
+      <%= form_p :http, :model => @new_comment %>
+    <% end %>
+    <%= form_p :body, :type => 'textarea', :model => @new_comment %>
+    <%= form_p :comment_id, :type => 'hidden', :model => @new_comment %>
+    <%= form_p :journal_id, :type => 'hidden', :model => @new_comment %>
+    <%= form_p :photograph_id, :type => 'hidden', :model => @new_comment %>
+    <%= form_p :project_id, :type => 'hidden', :model => @new_comment %>
+    <%= form_p :page_id, :type => 'hidden', :model => @new_comment %>
+    <input type="submit" value="Post Comment" />
+  </form>
 </div>

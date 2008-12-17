@@ -52,12 +52,21 @@ module CortexReaver
       render_template :list
     end
 
+    # This action is referenced by public comment-posting forms.
     def post
       unless request.post?
         flash[:error] = "No comment to post!"
         redirect_to R(:/)
       end
-      
+     
+      # Check for robots
+      unless request[:captcha].blank? and
+             request[:comment].blank?
+        # Robot!?
+        flash[:error] = "Cortex Reaver is immune to your drivel, spambot."
+        redirect R(:/)
+      end 
+
       begin
         # Create comment
         CortexReaver.db.transaction do
