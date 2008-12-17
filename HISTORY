@@ -1,11 +1,13 @@
-Version 0.0.2 (2008-12-14)
+Version 0.0.2 (2008-12-16)
   * Server
+    * Menaces users right out of the box!
     * Added daemonization support
     * Reworked configuration file defaults
     * Support for multiple environments
     * Smart console/file logging
     * Automatic creation of public & log directories
   * Models
+    * Now tested with SQLite.
     * Model update hooks don't update timestamps on other models they change.
     * Changed some callbacks from delete to destroy
   * View
