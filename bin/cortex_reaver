@@ -24,6 +24,11 @@ module CortexReaver
   # Parse options
   @values = {}
   parser = OptionParser.new do |o|
+    o.on '-b', '--blank',
+      'Wipes the database and sets up a clean copy of the latest version.' do
+      @action = :blank
+    end
+
     o.on '-c', '--config file', 'Configuration file' do |file|
       self.config_file = file
     end
@@ -36,37 +41,35 @@ module CortexReaver
       @action = :help
     end
 
-    o.on '-s', '--start',
-      'Start the CortexReaver server.' do
-      @action = :start
+    o.on '-i', '--irb', 'Start an IRB session' do
+      @action = :irb
+    end
+
+    o.on '-k', '--stop', 'Stop Cortex Reaver' do
+      @action = :stop
     end
 
     o.on '-m', '--migrate [version]',
-      'Migrate the database to schema version, or to the latest version.' do |version|
+      'Migrate the database to schema version, or to the latest version' do |version|
       @action = :migrate
       @values[:schema_version] = version ? version.to_i : nil
     end
 
-    o.on '-b', '--blank',
-      'Wipes the database and sets up a clean copy of the latest version.' do
-      @action = :blank
-    end
-
-    o.on '-r', '--restart', 'Restart CortexReaver' do
+    o.on '-r', '--restart', 'Restart Cortex Reaver' do
       @action = :restart
     end
 
-    o.on '-k', '--stop', 'Stop CortexReaver' do
-      @action = :stop
+    o.on '-s', '--start',
+      'Start the Cortex Reaver server' do
+      @action = :start
     end
 
-    o.on '--status', 'Check CortexReaver status.' do
+    o.on '--status', 'Check Cortex Reaver status' do
       @action = :status
     end
   end
 
   parser.parse! ARGV
-
 
   # Main
   case @action
@@ -112,10 +115,29 @@ module CortexReaver
 
   when :blank
     if confirm "Are you sure you wish to wipe the database?"
-      # Strangely, calling Migrator.apply to go down and then up doesn't seem to work. :-/
+      # Strangely, calling Migrator.apply to go down and then up doesn't seem
+      # to work. :-/
       system($0, '-f', '-m', '0')
       system($0, '-f', '-m')
     end
+
+  when :help
+    puts "Cortex Reaver #{APP_VERSION}: A dangerous Ruby blog engine, with a photographic memory."
+    puts parser.help
+
+  when :irb
+    # Start an IRB session
+    reload_config
+    setup
+    Ramaze::Global.console = true
+
+    # Don't let IRB try to interpret our command line
+    ARGV.clear
+
+    require 'irb'
+    require 'irb/completion'
+
+    IRB.start
 
   when :restart
     restart

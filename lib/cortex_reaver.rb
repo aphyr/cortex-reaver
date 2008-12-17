@@ -15,11 +15,13 @@ gem install mongrel ramaze sequel yaml erubis BlueCloth rmagick exifr hpricot bu
 end
 
 module CortexReaver
+  # Paths
   ROOT = File.expand_path(__DIR__/'..')
   LIB_DIR = ROOT/:lib/:cortex_reaver
   HOME_DIR = Dir.pwd
   
-  # We need the configuration class before everything.
+  # Some basic initial requirements
+  require LIB_DIR/:version
   require LIB_DIR/:config
 
   # Returns the site configuration
@@ -124,6 +126,7 @@ module CortexReaver
   def self.restart
     begin
       stop
+      # Wait for Cortex Reaver to finish, and for the port to become available.
       sleep 5
     ensure
       start
