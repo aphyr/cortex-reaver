@@ -244,6 +244,10 @@ th {
   clear: both;
 }
 
+.dont-read-me {
+  display: none;
+}
+
 .current {
   font-weight: bolder;
 }
