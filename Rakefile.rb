@@ -23,7 +23,7 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.summary = 'A dangerous Ruby blog engine, with a photographic memory.'
  
   s.files = FileList['{bin,lib}/**/*', 'LICENSE', 'README'].to_a
-  s.executables = ['cortex_reaver', 'console']
+  s.executables = ['cortex_reaver']
   s.require_path = 'lib'
   s.has_rdoc = true
  
