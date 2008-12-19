@@ -55,7 +55,7 @@ module CortexReaver
       else
         # Specific tags
         @tags = tags
-        @title = "Tags: #{h tags.join(', ')}"
+        @title = "Tags: #{tags.join(', ')}"
       end
     end
 
