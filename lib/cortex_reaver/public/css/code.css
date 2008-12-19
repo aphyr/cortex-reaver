@@ -1,0 +1,24 @@
+code {
+  display: block;
+  margin: 1em 0;
+  padding: 4pt;
+  color: #fff;
+  background: #000;
+/*  white-space: pre */
+}
+
+code .r { color: #FCE94F; font-weight: bolder; }
+code .cl { color: #8AE234; font-weight: bolder;}
+code .c { color: #34E2E2; }
+code .dl { color: #EF2929; font-weight: bolder; }
+code .k { color: #AD7FA8; font-weight: bolder; }
+code .i { color: #AD7FA8; font-weight: bolder; }
+code .fu { color: #729FCF; font-weight: bolder; }
+code .co { color: #8AE234; font-weight: bolder; }
+code .ch { color: #AD7FA8; font-weight: bolder; }
+code .idl { color: #EF2929; }
+code .gv { color: #34E2E2; font-weight: bolder; }
+code .pc { color: #AD7FA8; font-weight: bolder; }
+code .sy { color: #AD7FA8; font-weight: bolder; }
+code .fl { color: #AD7FA8; font-weight: bolder; }
+
