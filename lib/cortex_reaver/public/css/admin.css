@@ -1,7 +1,7 @@
 #adminbox {
   display: none;
   padding: 0.5em;
-  margin: 0 0 1em 0;
+  margin: -1px 0 1em 0;
   background-color: #eaeaea;
   border: 1px solid #aaa;
   border-top: none;
@@ -9,7 +9,7 @@
 }
 
 #main #adminbox {
-  margin: -0.8em 0em 1em 0em;
+  margin: -1em 0em 1em 0em;
 }
 
 #adminbox .actions-table {

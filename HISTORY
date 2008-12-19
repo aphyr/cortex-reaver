@@ -1,3 +1,7 @@
+  * Renderer
+    * Added code syntax highlighting with <cr:code lang="foo">, using CodeRay
+  * Server
+    * Replaced bin/console with bin/cortex_reaver -i
   * Controller
     * Comment anti-spam measures
 Version 0.0.2 (2008-12-16)
