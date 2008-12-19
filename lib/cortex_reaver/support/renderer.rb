@@ -1,15 +1,16 @@
 module CortexReaver
   module Model
-    # Some common rendering methods, wrapped up for your convenience. Use in your model
-    # with something like:
+    # Some common rendering methods, wrapped up for your convenience. Use in
+    # your model with something like:
     #
     # render :body, :with => :render_comment
     #
     # See CortexReaver::Model::CachedRendering for more details.
     module Renderer
+
       require 'bluecloth'
       require 'hpricot'
-      require 'syntax'
+      require 'coderay'
 
       # Elements to allow in sanitized HTML.
       ELEMENTS = [
@@ -35,11 +36,44 @@ module CortexReaver
       PROTOCOLS = ['ftp', 'http', 'https', 'mailto']
 
       
-      # Renders plain text and html to html.
-      def bluecloth(text)
+      # Renders plain text and html to html. If parse_code isn't true, only
+      # runs bluecloth on text *outside* any <code>...</code> blocks.
+      def bluecloth(text, parse_code = true)
         return text if text.nil?
 
-        BlueCloth::new(text).to_html
+        if parse_code
+          return BlueCloth::new(text).to_html
+        end
+
+        text = text.dup
+        out = ''
+        level = 0
+        until text.empty? do
+          if level < 1
+            # Find start of code block
+            j = text.index('<code>') || text.length
+            j -= 1 if j != 0
+            level += 1
+           
+            if j != 0
+              # Convert to bluecloth
+              out << BlueCloth::new(text[0..j]).to_html
+            end
+          else
+            # Find end of code block
+            j = text.index('</code>') || text.length
+            level -= 1
+            j += 6
+
+            # Output as is
+            out << text[0..j]
+          end
+
+          # Excise parsed string
+          text.slice! 0..j unless j == 0
+        end
+
+        out
       end
 
       # Replace <% and %> to prevent Erubis injection.
@@ -54,7 +88,9 @@ module CortexReaver
 
       # Macro substitutions
       #
-      # Expands [[type:resource][name]] macros. Right now, resource is just an attachment.
+      # Expands [[type:resource][name]] macros. Right now, resource is just an
+      # attachment.
+      #
       # Included types are:
       #
       # url: returns the URL to an attachment
@@ -113,10 +149,25 @@ module CortexReaver
       def syntax_highlight(text)
         return text if text.nil?
 
-        h = Hpricot(text)
+        text.gsub(/<cr:code\s.*?(lang="(.*?)").*?>(.*?)<\/cr:code>/m) do |match|
+          lang = $2
+          code = $3
 
-        h.search('cr:code').replace do |code|
-          code[:lang]
+          # Replace entities
+          code.gsub!('&', '&quot;')
+
+          unless lang.empty?
+            # Parse with CodeRay.
+            code = '<div class="code"><code>' + CodeRay.scan(code, lang.to_sym).html.strip + '</code></div>'
+          end
+
+          # Using white-space: pre is a nice option, but I haven't figured out
+          # how to make it work with fluid layouts. So, I'm going with line
+          # wrapping and explicit HTML entities; since we're already marking
+          # up the code for syntax, might as well go all the way. Plus, 
+          # this still pastes cleanly, but displays like a terminal.
+          code.gsub!("\n", '<br />')
+          code.gsub!(/( {2})/) { |match| '&nbsp;' * $1.length }
         end
       end
 
@@ -175,9 +226,11 @@ module CortexReaver
         bluecloth(
           macro(
             erubis_filter(
-              text
+              syntax_highlight(
+                text
+              )
             )
-          )
+          ), false
         ) # (((Feeling) LISPish yet)?)
       end
 
