@@ -1,23 +1,34 @@
-  * Renderer
-    * Added code syntax highlighting with <cr:code lang="foo">, using CodeRay
-  * Server
-    * Replaced bin/console with bin/cortex_reaver -i
-  * Controller
-    * Comment anti-spam measures
+Version 0.0.3 (2008-12-16)
+  - Server
+    - Replaced bin/console with bin/cortex_reaver -i
+  - Renderer
+    - Added code syntax highlighting with <cr:code lang="foo">, using CodeRay
+  - View
+    - Fixed double-escaping bug in tag title display
+  - Controller
+    - Comment anti-spam measures
+  - Outstanding bugs
+    - Lots!
+    - If you restart too quickly, the server can fail to rebind. Possibly
+      look into sockopt?
+    - If creation of a CRUD model fails, invalid associations and updated
+      associated models are not rolled back.
+
 Version 0.0.2 (2008-12-16)
-  * Server
-    * Menaces users right out of the box!
-    * Added daemonization support
-    * Reworked configuration file defaults
-    * Support for multiple environments
-    * Smart console/file logging
-    * Automatic creation of public & log directories
-  * Models
-    * Now tested with SQLite.
-    * Model update hooks don't update timestamps on other models they change.
-    * Changed some callbacks from delete to destroy
-  * View
-    * Style fixes
-    * Minor tweaks
+  - Server
+    - Menaces users right out of the box!
+    - Added daemonization support
+    - Reworked configuration file defaults
+    - Support for multiple environments
+    - Smart console/file logging
+    - Automatic creation of public & log directories
+  - Models
+    - Now tested with SQLite.
+    - Model update hooks don't update timestamps on other models they change.
+    - Changed some callbacks from delete to destroy
+  - View
+    - Style fixes
+    - Minor tweaks
+
 Version 0.0.1 (2008-12-14)
-  * First release
+  - First release
