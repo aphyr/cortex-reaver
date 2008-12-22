@@ -8,13 +8,17 @@ module CortexReaver
     template :new, :form
     engine :Erubis
 
-    helper :error,
+    helper :cache,
+      :error,
       :auth,
       :form,
       :workflow,
       :navigation,
       :canonical,
       :crud
+
+    cache :index, :ttl => 60
+    cache :show, :ttl => 60
 
     on_save do |tag, request|
       tag.title = request[:title]

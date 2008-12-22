@@ -128,7 +128,7 @@ module CortexReaver
     begin
       stop
       # Wait for Cortex Reaver to finish, and for the port to become available.
-      sleep 5
+      sleep 2
     ensure
       start
     end
@@ -145,6 +145,7 @@ module CortexReaver
 
     # Run Ramaze
     Ramaze.startup(
+      :force => true,
       :adapter => config[:adapter],
       :host => config[:host],
       :port => config[:port]
@@ -213,14 +214,14 @@ module CortexReaver
     setup
 
     # Check port availability
-    begin
-      socket = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
-      sockaddr = Socket.pack_sockaddr_in(*[config[:port], config[:host]])
-      socket.bind(sockaddr)
-      socket.close
-    rescue => e
-      abort "Unable to bind to port #{config[:host]}:#{config[:port]} (#{e})"
-    end
+#    begin
+#      socket = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
+#      sockaddr = Socket.pack_sockaddr_in(*[config[:port], config[:host]])
+#      socket.bind(sockaddr)
+#      socket.close
+#    rescue => e
+#      abort "Unable to bind to port #{config[:host]}:#{config[:port]} (#{e})"
+#    end
 
     if config[:daemon]
       fork do

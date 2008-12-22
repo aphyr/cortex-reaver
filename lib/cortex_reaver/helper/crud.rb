@@ -224,6 +224,11 @@ module Ramaze
                   raise unless @model.save
                 end
 
+                # Invalidate caches
+                if respond_to? :action_cache
+                  action_cache.clear
+                end
+
                 flash[:notice] = "Updated #{model_class.to_s.demodulize.downcase} #{h @model.to_s}."
                 redirect @model.url
               end

@@ -8,7 +8,8 @@ module CortexReaver
     template :new, :form
     engine :Erubis
 
-    helper :error, 
+    helper :cache,
+      :error, 
       :auth, 
       :form, 
       :workflow, 
@@ -19,6 +20,8 @@ module CortexReaver
       :crud,
       :attachments,
       :feeds
+
+    cache :index, :ttl => 60
 
     on_second_save do |project, request|
       project.tags = request[:tags]

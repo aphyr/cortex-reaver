@@ -4,7 +4,7 @@ module Ramaze
     # lists that controller's recent elements by yielding a block with
     # each record and a builder object for the feed.
     #
-    # Requires crud.
+    # Requires crud. Will attempt to cache feeds if the cache helper is available.
     module Feeds
       require 'builder'
 
@@ -19,6 +19,10 @@ module Ramaze
           def self.for_feed_block
             @for_feed_block
           end
+
+          if base.respond_to? :cache
+            cache :atom, :ttl => 300
+          end
         end
       end
 
@@ -28,7 +32,7 @@ module Ramaze
 
       private
 
-      def atom_builder(params = {:model_class => self.model_class})
+      def atom_builder(params = {:model_class => self.class.const_get('MODEL')})
         response['Content-Type'] = 'application/atom+xml'
 
         x = Builder::XmlMarkup.new(:indent => 2)
@@ -41,11 +45,15 @@ module Ramaze
         recent = params[:recent] || model_class.recent
 
         # Find update time
-        updated = recent.first.updated_on.xmlschema
+        if first = recent.first
+          updated = first.updated_on.xmlschema
+        else
+          updated = Time.now.xmlschema
+        end
 
         x.feed(:xmlns => 'http://www.w3.org/2005/Atom') do
           x.id = model_class.url
-          x.title CortexReaver.config.name + ' - ' + model_class.to_s.demodulize.titleize
+          x.title "#{CortexReaver.config[:name]} - #{model_class.to_s.demodulize.titleize}"
           # x.subtitle
           x.updated updated
           x.link :href => model_class.url
