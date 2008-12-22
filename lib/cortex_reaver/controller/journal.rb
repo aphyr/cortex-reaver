@@ -4,7 +4,6 @@ module CortexReaver
 
     map '/journals'
     layout '/text_layout'
-    deny_layout :atom
     template :edit, :form
     template :new, :form
     engine :Erubis

@@ -41,7 +41,11 @@ module CortexReaver
     end
 
     for_feed do |photograph, x|
-      x.content render_template('atom_fragment.rhtml', :photograph => photograph)
+      p photograph
+      x.content(
+        render_template('atom_fragment.rhtml', :photograph => photograph), 
+        :type => 'html'
+      )
     end
   end
 end
