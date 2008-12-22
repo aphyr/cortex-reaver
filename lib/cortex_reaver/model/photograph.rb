@@ -1,9 +1,6 @@
 module CortexReaver
   class Photograph < Sequel::Model(:photographs)
-    def self.url
-      '/photographs'
-    end
-    
+   
     include CortexReaver::Model::Timestamps
     include CortexReaver::Model::Canonical
     include CortexReaver::Model::Attachments
@@ -31,6 +28,10 @@ module CortexReaver
       presence_of :title
     end
 
+    def self.atom_url
+      '/photographs/atom'
+    end
+
     def self.get(id)
       self[:name => id] || self[id]
     end
@@ -39,6 +40,10 @@ module CortexReaver
       reverse_order(:created_on).limit(16)
     end
 
+    def self.url
+      '/photographs'
+    end
+ 
     def atom_url
       '/photographs/atom/' + name
     end

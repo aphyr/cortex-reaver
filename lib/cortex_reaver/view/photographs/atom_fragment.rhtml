@@ -9,13 +9,7 @@
     <td id="photograph_<%= @photograph.name %>" class="content">
       <img src="<%= @photograph.full_public_path %>" id="photo" alt="<%= attr_h @photograph.title %>" title="<%= attr_h @photograph.title %>" />
       <h2>
-        <% if previous_photo %>
-          <%= A('&laquo;', :href => previous_photo.url) %>
-        <% end %>
         <%=h @photograph.title %>
-        <% if next_photo %>
-          <%= A('&raquo;', :href => next_photo.url) %>
-        <% end %>
       </h2>
       <div class="byline">
         <div class="description"><%= description_of @photograph %></div>
@@ -23,54 +17,6 @@
           <div class="tags"><%= tags_on @photograph %></div>
         <% end %>
       </div>
-    </td>
-    <td class="border_right"></td>
-  </tr>
-  <tr>
-    <td class="border_bottom_left"></td>
-    <td class="border_bottom"></td>
-    <td class="border_bottom_right"></td>
-  </tr>
-</table>
-
-<% unless @photograph.comments.empty? %>
-<table class="text frame" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="border_top_left"></td>
-    <td class="border_top"></td>
-    <td class="border_top_right"></td>
-  </tr>
-  <tr>
-    <td class="border_left"></td>
-    <td class="content">
-      <div class="comments">
-        <a id="comments"></a>
-        <% @photograph.comments.each do |comment| %>
-          <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
-        <% end %>
-      </div>
-
-    </td>
-    <td class="border_right"></td>
-  </tr>
-  <tr>
-    <td class="border_bottom_left"></td>
-    <td class="border_bottom"></td>
-    <td class="border_bottom_right"></td>
-  </tr>
-</table>
-<% end %>
-
-<table class="text frame" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="border_top_left"></td>
-    <td class="border_top"></td>
-    <td class="border_top_right"></td>
-  </tr>
-  <tr>
-    <td class="border_left"></td>
-    <td class="content">
-      <%= render_template '../comments/post_form.rhtml', 'comment' => @new_comment %>
     </td>
     <td class="border_right"></td>
   </tr>

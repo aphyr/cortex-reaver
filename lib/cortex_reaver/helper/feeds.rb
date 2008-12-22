@@ -20,9 +20,13 @@ module Ramaze
             @for_feed_block
           end
 
+          # Cache feeds
           if base.respond_to? :cache
             cache :atom, :ttl => 300
           end
+
+          # Don't use layout
+          base.deny_layout :atom
         end
       end
 
@@ -58,7 +62,7 @@ module Ramaze
 
         x.feed(:xmlns => 'http://www.w3.org/2005/Atom') do
           x.id url_base + model_class.url
-          x.title "#{CortexReaver.config[:name]} - #{model_class.to_s.demodulize.titleize}"
+          x.title "#{CortexReaver.config[:site][:name]} - #{model_class.to_s.demodulize.titleize}"
           # x.subtitle
           x.updated updated
           x.link :href => url_base + model_class.url
