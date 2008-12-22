@@ -6,7 +6,7 @@
   <%= form_p :title, :model => @journal %>
   <%= live_name_field @journal %>
   <%= live_tags_field @journal %>
-  <%= form_p :body, :model => @journal, :type => 'textarea' %>
+  <%= form_p :body, :model => @journal, :type => 'textarea', :description => 'Body (<a href="/documentation/formatting" />Formatting Help</a>)' %>
   <%= attachment_form @journal %>
   <input type="submit" name="submit" />
 </form>

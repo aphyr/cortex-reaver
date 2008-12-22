@@ -1,0 +1,64 @@
+<div class="documentation">
+  <h2>Cortex Reaver Formatting</h2>
+
+  <p>Cortex Reaver will pass through all HTML in the body of a text. Hence, you
+  can specify paragraphs, block-quotes, insertions and deletions, headings, and
+  so forth using plain HTML. However, there are also some shortcuts for your
+  convenience.</p>
+
+  <h3>Markdown</h3>
+  
+  <p>All posts are automatically formatted with <a
+    href="http://daringfireball.net/projects/markdown/basics">Markdown</a>,
+  which transforms common plain-text conventions to HTML.</p>
+  
+  <ul>
+    <li>Headings are specified by underlining with the equals sign (=) and the dash (-).</li>
+    <li>Paragraphs are delineated by a blank line between blocks of text.</li>
+    <li>Surrounding text with underscores (_) and asterisks (*) denotes emphasis.</li>
+    <li>Asterisks, pluses, and dashes (*, +, -) all create unordered lists.</li>
+    <li>Numbers (no matter what their order) followed by periods, yield ordered lists.</li>
+    <li>Indenting with the right angle bracket (&gt;) gives a blockquote.</li>
+  </ul> 
+
+  <h3>Attachments</h3>
+
+  <p>To reference an attachment hacker.jpg, use a macro like:</p>
+
+  <code>[[hacker.jpg]]</code>
+
+  <p>This will create a link to the attachment with that name. You can give an
+  optional name for the link, which will be shown instead of the filename, used
+  for descriptions of images, and so forth.</p>
+
+  <code>[[hacker.jpg][A pathetic creature of meat and bone.]]</code>
+  
+  <p>A variety of attachment macros are available.</p>
+
+  <code>
+    [[link:hacker.jpg]]&nbsp;&nbsp;=&gt; An HTML link to the attachment.<br />
+    [[image:hacker.jpg]]&nbsp;=&gt; An inline image.<br />
+    [[url:hacker.jpg]]&nbsp;&nbsp;=&gt; The URL for the attachment.
+  </code>
+
+  <p>The url macro is especially useful when you want additional control:</p>
+
+  <code>
+    &lt;img src="[[url:hacker.jpg]]" style="width: 40%; float: left;" /&gt;
+  </code>
+
+  <h3>Code</h3>
+
+  <p>Cortex Reaver escapes code using HTML entities, and if you specify a
+  language, can use <a href="http://coderay.rubychan.de/">CodeRay</a> to format
+  syntax.</p>
+
+  <code>
+    &lt;cr:code lang="ruby"&gt;
+    &nbsp;&nbsp;class &lt;&lt; self
+    &lt;/cr:code&gt;
+  </code>
+
+  <p>Cortex Reaver won't do anything to ordinary &lt;code&gt; tags, however, it
+  will avoid applying Markdown to anything inside them.</p>
+</div>
