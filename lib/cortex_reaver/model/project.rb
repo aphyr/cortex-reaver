@@ -1,9 +1,5 @@
 module CortexReaver
   class Project < Sequel::Model(:projects)
-    def self.url
-      '/projects'
-    end
-
     include CortexReaver::Model::Timestamps
     include CortexReaver::Model::CachedRendering
     include CortexReaver::Model::Renderer
@@ -26,12 +22,20 @@ module CortexReaver
 
     render :body
 
+    def self.atom_url
+      '/projects/atom'
+    end
+
     def self.get(id)
       self[:name => id] || self[id]
     end
 
     def self.recent
       reverse_order(:updated_on).limit(16)
+    end
+
+    def self.url
+      '/projects'
     end
 
     def atom_url

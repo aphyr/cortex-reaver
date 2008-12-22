@@ -4,8 +4,19 @@ module CortexReaver
   class MainController < Ramaze::Controller
     map '/'
     layout '/text_layout'
-    helper :workflow, :auth, :error, :navigation, :date, :tags, :form, :feeds
+    helper :cache, 
+      :workflow, 
+      :auth, 
+      :error, 
+      :navigation, 
+      :date, 
+      :tags, 
+      :form,
+      :feeds
+
     engine :Erubis
+
+    cache :index, :ttl => 60
 
     # the index action is called automatically when no other action is specified
     def index(id = nil)
@@ -42,6 +53,11 @@ module CortexReaver
 
         render_template 'journals/list.rhtml'
       end
+    end
+
+    # TODO: We don't implement a collective ATOM feed. Yet.
+    def atom
+      error_404
     end
 
     private

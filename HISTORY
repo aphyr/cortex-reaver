@@ -1,4 +1,8 @@
+Version 0.0.4 (2008-12-21)
+  - Controller
+    - Fixed broken ATOM feeds
   - Server
+    - Added caching to common indexes and feeds.
     - Added :compile_views option to config (enabled by default in production)
       which improves rendering performance
     - Switched to Thin adapter, which significantly improves performance.

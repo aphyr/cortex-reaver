@@ -12,7 +12,8 @@ module CortexReaver
     template :new, :form
     engine :Erubis
 
-    helper :error,
+    helper :cache,
+      :error,
       :auth, 
       :form, 
       :workflow, 
@@ -25,6 +26,7 @@ module CortexReaver
       :photographs,
       :feeds
 
+    cache :index, :ttl => 60
 
     on_save do |photograph, request|
       photograph.title = request[:title]

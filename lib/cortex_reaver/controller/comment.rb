@@ -8,7 +8,8 @@ module CortexReaver
     template :new, :form
     engine :Erubis
 
-    helper :error, 
+    helper :cache,
+      :error, 
       :auth, 
       :form, 
       :workflow, 
@@ -17,6 +18,8 @@ module CortexReaver
       :canonical,
       :crud,
       :feeds
+
+    cache :index, :ttl => 60
 
     on_save do |comment, request|
       comment.title = request[:title]
@@ -101,6 +104,9 @@ module CortexReaver
 
           # Save
           raise unless @comment.save
+
+          # Clear action cache
+          action_cache.delete '/index'
 
           flash[:notice] = "Your comment (<a href=\"##{@comment.url.gsub(/.*#/, '')}\">#{h @comment.title}</a>) has been posted."
           redirect @comment.parent.url
