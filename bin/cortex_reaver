@@ -33,6 +33,11 @@ module CortexReaver
       self.config_file = file
     end
 
+    o.on '-d', '--dump file', 'Dump database' do |file|
+      @action = :dump
+      @values[:dump_file] = file
+    end
+
     o.on '-f', '--force', 'Just do it' do
       @values[:force] = true
     end
@@ -48,6 +53,12 @@ module CortexReaver
     o.on '-k', '--stop', 'Stop Cortex Reaver' do
       @action = :stop
     end
+
+    o.on '-l', '--load file', 'Load database' do |file|
+      @action = :load
+      @values[:load_file] = file
+    end
+
 
     o.on '-m', '--migrate [version]',
       'Migrate the database to schema version, or to the latest version' do |version|
@@ -73,6 +84,70 @@ module CortexReaver
 
   # Main
   case @action
+  when :dump
+    # Dump the database to disk
+    
+    # Connect to current DB
+    reload_config
+    setup_db false
+    current_version = Sequel::Migrator.get_current_migration_version(db)
+
+    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
+
+    # Prepare dump file
+    file = @values[:dump_file]
+    if File.file? file
+      exit unless confirm("Overwrite #{File.expand_path(file)} with current Cortex Reaver database?")
+      FileUtils.rm file
+    end
+
+    # Connect to dump DB
+    dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
+    Sequel::Migrator.apply dump, LIB_DIR/:migrations, current_version
+
+    # Copy tables
+    db.tables.each do |table|
+      puts "Table #{table} (#{db[table].count} rows)..."
+      dump_table = dump[table]
+      db[table].each do |row|
+        dump_table << row
+      end
+    end   
+        
+    puts "Dumped database to #{file}."
+
+  when :load
+    # Load an SQLite database from disk.
+
+    # Connect to dump DB
+    file = @values[:load_file]
+    dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
+    current_version = Sequel::Migrator.get_current_migration_version(dump)
+
+    # Connect to current DB
+    reload_config
+    setup_db false
+    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
+
+    unless confirm("Overwrite current database with #{File.expand_path(file)}?")
+      exit
+    end
+     
+    # Drop current migrations and move to the dump's version
+    system($0, '-f', '-m', '0')
+    Sequel::Migrator.apply db, LIB_DIR/:migrations, current_version
+
+    # Copy tables
+    dump.tables.each do |table|
+      puts "Table #{table} (#{dump[table].count} rows)..."
+      db_table = db[table]
+      dump[table].each do |row|
+        db_table << row
+      end
+    end   
+        
+    puts "Database #{file} loaded."
+
   when :status
     # Make a quick HTTP request to see how we're doing.
     require 'open-uri'

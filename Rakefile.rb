@@ -35,7 +35,7 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.add_dependency('hpricot', '~> 0.6')
   s.add_dependency('BlueCloth', '~> 1.0.0')
   s.add_dependency('sequel', '~> 2.7.1')
-  s.add_dependency('mongrel', '~> 1.1.5')
+  s.add_dependency('thin', '~> 1.1.0')
   s.add_dependency('exifr', '~> 0.10.7')
   s.add_dependency('coderay', '~> 0.8.260')
 # This doesn't work right on Debian yet

@@ -14,11 +14,13 @@ module CortexReaver
     # :mode        - Cortex Reaver mode: either :development or :production
     # :daemon      - Whether to daemonize or not. Defaults to :true if :mode
     #                is :production, otherwise nil.
-    # :adapter     - The Ramaze adapter name (default 'mongrel')
+    # :adapter     - The Ramaze adapter name (default 'thin')
     # :host        - Host to bind to 
     # :port        - Port to bind to (default 7000)
     # :pidfile     - Process ID file for this server. Defaults to 
     #                HOME_DIR/cortex_reaver_<host>_<port>.pid
+    # :compile_views - Whether to cache compiled view templates. Defaults to
+    #                  true in production mode.
     #
     # Site configuration options
     # :site = {
@@ -37,7 +39,7 @@ module CortexReaver
       self[:view_root] = File.join(CortexReaver::LIB_DIR, 'view')
       self[:log_root] = File.join(CortexReaver::HOME_DIR, 'log')
       self[:mode] = :production
-      self[:adapter] = 'mongrel'
+      self[:adapter] = 'thin'
       self[:host] = nil
       self[:port] = 7000
 
@@ -62,6 +64,9 @@ module CortexReaver
 
       # Daemon mode
       self[:daemon] ||= true if self[:mode] == :production
+
+      # Compile views
+      self[:compile_views] ||= true if self[:mode] == :production
     end
   end
 end
