@@ -11,6 +11,14 @@ simple attachments. Features include canonically named URLs
 modules for content (HTML sanitizing, attachment references, BlueCloth, etc),
 and custom pages.
 
+Why Cortex Reaver
+-----------------
+
+- Adaptible. Runs on every web server and database Ramaze and Sequel support.
+- Visual. Large, beautiful photographs, with concise EXIF support.
+- Comprehensive. Comments, file attachments, and tags on everything.
+- Devastating. The main page of Aphyr.com scales to ~400 requests/second.
+
 Getting Started
 ---------------
 

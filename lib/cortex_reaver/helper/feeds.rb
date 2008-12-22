@@ -51,21 +51,26 @@ module Ramaze
           updated = Time.now.xmlschema
         end
 
+        # Construct URL base
+        port = CortexReaver.config[:port]
+        url_base = "#{request.scheme}://#{request.host}"
+        url_base << ":#{port}" unless port == 80
+
         x.feed(:xmlns => 'http://www.w3.org/2005/Atom') do
-          x.id = model_class.url
+          x.id url_base + model_class.url
           x.title "#{CortexReaver.config[:name]} - #{model_class.to_s.demodulize.titleize}"
           # x.subtitle
           x.updated updated
-          x.link :href => model_class.url
-          x.link :href => model_class.atom_url, :rel => 'self'
+          x.link :href => url_base + model_class.url
+          x.link :href => (url_base + model_class.atom_url), :rel => 'self'
 
           recent.all do |model|
             x.entry do
-              x.id model.url
+              x.id url_base + model.url
               x.title model.title
               x.published model.created_on.xmlschema
               x.updated model.updated_on.xmlschema
-              x.link :href => model.url, :rel => 'alternate'
+              x.link :href => (url_base + model.url), :rel => 'alternate'
 
               x.author do
                 x.name model.user.name
