@@ -38,10 +38,9 @@
 # Defaults to true in production mode, false in development mode.
 #  :daemon: true
 
-# Ramaze host, port, and adapter. Defaults to nil (listens on all interfaces), mongrel,
-# and port 7000.
+# Ramaze host, port, and adapter. Defaults to nil (listens on all interfaces), htin, and port 7000.
 #  :host: 127.0.0.1
-#  :adapter: 'mongrel'
+#  :adapter: 'thin'
 #  :port: 7000
 
 # Process ID file: stores each Cortex Reaver's process ID, so you can control it later.

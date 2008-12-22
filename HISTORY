@@ -1,4 +1,14 @@
-Version 0.0.3 (2008-12-16)
+  - Server
+    - Added :compile_views option to config (enabled by default in production)
+      which improves rendering performance
+    - Switched to Thin adapter, which significantly improves performance.
+    - Dump current database to disk (an SQLite file) with cortex_reaver --dump file
+    - Load database from a dump with cortex_reaver --load file
+      These are both pretty naive approaches, but since I haven't done anything
+      really tricky in Sequel, ought to work okay. Let me know if you spot any
+      inconsistencies. There is no locking, and your own database's backup 
+      functionality is always best. :)
+Version 0.0.3 (2008-12-18)
   - Server
     - Replaced bin/console with bin/cortex_reaver -i
   - Renderer

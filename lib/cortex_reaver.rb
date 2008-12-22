@@ -46,6 +46,7 @@ module CortexReaver
     # Tell Ramaze where to find public files and views
     Ramaze::Global.public_root = LIB_DIR/:public
     Ramaze::Global.view_root = config[:view_root]
+    Ramaze::Global.compile = config[:compile_views]
 
     # Check directories
     if config[:public_root] and not File.directory? config[:public_root]
