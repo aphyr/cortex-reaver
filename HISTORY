@@ -1,5 +1,7 @@
   - Controller
     - More ATOM fixes/tweaks; actually works now, caches, no layout.
+    - Fixed project canonicalized names checking for conflicts with journals,
+      not other projects.
 Version 0.0.4 (2008-12-21)
   - Controller
     - Fixed broken ATOM feeds

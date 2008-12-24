@@ -122,6 +122,8 @@ module Ramaze
                     raise unless @model.save
                   end
 
+                  raise RuntimeError.new("Ack!")
+
                   flash[:notice] = "Created #{model_class.to_s.demodulize.downcase} #{h @model.to_s}."
                   redirect @model.url
                 end
