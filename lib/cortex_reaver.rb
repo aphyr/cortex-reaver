@@ -101,6 +101,12 @@ module CortexReaver
         Ramaze::Log.loggers << Ramaze::Logger::Informer.new(
           File.join(config[:log_root], 'development.log')
         )
+
+        # Also use SQL log
+        require 'logger'
+        db.logger = Logger.new(
+          File.join(config[:log_root], 'sql.log')
+        )
       end
     else
       raise ArgumentError.new("unknown Cortex Reaver mode #{config[:mode].inspect}. Expected one of [:production, :development].")
