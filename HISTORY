@@ -1,3 +1,4 @@
+Version 0.0.5
   - Controller
     - More ATOM fixes/tweaks; actually works now, caches, no layout.
     - Fixed project canonicalized names checking for conflicts with journals,
