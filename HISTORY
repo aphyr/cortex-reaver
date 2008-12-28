@@ -1,4 +1,11 @@
-Version 0.0.5
+Version 0.0.6 (2008-12-27)
+  - Model
+    - Changed MySQL table storage engines to InnoDB; transactions now ensure
+      model correctness under many failures.
+  - Controller
+    - Started administration tools controller for database integrity checks
+      cache refreshing, etc.
+Version 0.0.5 (2008-12-24)
   - Controller
     - More ATOM fixes/tweaks; actually works now, caches, no layout.
     - Fixed project canonicalized names checking for conflicts with journals,

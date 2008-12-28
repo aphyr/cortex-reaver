@@ -30,9 +30,12 @@ module CortexReaver
 
     # Recalculates the number of children on each tag, and saves the updated values.
     def self.refresh_counts
-      all.each do |tag|
-        tag.refresh_count
+      updated = []
+      sort(:title).all.each do |tag|
+        result = tag.refresh_count
+        updated << [tag, result] if result
       end
+      updated
     end
 
     def self.get(id)
@@ -47,18 +50,24 @@ module CortexReaver
       '/tags/atom/' + name
     end
 
-    # Recalculates the number of children on this tag, and saves the update value.
+    # Recalculates the number of children on this tag, and saves the update value. Returns [old_count, new_count] if changed.
     def refresh_count
       # Find counts
+      old_count = self[:count]
       self[:count] = photographs_dataset.count + 
         journals_dataset.count +
         pages_dataset.count + 
         projects_dataset.count
       
       # Save and return
-      self.skip_timestamp_update = true
+      changed = changed_columns.include? :count
       self.save
-      self[:count]
+
+      if changed
+        [old_count, self[:count]]
+      else
+        nil
+      end
     end
 
     def url

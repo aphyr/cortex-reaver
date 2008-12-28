@@ -1,0 +1,24 @@
+<h2>Updated tag counts:</h2>
+
+<% if @updated.empty? %>
+  <p>Everything up to date.</p>
+<% else %>
+  <p>These tags had an incorrectly cached number of associated objects, and were updated to reflect the correct value.</p>
+
+  <table>
+    <thead>
+      <th>Tag</th>
+      <th>Old</th>
+      <th>New</th>
+    </thead>
+    <tbody>
+      <% @updated.each do |tag, counts| %>
+        <tr>
+          <td><%=h tag.title %></td>
+          <td><%= counts[0] %></td>
+          <td><%= counts[1] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
