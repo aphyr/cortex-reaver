@@ -7,6 +7,8 @@ module CortexReaver
     many_to_many :projects, :class => 'CortexReaver::Project'
     many_to_many :pages, :class => 'CortexReaver::Page'
 
+    subset :unused, :count => 0
+
     validates do
       uniqueness_of :name
       presence_of :name
@@ -31,7 +33,7 @@ module CortexReaver
     # Recalculates the number of children on each tag, and saves the updated values.
     def self.refresh_counts
       updated = []
-      sort(:title).all.each do |tag|
+      order(:title).all.each do |tag|
         result = tag.refresh_count
         updated << [tag, result] if result
       end

@@ -1,4 +1,4 @@
-<h2>Updated tag counts:</h2>
+<h2>Updated tag counts</h2>
 
 <% if @updated.empty? %>
   <p>Everything up to date.</p>
@@ -21,4 +21,17 @@
       <% end %>
     </tbody>
   </table>
+<% end %>
+
+
+<h2>Deleted unused tags</h2>
+<% if @deleted.empty? %>
+  <p>Every tag is currently in use.</p>
+<% else %>
+  <p>These tags had no associated objects, and were deleted:</p>
+  <ul>
+    <% @deleted.each do |tag| %>
+      <li><%=h tag.title %></li>
+    <% end %>
+  </ul>
 <% end %>

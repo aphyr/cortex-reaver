@@ -17,7 +17,7 @@ module CortexReaver
     def update_tags
       @updated = Tag.refresh_counts
       @deleted = []
-      Tag.filter(:count => 0).all.each do |tag|
+      Tag.unused.order(:title).all.each do |tag|
         @deleted << tag.destroy
       end
     end
