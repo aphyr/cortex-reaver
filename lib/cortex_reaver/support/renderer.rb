@@ -57,7 +57,10 @@ module CortexReaver
            
             if j != 0
               # Convert to bluecloth
-              out << BlueCloth::new(text[0..j]).to_html
+              blue = BlueCloth::New(text[0..j]).to_html
+              # Increment headings by two (h1 is site header, h2 is page header)
+              blue.gsub!(/<(\/)?h(\d)>/) { |match| "<#{$1}h#{$2.to_i + 2}>" }
+              out << blue
             end
           else
             # Find end of code block

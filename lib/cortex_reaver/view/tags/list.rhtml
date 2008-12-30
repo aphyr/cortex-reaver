@@ -12,7 +12,8 @@
       </tr>
     </thead>
     <tbody>
-      <% max_count = (@tags.order(:count).reverse.first || []).count %>
+      <% top_tag = @tags.order(:count).reverse.first %>
+      <% max_count = top_tag ? top_tag.count : 1 %>
       <% @tags.each do |tag| %>
         <tr>
           <td class="title"><%= A(tag.title, :href => tag.url) %></td>
