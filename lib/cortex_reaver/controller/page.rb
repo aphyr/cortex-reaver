@@ -17,7 +17,8 @@ module CortexReaver
       :tags,
       :canonical,
       :crud,
-      :attachments
+      :attachments,
+      :pages
 
     on_second_save do |page, request|
       page.tags = request[:tags]
@@ -26,7 +27,8 @@ module CortexReaver
 
     on_save do |page, request|
       page.title = request[:title]
-      page.name = Page.canonicalize request[:name], page.id
+      page.page_id = request[:page_id]
+      page.name = Page.canonicalize request[:name], :id => page.id, :page_id => page.page_id
       page.body = request[:body]
       page.user = session[:user]
     end

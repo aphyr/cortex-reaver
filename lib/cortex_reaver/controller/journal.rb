@@ -27,11 +27,13 @@ module CortexReaver
       journal.tags = request[:tags]
       add_attachments(journal, request[:attachments])
       journal.body = request[:body]
+    
+      MainController.send(:action_cache).clear
     end
 
     on_save do |journal, request|
       journal.title = request[:title]
-      journal.name = Journal.canonicalize request[:name], journal.id
+      journal.name = Journal.canonicalize(request[:name], :id => journal.id)
       journal.user = session[:user]
     end
 

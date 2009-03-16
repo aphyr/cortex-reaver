@@ -75,6 +75,11 @@ module CortexReaver
       @action = :start
     end
 
+    o.on '-t', '--test',
+      'Run tests' do
+      @action = :test
+    end
+
     o.on '--status', 'Check Cortex Reaver status' do
       @action = :status
     end
@@ -162,7 +167,7 @@ module CortexReaver
     puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
 
     current_version = Sequel::Migrator.get_current_migration_version(db)
-    latest_version = Sequel::Migrator.latest_migration_version(LIB_DIR/:migrations)
+    latest_version = Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
 
     if version == current_version and current_version == latest_version
       puts "The database is already at the latest version (#{latest_version})."
@@ -182,7 +187,7 @@ module CortexReaver
 
     if confirm message
       puts "Migrating database from version #{current_version} to version #{version}..."
-      Sequel::Migrator.apply(db, LIB_DIR/:migrations, version)
+      Sequel::Migrator.apply(db, File.join(LIB_DIR, 'migrations'), version)
       puts "Done."
     else
       exit
@@ -223,6 +228,8 @@ module CortexReaver
   when :stop
     stop
 
+  when :test
+    require File.join(DIR, '..', 'spec', 'main.rb')
   else
     abort("Unknown action: #{@action}")
   end

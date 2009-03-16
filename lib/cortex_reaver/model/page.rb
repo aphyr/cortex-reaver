@@ -9,9 +9,14 @@ module CortexReaver
     include CortexReaver::Model::Tags
     include CortexReaver::Model::Sequenceable
 
+    belongs_to :page, :class => 'CortexReaver::Page'
+    has_many   :pages, :class => 'CortexReaver::Page'
     belongs_to :user, :class => 'CortexReaver::User'
-    has_many :comments, :class => 'CortexReaver::Comment'
+    has_many   :comments, :class => 'CortexReaver::Comment'
     many_to_many :tags, :class => 'CortexReaver::Tag'
+
+    # Top-level pages.
+    subset :top, :page_id => nil
 
     validates do
       uniqueness_of :name
@@ -35,15 +40,45 @@ module CortexReaver
 
     # Also reserve everything in the public directory, as a courtesy.
     #
-    # I can't stop you from shooting yourself in the foot, but this will help you
-    # aim higher. :)
+    # I can't stop you from shooting yourself in the foot, but this will help
+    # you aim higher. :)
     self.reserved_canonical_names += Dir.entries(CortexReaver.config[:public_root]) - ['..', '.']
 
     # Use standard cached renderer
     render :body
 
-    def self.get(id)
-      self[:name => id] || self[id]
+    # Canonicalize only in the context of our parent's namespace.
+    # Arguments:
+    # - A proper canonical name to check for conflicts with
+    # - :id => An optional id to ignore conflicts with
+    # - :page_id => A parent page_id to use as the namespace for conflict checking.
+    def self.similar_canonical_names(proper, opts={})
+      id = opts[:id]
+      page_id = opts[:page_id]
+
+      similar = []
+      # Get parent page id for the current context.
+      if filter(canonical_name_attr => proper, :page_id => page_id).exclude(:id => id).limit(1).count > 0
+        # This name already exists, and it's not ours.
+        similar << proper
+        similar += filter(canonical_name_attr.like(/^#{proper}\-[0-9]+$/)).filter(:page_id => page_id).map(canonical_name_attr)
+      end
+      similar
+    end
+    
+    # get('foo', 'bar', 'baz')
+    # get('foo/bar/baz')
+    def self.get(ids)
+      unless ids.is_a? Array
+        ids = ids.split('/')
+      end
+
+      # Look up ids by nested names.
+      ids.inject(nil) do |page, name|
+        puts "Searching for #{name} in #{page.inspect}"
+        parent_id = page ? page.id : nil
+        self[:page_id => parent_id, :name => name]
+      end
     end
 
     def self.url
@@ -55,15 +90,29 @@ module CortexReaver
     end
 
     def atom_url
-      '/pages/atom/' + name
+      '/pages/atom/' + id.to_s
     end
 
     def url
-      '/' + name
+      if page
+        page.url + '/' + name
+      else
+        '/' + name
+      end
     end
 
     def to_s
       title || name
+    end
+
+    # Returns true if this page is located underneath another page.
+    # within?(self) => true.
+    def within?(other)
+      if parent = page
+        self == other or parent.within?(other)
+      else
+        self == other
+      end
     end
 
     # Create a default page if none exists.

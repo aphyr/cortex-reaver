@@ -10,19 +10,19 @@ rescue LoadError => e
   puts e
   puts "You probably need to install some packages Cortex Reaver needs. Try: 
 apt-get install librmagick-ruby libmysql-ruby;
-gem install mongrel ramaze sequel yaml erubis BlueCloth rmagick exifr hpricot builder syntax;"
+gem install thin mongrel ramaze sequel yaml erubis BlueCloth rmagick exifr hpricot builder coderay;"
   exit 255
 end
 
 module CortexReaver
   # Paths
-  ROOT = File.expand_path(__DIR__/'..')
-  LIB_DIR = ROOT/:lib/:cortex_reaver
+  ROOT = File.expand_path(File.join(__DIR__, '..'))
+  LIB_DIR = File.join(ROOT, 'lib', 'cortex_reaver')
   HOME_DIR = Dir.pwd
   
   # Some basic initial requirements
-  require LIB_DIR/:version
-  require LIB_DIR/:config
+  require File.join(LIB_DIR, 'version')
+  require File.join(LIB_DIR, 'config')
 
   # Returns the site configuration
   def self.config
@@ -44,7 +44,7 @@ module CortexReaver
   # Prepare Ramaze, create directories, etc.
   def self.init
     # Tell Ramaze where to find public files and views
-    Ramaze::Global.public_root = LIB_DIR/:public
+    Ramaze::Global.public_root = File.join(LIB_DIR, 'public')
     Ramaze::Global.view_root = config[:view_root]
     Ramaze::Global.compile = config[:compile_views]
 
@@ -116,12 +116,12 @@ module CortexReaver
   # Load libraries
   def self.load
     # Load controllers and models
-    acquire LIB_DIR/:snippets/'**'/'*'
-    acquire LIB_DIR/:support/'*'
-    acquire LIB_DIR/:model/'*'
-    acquire LIB_DIR/:helper/'*'
-    acquire LIB_DIR/:controller/'*'
-    acquire LIB_DIR/'**'/'*'
+    Ramaze::acquire File.join(LIB_DIR, 'snippets', '**', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'support', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'model', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'helper', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'controller', '*')
+    Ramaze::acquire File.join(LIB_DIR, '**', '*')
   end
 
   # Reloads the site configuration
@@ -195,7 +195,7 @@ module CortexReaver
     # Check schema
     if check_schema and
        Sequel::Migrator.get_current_migration_version(@db) !=
-       Sequel::Migrator.latest_migration_version(LIB_DIR/:migrations)
+       Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
 
       raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
     end

@@ -11,31 +11,8 @@ module CortexReaver
       require 'bluecloth'
       require 'hpricot'
       require 'coderay'
+      require 'sanitize'
 
-      # Elements to allow in sanitized HTML.
-      ELEMENTS = [
-        'a', 'b', 'blockquote', 'br', 'code', 'dd', 'dl', 'dt', 'em', 'i', 'li',
-        'ol', 'p', 'pre', 'small', 'strike', 'strong', 'sub', 'sup', 'u', 'ul'
-      ]
-   
-      # Attributes to allow in sanitized HTML elements.
-      ATTRIBUTES = {
-        'a' => ['href', 'title'],
-        'pre' => ['class']
-      }
-      
-      # Attributes to add to sanitized HTML elements.
-      ADD_ATTRIBUTES = {
-        'a' => {'rel' => 'nofollow'}
-      }
-   
-      # Attributes that should be checked for valid protocols.
-      PROTOCOL_ATTRIBUTES = {'a' => ['href']}
-   
-      # Valid protocols.
-      PROTOCOLS = ['ftp', 'http', 'https', 'mailto']
-
-      
       # Renders plain text and html to html. If parse_code isn't true, only
       # runs bluecloth on text *outside* any <code>...</code> blocks.
       def bluecloth(text, parse_code = true)
@@ -57,7 +34,7 @@ module CortexReaver
            
             if j != 0
               # Convert to bluecloth
-              blue = BlueCloth::New(text[0..j]).to_html
+              blue = BlueCloth::new(text[0..j]).to_html
               # Increment headings by two (h1 is site header, h2 is page header)
               blue.gsub!(/<(\/)?h(\d)>/) { |match| "<#{$1}h#{$2.to_i + 2}>" }
               out << blue
@@ -132,7 +109,7 @@ module CortexReaver
             case prefix
             when 'image'
               # Create an inline image
-              "<img src=\"#{target.public_path}\" alt=\"#{name.gsub('"', '&quot;')}\" title=\"#{name.gsub('"', '&quot')}\" />"
+              "<img class=\"attachment\" src=\"#{target.public_path}\" alt=\"#{name.gsub('"', '&quot;')}\" title=\"#{name.gsub('"', '&quot')}\" />"
             when 'url'
               # Create a URL
               target.public_path
@@ -174,54 +151,10 @@ module CortexReaver
         end
       end
 
-      # Stolen wholesale from Ryan's Thoth (http://github.com/rgrove/thoth/)
-      # Who adapted it from http://rid.onkulo.us/archives/14-sanitizing-html-with-ruby-and-hpricot
       def sanitize_html(html)
         return html if html.nil?
 
-        h = Hpricot(html)
-  
-        h.search('*').each do |el|
-          if el.elem?
-            tag = el.name.downcase
-   
-            if ELEMENTS.include?(tag)
-              if ATTRIBUTES.has_key?(tag)
-                # Delete any attribute that isn't in the whitelist for this
-                # particular element.
-                el.raw_attributes.delete_if do |key, val|
-                  !ATTRIBUTES[tag].include?(key.downcase)
-                end
-   
-                # Check applicable attributes for valid protocols.
-                if PROTOCOL_ATTRIBUTES.has_key?(tag)
-                  el.raw_attributes.delete_if do |key, val|
-                    PROTOCOL_ATTRIBUTES[tag].include?(key.downcase) &&
-                        (!(val.downcase =~ /^([^:]+)\:/) || !PROTOCOLS.include?($1))
-                  end
-                end
-              else
-                # Delete all attributes from elements with no whitelisted
-                # attributes.
-                el.raw_attributes = {}
-              end
-   
-              # Add required attributes.
-              if ADD_ATTRIBUTES.has_key?(tag)
-                el.raw_attributes.merge!(ADD_ATTRIBUTES[tag])
-              end
-            else
-              # Delete any element that isn't in the whitelist.
-              el.parent.replace_child(el, el.children)
-            end
-          elsif el.comment?
-            # Delete all comments, since it's possible to make IE execute JS
-            # within conditional comments.
-            el.swap('')
-          end
-        end
-   
-        h.to_s
+        Sanitize.clean(html, Sanitize::Config::BASIC)
       end
 
       # Default renderer

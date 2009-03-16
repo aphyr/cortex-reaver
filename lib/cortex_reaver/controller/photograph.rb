@@ -30,7 +30,7 @@ module CortexReaver
 
     on_save do |photograph, request|
       photograph.title = request[:title]
-      photograph.name = Photograph.canonicalize request[:name], photograph.id
+      photograph.name = Photograph.canonicalize request[:name], :id => photograph.id
       photograph.user = session[:user]
     end
 
@@ -38,6 +38,8 @@ module CortexReaver
       photograph.tags = request[:tags]
       photograph.image = request[:image][:tempfile] if request[:image]
       photograph.infer_date_from_exif! if request[:infer_date]
+
+      MainController.action_cache.clear
     end
 
     for_feed do |photograph, x|

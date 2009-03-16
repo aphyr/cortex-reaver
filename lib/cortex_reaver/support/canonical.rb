@@ -9,6 +9,11 @@ module CortexReaver
       # The attribute we infer the canonical name from, if not set.
       CANONICAL_INFERENCE_ATTR = :title
 
+      # Lower case, remove special chars, and replace with hyphens.
+      def self.formalize(string)
+        string.downcase.gsub(/[^a-z0-9_]/, '-').squeeze('-')[0..250].sub(/-$/, '')
+      end
+
       def self.included(base)
         base.class_eval do
           # Canonical names which cannot be reserved.
@@ -21,10 +26,10 @@ module CortexReaver
           end
 
           # Canonicalize a string. Optionally, ignore conflicts with the record
-          # with id.
-          def self.canonicalize(string, id = nil)
+          # with opts[:id]
+          def self.canonicalize(string, opts={})
             # Lower case, remove special chars, and replace with hyphens.
-            proper = string.downcase.gsub(/[^a-z0-9_]/, '-').squeeze('-')[0..250].sub(/-$/, '')
+            proper = Canonical.formalize string
 
             # If proper is blank, just return it at this point.
             if proper.blank?
@@ -34,47 +39,32 @@ module CortexReaver
             # Numeric suffix to append
             suffix = nil
 
-            if proper != filter(:id => id).map(canonical_name_attr).first
-              # We don't already have this name.
+            # Get similar names from the class
+            similar = similar_canonical_names(proper, opts)
 
-              similar = []
-
-              if filter(canonical_name_attr => proper).limit(1).count > 0
-                similar << proper
-                # This name already exists, and it's not ours!
-                similar += filter(canonical_name_attr.like(/^#{proper}\-[0-9]+$/)).map(canonical_name_attr)
-              end
-
-              # Check for reserved names
-              reserved_canonical_names.each do |name|
-                if name =~ /^#{proper}(-\d+)?$/
-                  similar << name
-                end
-              end
-
-              # Find possible conflicting names from actions on this model's controller.
-#              if self.respond_to? :url and controller = Ramaze::Controller.at(self.url)
-#                similar += controller.action_methods.select do |action|
-#                  action =~ /^#{proper}(-\d+)?$/
-#                end
-#              end
-
-              # Extract numeric suffices
-              suffices = {}
-              similar.each do |name|
-                suffices[name[/\d$/].to_i] = true
-              end
-
-              # Compute suffix
-              unless suffices.empty?
-                i = 1
-                while suffices.include? i
-                  i += 1
-                end
-                suffix = i
+            # Get reserved names from the class
+            reserved_canonical_names.each do |name|
+              if name =~ /^#{proper}(-\d+)?$/
+                similar << name
               end
             end
 
+            # Extract numeric suffices
+            suffices = {}
+            similar.each do |name|
+              suffices[name[/\d$/].to_i] = true
+            end
+
+            # Compute suffix
+            unless suffices.empty?
+              i = 1
+              while suffices.include? i
+                i += 1
+              end
+              suffix = i
+            end
+           
+            # Apply suffix
             if suffix
               proper + '-' + suffix.to_s
             else
@@ -100,6 +90,20 @@ module CortexReaver
               @canonical_name_attr || CANONICAL_NAME_ATTR
             end
           end
+
+          # Canonicalize only in the context of our parent's namespace.
+          # Takes a proper canonical name to check for conflicts with, and an optional
+          # id to ignore conflicts with
+          def self.similar_canonical_names(proper, opts={})
+            id = opts[:id]
+            similar = []
+            if filter(canonical_name_attr => proper).exclude(:id => id).limit(1).count > 0
+              # This name already exists, and it's not ours.
+              similar << proper
+              similar += filter(canonical_name_attr.like(/^#{proper}\-[0-9]+$/)).map(canonical_name_attr)
+            end
+            similar
+          end 
         end
       end
     end

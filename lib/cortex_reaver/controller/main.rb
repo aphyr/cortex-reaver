@@ -12,23 +12,24 @@ module CortexReaver
       :date, 
       :tags, 
       :form,
-      :feeds
+      :feeds,
+      :pages
 
     engine :Erubis
 
     cache :index, :ttl => 60
 
     # the index action is called automatically when no other action is specified
-    def index(id = nil)
-      if id and @page = Page.get(id)
+    def index(*ids)
+      if not ids.empty? and @page = Page.get(ids)
         # Render that page.
         @title = @page.title
         
-        workflow "Edit this page", R(PageController, :edit, @page.name)
-        workflow "Delete this page", R(PageController, :delete, @page.name)
+        workflow "Edit this page", R(PageController, :edit, @page.id)
+        workflow "Delete this page", R(PageController, :delete, @page.id)
 
         render_template 'pages/show'
-      elsif id
+      elsif not ids.empty?
         # Didn't have that page
         error_404
       else
@@ -41,10 +42,10 @@ module CortexReaver
           @sidebar.unshift render_template('photographs/sidebar.rhtml')
         end
 
-        workflow "New Page", R(JournalController, :new)
-        workflow "New Project", R(JournalController, :new)
+        workflow "New Page", R(PageController, :new)
+        workflow "New Project", R(ProjectController, :new)
         workflow "New Journal", R(JournalController, :new)
-        workflow "New Photograph", R(JournalController, :new)
+        workflow "New Photograph", R(PhotographController, :new)
 
         feed 'Photographs', Rs(PhotographController, :atom)
         feed 'Journals', Rs(JournalController, :atom)
