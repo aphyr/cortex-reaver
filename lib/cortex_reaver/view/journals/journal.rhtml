@@ -8,6 +8,7 @@
   </div>
   <div class="body">
     <%= @journal.body_cache %>
+    <div class="clear"></div>
   </div>
   <div class="footer">
     <ul class="actions">
@@ -16,11 +17,11 @@
         <%= @journal.comment_count %> <%= @journal.comment_count == 1 ? 'comment' : 'comments' %>
       </a></li>
       <% if admin? %>
-        <li><a class="edit-link" href="/journals/edit/<%= @journal.name %>">
+        <li><a class="edit-link" href="/journals/edit/<%= @journal.id %>">
           <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
         </a></li>
         <li >
-          <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/journals/delete/#{@journal.name}", :onclick => "return confirm('Are you sure you want to delete this journal?');" %>
+          <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/journals/delete/#{@journal.id}", :onclick => "return confirm('Are you sure you want to delete this journal?');" %>
         </li>
       <% end %>
     </ul>

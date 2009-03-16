@@ -176,7 +176,7 @@ module Ramaze
       def delete(id)
         require_admin
 
-        if @model = model_class.get(id)
+        if @model = model_class[id]
           if @model.destroy
             flash[:notice] = "#{model_class.to_s.demodulize.downcase} #{h @model.to_s} deleted."
             redirect Rs()
@@ -193,13 +193,9 @@ module Ramaze
       def edit(id = nil)
         require_admin
 
-        if @model = model_class.get(id)
+        if @model = model_class[id]
           @title = "Edit #{model_class.to_s.demodulize.downcase} #{h @model.to_s}"
-          if @model.class.respond_to? :canonical_name_attr
-            @form_action = "edit/#{@model.send(@model.class.canonical_name_attr)}"
-          else
-            @form_action = "edit/#{@model.id}"
-          end
+          @form_action = "edit/#{@model.id}"
 
           set_singular_model_var @model
 
@@ -303,14 +299,9 @@ module Ramaze
           end
           
           # ID component of edit/delete links
-          if @model.class.respond_to? :canonical_name_attr
-            id = @model.send(@model.class.canonical_name_attr)
-          else
-            id = @model.id
-          end
 
-          workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, id)
-          workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, id)
+          workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, @model.id)
+          workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
           render_template :show
         elsif id
           # Didn't find that model

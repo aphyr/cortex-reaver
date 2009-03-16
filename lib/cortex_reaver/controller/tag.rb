@@ -22,7 +22,7 @@ module CortexReaver
 
     on_save do |tag, request|
       tag.title = request[:title]
-      tag.name = Tag.canonicalize request[:name], tag.id
+      tag.name = Tag.canonicalize request[:name], :id => tag.id
     end
 
     def index(*ids)

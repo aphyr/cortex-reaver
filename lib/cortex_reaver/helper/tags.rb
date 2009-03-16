@@ -7,7 +7,7 @@ module Ramaze
         title = opts[:title] || name.to_s.titleize
         
         s = "<p><label for=\"#{name}\">#{title}</label>"
-        s << "<input name=\"#{name}\" id=\"#{name}\" type=\"text\" class=\"autobox\" value=\"#{attr_h(tags_on(model, false))}\" />"
+        s << "<input name=\"#{name}\" id=\"#{name}\" type=\"text\" class=\"acfb-input\" value=\"#{attr_h(tags_on(model, false))}\" />"
         s << "</p>"
 
         s << <<EOF

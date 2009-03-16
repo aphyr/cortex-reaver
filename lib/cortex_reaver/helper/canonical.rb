@@ -7,7 +7,7 @@ module Ramaze
       def canonicalize
         respond self.class.const_get('MODEL').canonicalize(
           request[:new],
-          request[:id]
+          :id => request[:id]
         )
       end
 

@@ -18,8 +18,8 @@
         <tr>
           <td class="title"><%= A(tag.title, :href => tag.url) %></td>
            <% if admin? %>
-            <td><a href="/tags/edit/<%= tag.name %>">Edit</a></td>
-            <td><%= A 'Delete', :href => "/tags/delete/#{tag.name}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></td>
+            <td><a href="/tags/edit/<%= tag.id %>">Edit</a></td>
+            <td><%= A 'Delete', :href => "/tags/delete/#{tag.id}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></td>
           <% end %>
          <td class="count" style="width: <%= admin? ? 60 : 80 %>%"><div class="percent-bar" style="width: <%= tag.count.to_f / max_count * 100 %>%"><%= tag.count %></div></td>
         </tr>

@@ -20,7 +20,7 @@
             </li>
             <% if admin? %>
               <li>
-                <%= A('Edit', :href => Rs(:edit, @photograph.name)) %>
+                <%= A('Edit', :href => Rs(:edit, @photograph.id)) %>
               </li>
             <% end %>
             <% if next_photo = @photograph.next %>
