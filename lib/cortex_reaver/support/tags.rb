@@ -32,8 +32,13 @@ module CortexReaver
             remove_all_tags
           end
 
+          # Returns all models with ANY of the following tags
+          def self.tagged_with_any_of(tags)
+            tagged_with(tags, false)
+          end
+          
           # Returns all models with ALL the following tags:
-          def self.tagged_with(tags)
+          def self.tagged_with(tags, all=true)
             # Find map between this model and tags, e.g. pages_tags
             map = [table_name.to_s, 'tags'].sort.join('_').to_sym
             
@@ -48,11 +53,17 @@ module CortexReaver
             # to contain only rows with one of our interesting tags.
             #
             # Man, don't you wish MySQL had intersect?
-            filter(:id =>
-              CortexReaver.db[map].filter(:tag_id => ids).group(own_id).having(
-                "count(*) = #{ids.size}"
-              ).select(own_id)
-            )
+            if all
+              filter(:id =>
+                CortexReaver.db[map].filter(:tag_id => ids).group(own_id).having(
+                  "count(*) = #{ids.size}"
+                ).select(own_id)
+              )
+            else
+              filter(:id => 
+                CortexReaver.db[map].filter(:tag_id => ids).select(own_id)
+              )
+            end
           end
         end
       end
