@@ -15,7 +15,7 @@ module CortexReaver
 
       # Renders plain text and html to html. If parse_code isn't true, only
       # runs bluecloth on text *outside* any <code>...</code> blocks.
-      def bluecloth(text, parse_code = true)
+      def bluecloth(text, parse_code = true, increment_headers = true)
         return text if text.nil?
 
         if parse_code
@@ -35,8 +35,10 @@ module CortexReaver
             if j != 0
               # Convert to bluecloth
               blue = BlueCloth::new(text[0..j]).to_html
-              # Increment headings by two (h1 is site header, h2 is page header)
-              blue.gsub!(/<(\/)?h(\d)>/) { |match| "<#{$1}h#{$2.to_i + 2}>" }
+              if increment_headers
+                # Increment headings by two (h1, h2 are page/entry headers)
+                blue.gsub!(/<(\/)?h(\d)>/) { |match| "<#{$1}h#{$2.to_i + 2}>" }
+              end
               out << blue
             end
           else
