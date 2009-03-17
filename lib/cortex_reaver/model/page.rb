@@ -47,6 +47,18 @@ module CortexReaver
     # Use standard cached renderer
     render :body
 
+    def render(text)
+      bluecloth(
+        macro(
+          erubis_filter(
+            syntax_highlight(
+              text
+            )
+          )
+        ), false, false
+      )
+    end
+
     # Canonicalize only in the context of our parent's namespace.
     # Arguments:
     # - A proper canonical name to check for conflicts with
