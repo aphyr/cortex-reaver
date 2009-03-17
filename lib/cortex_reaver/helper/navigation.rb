@@ -104,6 +104,22 @@ module Ramaze
         links << '</ol>'
       end
 
+      # Produces a section navigation list from an array of titles to urls.
+      def section_nav(sections)
+        s = "<ul>\n"
+        sections.each do |section|
+          title = section.first
+          url = section.last
+          klass = url.gsub(/\//, '').gsub(/_/, '-')
+          s << '<li><a class="' + klass
+          s << ' selected' if request.request_uri == url 
+          s << '" href="' + attr_h(url) + '">'
+          s << title
+          s << "</a></li>\n"
+        end
+        s << "\n</ul>"
+      end
+
       # Returns a link to a user.
       def user_link(x)
         case x
