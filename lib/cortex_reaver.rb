@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 begin
+  require 'find'
   require 'rubygems'
   require 'ramaze'
   require 'sequel'
@@ -45,7 +46,7 @@ module CortexReaver
   def self.init
     # Tell Ramaze where to find public files and views
     Ramaze::Global.public_root = File.join(LIB_DIR, 'public')
-    Ramaze::Global.view_root = config[:view_root]
+    Ramaze::Global.view_root = config[:view_root] || File.join(CortexReaver::LIB_DIR, 'view')
     Ramaze::Global.compile = config[:compile_views]
 
     # Check directories
@@ -111,6 +112,40 @@ module CortexReaver
     else
       raise ArgumentError.new("unknown Cortex Reaver mode #{config[:mode].inspect}. Expected one of [:production, :development].")
     end
+
+    # Prepare view directory
+    if config[:view_root]
+      if not File.directory? config[:view_root]
+        # Try to create a view directory
+        begin
+          FileUtils.mkdir_p config[:view_root]
+        rescue => e
+          Ramaze::Log.warn "Unable to create a view directory at #{config[:view_root]}: #{e}."
+        end
+      end
+
+      if File.directory? config[:view_root]
+        # Link in default views
+        source = File.join(LIB_DIR, 'view')
+        dest = config[:view_root].sub(/\/$/, '')
+        Find.find(source) do |path|
+          dest_path = path.sub(source, dest)
+          if File.directory? path and not File.exists? dest_path
+            # Link this directory
+            FileUtils.ln_s path, dest_path
+            Find.prune
+          elsif File.file? path and not File.exists? dest_path
+            FileUtils.ln_s path, dest_path
+          end
+        end
+      end
+    end
+
+    # Load plugins
+    config[:plugins].each do |plugin|
+      Ramaze::Log.info "Loading plugin #{plugin}"
+      require File.join(config[:plugin_root], plugin)
+    end
   end
 
   # Load libraries
@@ -144,6 +179,18 @@ module CortexReaver
   def self.run
     # Shutdown callback
     at_exit do
+      # Unlink templates
+      Find.find(config[:view_root]) do |path|
+        if File.symlink? path # TODO: identify link target
+          begin
+            File.delete path
+          rescue => e
+            Ramaze::Log.error "Unable to unlink symlinked view #{path}: #{e}"
+          end
+        end
+      end
+
+      # Remove pidfile
       FileUtils.rm(config[:pidfile]) if File.exist? config[:pidfile]
     end
 

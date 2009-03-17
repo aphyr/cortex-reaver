@@ -11,6 +11,8 @@ module CortexReaver
     #                Cortex Reaver's builtin templates.
     # :log_root    - The directory that Cortex Reaver should log to. Defaults to
     #                HOME_DIR/log. If nil, file logging disabled.
+    # :plugin_root - The directory that Cortex Reaver plugins live in. Defaults
+    #                to HOME_DIR/plugins.
     # :mode        - Cortex Reaver mode: either :development or :production
     # :daemon      - Whether to daemonize or not. Defaults to :true if :mode
     #                is :production, otherwise nil.
@@ -21,6 +23,7 @@ module CortexReaver
     #                HOME_DIR/cortex_reaver_<host>_<port>.pid
     # :compile_views - Whether to cache compiled view templates. Defaults to
     #                  true in production mode.
+    # :plugins     - Which plugins to enable. Defaults to [].
     #
     # Site configuration options
     # :site = {
@@ -36,12 +39,14 @@ module CortexReaver
        'cortex_reaver.db'
       )
       self[:public_root] = File.join(CortexReaver::HOME_DIR, 'public')
-      self[:view_root] = File.join(CortexReaver::LIB_DIR, 'view')
+      self[:view_root] = nil
       self[:log_root] = File.join(CortexReaver::HOME_DIR, 'log')
+      self[:plugin_root] = File.join(CortexReaver::HOME_DIR, 'plugins')
       self[:mode] = :production
       self[:adapter] = 'thin'
       self[:host] = nil
       self[:port] = 7000
+      self[:plugins] = []
 
       self[:site] = {
         :name => 'Cortex Reaver',

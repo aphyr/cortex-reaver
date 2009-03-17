@@ -14,8 +14,6 @@ module Ramaze
 
 <script type="text/javascript">
 /* <![CDATA[ */
-
-
 /* ]]> */
 </script>
 EOF

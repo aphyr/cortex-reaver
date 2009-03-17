@@ -235,7 +235,7 @@ module CortexReaver
       # Returns a url for this record, viewed in an absolute window. TODO: handle non-default window sizes.
       def absolute_window_url(size = self.class.window_size)
         page = (Float(position) / size).floor
-        self.class.url + '/page/' + page.to_s + '#' + self.class.to_s.underscore + 
+        self.class.url + '/page/' + page.to_s + '#' + self.class.to_s.demodulize.underscore + 
           '_' + send(self.class.canonical_name_attr)
       end
 
