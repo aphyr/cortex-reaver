@@ -41,14 +41,14 @@
     </div>
 
     <div id="sections">
-      <ul>
-        <li><a href="/journals">Journal</a></li>
-        <li><a href="/photographs">Photography</a></li>
-        <li><a href="/projects">Projects</a></li>
-        <li><a href="/tags">Tags</a></li>
-        <li><a href="/comments">Comments</a></li>
-        <li><a href="/about">About</a></li>
-      </ul>
+      <%= section_nav([
+            ['Journals', '/journals'],
+            ['Photographs', '/photographs'],
+            ['Projects', '/projects'],
+            ['Tags', '/tags'],
+            ['Comments', '/comments'],
+            ['About', '/about']
+      ]) %>
     </div>
 
     <div id="middle">
