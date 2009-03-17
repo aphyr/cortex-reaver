@@ -42,10 +42,10 @@ module CortexReaver
           @sidebar.unshift render_template('photographs/sidebar.rhtml')
         end
 
-        workflow "New Page", R(PageController, :new)
-        workflow "New Project", R(ProjectController, :new)
         workflow "New Journal", R(JournalController, :new)
+        workflow "New Page", R(PageController, :new)
         workflow "New Photograph", R(PhotographController, :new)
+        workflow "New Project", R(ProjectController, :new)
 
         feed 'Photographs', Rs(PhotographController, :atom)
         feed 'Journals', Rs(JournalController, :atom)

@@ -241,7 +241,6 @@ module Ramaze
       end
 
       def page(page)
-
         page = case page
         when Symbol
           page
@@ -300,8 +299,10 @@ module Ramaze
           
           # ID component of edit/delete links
 
+          workflow "New #{model_class.to_s.demodulize}", Rs(:new)
           workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, @model.id)
           workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
+          
           render_template :show
         elsif id
           # Didn't find that model
