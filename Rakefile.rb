@@ -32,7 +32,7 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.add_dependency('ramaze', '= 2008.11')
   s.add_dependency('builder', '~> 2.1.2')
   s.add_dependency('erubis', '~> 2.6.2')
-  s.add_dependency('hpricot', '~> 0.6')
+  s.add_dependency('sanitize', '~> 1.0.6')
   s.add_dependency('BlueCloth', '~> 1.0.0')
   s.add_dependency('sequel', '~> 2.11.0')
   s.add_dependency('thin', '~> 1.0.0')
