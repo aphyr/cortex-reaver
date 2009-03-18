@@ -1,5 +1,6 @@
 Version 0.0.7 (2009-3-17)
   - General
+    - Basic plugin system
     - Replaced String#/ deprecation
     - Fixed MySQL migration error when MySQL Sequel adapter not loaded
   - Model
