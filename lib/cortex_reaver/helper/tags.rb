@@ -23,6 +23,7 @@ EOF
       def tags_on(model, html=true)
         begin
           if html
+            #t = '<img src="/images/tag.gif" alt="Tags" />'
             t = '<ul class="tags">'
             model.tags.each do |tag|
               t << "<li><a href=\"#{tag.url}\">#{tag.title}</a></li>"

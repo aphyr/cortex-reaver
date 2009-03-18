@@ -259,6 +259,9 @@ th {
 .tags {
   margin: 0px;
   padding: 0px;
+  background: url(/images/tag.gif) no-repeat;
+  background-position: 0px 3px;
+  padding-left: 12px;
 }
 
 .tags li {
