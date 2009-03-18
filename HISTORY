@@ -1,3 +1,17 @@
+Version 0.0.7 (2009-3-17)
+  - General
+    - Replaced String#/ deprecation
+    - Fixed MySQL migration error when MySQL Sequel adapter not loaded
+  - Model
+    - Model.tagged_with_any_of array_of_tags
+    - Pages are now heirarchical
+  - View
+    - If view_root is specified, automatically symlinks in missing view templates from the library version
+    - Added little tag icon
+    - Helper to generate section links
+    - Sections now come with a selected class
+    - Header level (h1, h2, ..) no longer adjusted for pages
+    - Journals and pages now come with 'tagged_tag-name' classes
 Version 0.0.6 (2008-12-29)
   - Model
     - Changed MySQL table storage engines to InnoDB; transactions now ensure
