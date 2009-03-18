@@ -256,7 +256,7 @@ th {
   font-size: 75%;
 }
 
-.tags {
+ul.tags {
   margin: 0px;
   padding: 0px;
   background: url(/images/tag.gif) no-repeat;
