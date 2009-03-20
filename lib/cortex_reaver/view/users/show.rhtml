@@ -27,7 +27,7 @@
   <div class="footer">
     <ul class="actions">
       <% if admin? %>
-        <li><a href="/users/edit/<%= @user.login %>">
+        <li><a href="/users/edit/<%= @user.id %>">
           <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
         </a></li>
         <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{@user.login}", :onclick => "return confirm('Are you sure you want to delete this user?');" %></li>
