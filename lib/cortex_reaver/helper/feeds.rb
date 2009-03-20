@@ -77,10 +77,10 @@ module Ramaze
               x.link :href => (url_base + model.url), :rel => 'alternate'
 
               x.author do
-                x.name model.user.name
+                x.name model.creator.name
 
-                if model.user.http
-                  x.uri model.user.http
+                if model.creator.http
+                  x.uri model.creator.http
                 end
               end
 

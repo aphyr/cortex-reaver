@@ -6,7 +6,8 @@ module CortexReaver
     include CortexReaver::Model::Comments
     include CortexReaver::Model::Sequenceable
     
-    belongs_to :user, :class => 'CortexReaver::User'
+    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     belongs_to :journal, :class => 'CortexReaver::Journal'
     belongs_to :project, :class => 'CortexReaver::Project'
     belongs_to :photograph, :class => 'CortexReaver::Photograph'

@@ -5,11 +5,16 @@ module CortexReaver
     include CortexReaver::Model::Timestamps
     include CortexReaver::Model::Sequenceable
 
-    has_many :comments, :class => 'CortexReaver::Comment'
-    has_many :journals, :class => 'CortexReaver::Journal'
-    has_many :pages, :class => 'CortexReaver::Page'
-    has_many :photographs, :class => 'CortexReaver::Photograph'
-    has_many :projects, :class => 'CortexReaver::Project'
+    has_many :created_comments, :key => 'created_by', :class => 'CortexReaver::Comment'
+    has_many :created_journals, :key => 'created_by', :class => 'CortexReaver::Journal'
+    has_many :created_pages, :key => 'created_by', :class => 'CortexReaver::Page'
+    has_many :created_photographs, :key => 'created_by', :class => 'CortexReaver::Photograph'
+    has_many :created_projects, :key => 'created_by', :class => 'CortexReaver::Project'
+    has_many :updated_comments, :key => 'updated_by', :class => 'CortexReaver::Comment'
+    has_many :updated_journals, :key => 'updated_by', :class => 'CortexReaver::Journal'
+    has_many :updated_pages, :key => 'updated_by', :class => 'CortexReaver::Page'
+    has_many :updated_photographs, :key => 'updated_by', :class => 'CortexReaver::Photograph'
+    has_many :updated_projects, :key => 'updated_by', :class => 'CortexReaver::Project'
 
     validates do
       uniqueness_of :login
@@ -32,7 +37,7 @@ module CortexReaver
     # Ensure an administrator is always available. TODO: This is probably
     # subject to a race condition, especially between servers. Backup plan?
     validates_each :admin do |object, attribute, value|
-      if User.filter(:admin => true).count == 1 and not value
+      if admins = User.filter(:admin => true) and admins.size == 1 and admins.first.id == self.id and not value
         object.errors[attribute] << "can't be unset; only one administrator left!"
       end
     end
@@ -47,6 +52,46 @@ module CortexReaver
       else
         nil
       end
+    end
+
+    def can_create?(other)
+      if admin?
+        # Administrators may create anything
+        true
+      elsif contributor?
+        # Contributors may create anything but users
+        case other
+        when User
+          false
+        else
+          true
+        end
+      else
+        # Anyone may create a comment.
+        case other
+        when Comment
+          true
+        else
+          false
+        end
+      end
+    end
+
+    def can_delete?(other)
+      if admin?
+        # Administrators may delete anything
+        true
+      elsif contributor?
+        # Contributors may delete their own contributions
+        other.created_by == self.id
+      else
+        # Anyone may delete their own comments
+        Comment === other and other.created_by == self.id
+      end
+    end
+
+    def can_edit?(other)
+      return true if admin?
     end
 
     # CRUD uses this to construct URLs. Even though we don't need the full
@@ -72,6 +117,11 @@ module CortexReaver
       else
         false
       end
+    end
+
+    # Returns true if user is a contributor
+    def contributor?
+      self.contributor
     end
 
     # Set user password

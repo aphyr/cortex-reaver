@@ -121,15 +121,15 @@ module Ramaze
       end
 
       # Returns a link to a user.
-      def user_link(x)
+      def user_link(x, who=:creator)
         case x
         when CortexReaver::User
           name = x.name || x.login
           A(name, :href => x.url)
         when CortexReaver::Comment
-          if x.user
-            # Use attached user
-            user_link x.user
+          if x.send(who)
+            # Use attached creator/whoever
+            user_link x.send(who)
           else
             # Use anonymous info
             name = x.name || x.email || 'Anonymous'
@@ -146,8 +146,8 @@ module Ramaze
             end
           end
         else
-          if x.respond_to? :user
-            user_link x.user
+          if x.respond_to? who
+            user_link x.send(who)
           else
             raise ArgumentError.new("don't know how to make a user link to #{x.inspect}")
           end

@@ -180,14 +180,20 @@ module CortexReaver
     # Shutdown callback
     at_exit do
       # Unlink templates
-      Find.find(config[:view_root]) do |path|
-        if File.symlink? path # TODO: identify link target
-          begin
-            File.delete path
-          rescue => e
-            Ramaze::Log.error "Unable to unlink symlinked view #{path}: #{e}"
+      begin
+        if config[:view_root]
+          Find.find(config[:view_root]) do |path|
+            if File.symlink? path # TODO: identify link target
+              begin
+                File.delete path
+              rescue => e
+                Ramaze::Log.error "Unable to unlink symlinked view #{path}: #{e}"
+              end
+            end
           end
         end
+      rescue => e2
+        Ramaze::Log.error "Unable to unlink symlinked views in #{config[:view_root]}: #{e}"
       end
 
       # Remove pidfile

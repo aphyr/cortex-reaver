@@ -30,7 +30,14 @@ module CortexReaver
       page.page_id = request[:page_id]
       page.name = Page.canonicalize request[:name], :id => page.id, :page_id => page.page_id
       page.body = request[:body]
-      page.user = session[:user]
+    end
+
+    on_create do |page, request|
+      page.creator = session[:user]
+    end
+
+    on_update do |page, request|
+      page.updater = session[:user]
     end
   end
 end
