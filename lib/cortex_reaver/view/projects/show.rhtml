@@ -2,7 +2,7 @@
   <h2><a id="project_<%= @project.name %>" href="<%= @project.url %>"><%=h @project.title %></a></h2>
   <div class="byline">
     <span class="written">
-      <%= user_link @project.user %> on <%= date_line @project %>
+      <%= user_link @project.creator %> on <%= date_line @project %>
     </span>
     <%= tags_on @project %>
   </div>

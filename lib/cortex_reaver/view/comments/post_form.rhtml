@@ -26,7 +26,7 @@
       <textarea name="comment" id="comment"></textarea>
     </p>
     
-    <% unless @new_comment.user %>
+    <% unless @new_comment.creator %>
       <%= form_p :name, :model => @new_comment %>
       <%= form_p :email, :model => @new_comment %>
       <%= form_p :http, :model => @new_comment %>

@@ -2,7 +2,7 @@
   <h2><a id="journal_<%= @journal.name %>" href="<%= @journal.url %>"><%=h @journal.title %></a></h2>
   <div class="byline">
     <span class="written">
-      <%= user_link @journal.user %> on <%= date_line @journal %>
+      <%= user_link @journal.creator %> on <%= date_line @journal %>
     </span>
     <%= tags_on @journal %>
   </div>

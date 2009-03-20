@@ -2,8 +2,9 @@ module CortexReaver
   class PageparentsSchema < Sequel::Migration
     def down
       alter_table :pages do
-        drop_index :page_id
-        drop_column :page_id
+        # Can't undo this cleanly yet. Fracking mysql. :/
+#       drop_index :page_id
+#       drop_column :page_id
       end
     end
 

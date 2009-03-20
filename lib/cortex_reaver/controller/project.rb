@@ -33,7 +33,14 @@ module CortexReaver
       project.description = request[:description]
       project.name = Project.canonicalize request[:name], :id => project.id
       project.body = request[:body]
-      project.user = session[:user]
+    end
+
+    on_create do |project, request|
+      project.creator = session[:user]
+    end
+
+    on_update do |project, request|
+      project.updater = session[:user]
     end
 
     for_feed do |project, x|

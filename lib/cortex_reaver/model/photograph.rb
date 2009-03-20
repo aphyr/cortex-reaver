@@ -18,7 +18,8 @@ module CortexReaver
     }
 
     many_to_many :tags, :class => 'CortexReaver::Tag'
-    belongs_to :user, :class => 'CortexReaver::User'
+    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     has_many :comments, :class => 'CortexReaver::Comment'
 
     validates do

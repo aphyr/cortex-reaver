@@ -34,7 +34,14 @@ module CortexReaver
     on_save do |journal, request|
       journal.title = request[:title]
       journal.name = Journal.canonicalize(request[:name], :id => journal.id)
-      journal.user = session[:user]
+    end
+
+    on_create do |journal, request|
+      journal.creator = session[:user]
+    end
+
+    on_update do |journal, request|
+      journal.updater = session[:user]
     end
 
     for_feed do |journal, x|

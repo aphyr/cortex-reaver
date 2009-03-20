@@ -284,17 +284,19 @@ module Ramaze
           @title = h @model.to_s
           set_singular_model_var @model
 
-          # Retrieve pending comment from session, if applicable.
-          if comment = session[:pending_comment] and comment.parent == @model
-            @new_comment = session.delete :pending_comment
-          else
-            # Create a comment to be posted
-            @new_comment = CortexReaver::Comment.new
-            @new_comment.send("#{model_class.to_s.demodulize.underscore.downcase}=", @model)
-          end
+          if @model.class.associations.include? :comments
+            # Retrieve pending comment from session, if applicable.
+            if comment = session[:pending_comment] and comment.parent == @model
+              @new_comment = session.delete :pending_comment
+            else
+              # Create a comment to be posted
+              @new_comment = CortexReaver::Comment.new
+              @new_comment.send("#{model_class.to_s.demodulize.underscore.downcase}=", @model)
+            end
 
-          if session[:user]
-            @new_comment.user = session[:user]
+            if session[:user]
+              @new_comment.creator = session[:user]
+            end
           end
           
           # ID component of edit/delete links

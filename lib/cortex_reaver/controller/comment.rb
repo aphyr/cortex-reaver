@@ -34,13 +34,17 @@ module CortexReaver
       # User-specific properties
       if session[:user]
         # A user is logged in.
-        comment.user = session[:user]
+        comment.creator = session[:user]
       else
         # Save the anonymous comment.
         comment.name = request[:name].blank? ? nil : request[:name]
         comment.email = request[:email].blank? ? nil : request[:email]
         comment.http = request[:http].blank? ? nil : request[:http]
       end
+    end
+
+    on_update do |journal, request|
+      journal.updater = session[:user]
     end
 
     for_feed do |comment, x|
@@ -84,7 +88,7 @@ module CortexReaver
 
           if session[:user]
             # A user is logged in. Use their account.
-            @comment.user = session[:user]
+            @comment.creator = session[:user]
           else
             # Use anonymous info, if it won't conflict.
             if User.filter(:email => request[:email]).count > 0
