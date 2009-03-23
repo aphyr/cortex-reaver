@@ -67,10 +67,10 @@ module CortexReaver
       parent.save
     end
     
-    after_save(:refresh_parent_comment_count) do
+    after_create(:increment_parent_comment_count) do
       # WARNING: If we *reparent* comments as opposed to just posting, this will break.
       parent = self.parent
-      parent.refresh_comment_count
+      parent.comment_count += 1
       parent.skip_timestamp_update = true
       parent.save
     end

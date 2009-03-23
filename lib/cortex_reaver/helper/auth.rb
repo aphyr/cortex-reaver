@@ -8,7 +8,7 @@ module Ramaze
       end
 
       def for_auth(&block)
-        unless yield session[:user]
+        unless yield user
           # Failed block
           if session[:user]
             flash[:error] = "You don't have permission to do this."
