@@ -66,10 +66,11 @@ module CortexReaver
       parent.skip_timestamp_update = true
       parent.save
     end
+    
     after_save(:refresh_parent_comment_count) do
       # WARNING: If we *reparent* comments as opposed to just posting, this will break.
       parent = self.parent
-      parent.comment_count += 1
+      parent.refresh_comment_count
       parent.skip_timestamp_update = true
       parent.save
     end
