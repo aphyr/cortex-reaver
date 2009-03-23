@@ -8,9 +8,24 @@ module CortexReaver
     helper :error,
       :auth,
       :form,
-      :workflow
+      :workflow,
+      :aspect
     
+    before_all do
+      require_roles :admin
+    end
+
     def index
+    end
+
+    # Recalculate comment counts
+    def update_comments
+      [Journal, Page, Project, Photograph].each do |klass|
+        klass.refresh_comment_counts
+      end
+
+      flash[:notice] = "Comment counts updated."
+      redirect Rs()
     end
 
     # Recalculate tag counts and vacuum unused tags

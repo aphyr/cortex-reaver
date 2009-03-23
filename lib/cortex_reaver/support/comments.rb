@@ -5,7 +5,7 @@ module CortexReaver
       def self.included(base)
         base.class_eval do
           # When we delete a model that has comments, remove the comments too.
-          before_delete(:drop_comments) do
+          before_destroy(:drop_comments) do
             comments = self.comments
             remove_all_comments
             comments.each do |comment|
