@@ -25,6 +25,9 @@ module CortexReaver
       user.http = request[:http]
       user.email = request[:email]
       user.admin = request[:admin] || false
+      user.editor = request[:editor] || false
+      user.contributor = request[:contributor] || false
+      user.moderator = request[:moderator] || false
 
       unless request[:password].blank? and request[:password_confirmation].blank?
         # Set password
@@ -35,7 +38,9 @@ module CortexReaver
 
     # Listing users outright is a little dodgy.
     before :index do
-      require_role :admin
+      for_auth do |u|
+        u.admin?
+      end
     end
 
     def login
