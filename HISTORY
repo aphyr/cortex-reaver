@@ -1,3 +1,13 @@
+Version 0.0.8 (2009-3-23)
+  - General
+    - New roles-based access system makes Cortex Reaver more suitable for use by a small community of authors
+  - Model
+    - Models now track two users: the creator, and the last person to edit
+    - Models support can_create?, can_edit? and can_delete?
+    - Fixed: editing a comment used to incorrectly increment the parent's comment_count
+  - Controller
+    - Admin controller now requires admin privileges
+    - Workflows now display only when you have permission to use them.
 Version 0.0.7 (2009-3-17)
   - General
     - Basic plugin system
