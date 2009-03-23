@@ -1,9 +1,6 @@
 <div class="user">
   <h2><a id="user_<%= @user.login %>" href="<%= @user.url %>">User <%=h @user.name %></a></h2>
   <div class="byline">
-    <% if @user.admin %>
-      Administrator,
-    <% end %>
     Created on <%= date_line @user %>
   </div>
   <div class="body">
@@ -26,7 +23,7 @@
   </div>
   <div class="footer">
     <ul class="actions">
-      <% if admin? %>
+      <% if user.can_edit? @user %>
         <li><a href="/users/edit/<%= @user.id %>">
           <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
         </a></li>

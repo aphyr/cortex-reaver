@@ -14,10 +14,12 @@
         <img src="/images/comment.gif" class="icon" alt="comment" />
         <%= @comment.comment_count %> <%= @comment.comment_count == 1 ? 'comment' : 'comments' %>
       </a></li>
-      <% if admin? %>
+      <% if user.can_edit? @comment %>
         <li><a href="/comments/edit/<%= @comment.id %>">
           <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
         </a></li>
+      <% end %>
+      <% if user.can_delete? @comment %>
         <li>
           <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/comments/delete/#{@comment.id}", :onclick => "return confirm('Are you sure you wish to delete this comment?');" %></li>
       <% end %>

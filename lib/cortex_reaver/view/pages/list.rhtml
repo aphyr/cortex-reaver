@@ -4,8 +4,10 @@
       <tr>
         <th>Name</th>
         <th>Title</th>
-        <% if admin? %>
+        <% if user.can_edit? CortexReaver::Page.new %>
           <th></th>
+        <% end %>
+        <% if user.can_delete? CortexReaver::Page.new %>
           <th></th>
         <% end %>
       </tr>
@@ -15,8 +17,10 @@
         <tr>
           <td><%= A(page.name, :href => page.url) %></td>
           <td><%= page.title %></td>
-          <% if admin? %>
+          <% if user.can_edit? page %>
             <td><a href="/pages/edit/<%= page.id %>">Edit</a></td>
+          <% end %>
+          <% if user.can_delete? page %>
             <td><%= A 'Delete', :href => "/pages/delete/#{page.id}", :onclick => "return confirm('Are you sure you want to delete this page?');" %></td>
           <% end %>
         </tr>

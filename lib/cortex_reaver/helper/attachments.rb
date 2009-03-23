@@ -6,11 +6,14 @@ module Ramaze
 
       # Deletes an attachment on a model identified by id.
       def delete_attachment(id, name)
-        require_admin
-        
         unless @model = model_class.get(id)
           flash[:error] = "No such #{model_class.to_s.downcase} (#{h id}) exists."
           redirect Rs()
+        end
+
+        # You need to be able to edit the model before removing attachments!
+        for_auth do |u|
+          u.can_edit? @model
         end
 
         unless attachment = @model.attachment(name)

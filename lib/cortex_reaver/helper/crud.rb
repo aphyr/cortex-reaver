@@ -94,7 +94,10 @@ module Ramaze
 
           # This action can't be in the normal module body, or it breaks things.
           def new
-            require_admin
+            # You need to be able to create one of these.
+            for_auth do |u|
+              u.can_create? model_class.new
+            end
 
             @title = "New #{h model_class.to_s.demodulize.titleize}"
             @form_action = :new
@@ -174,9 +177,11 @@ module Ramaze
       end
 
       def delete(id)
-        require_admin
-
         if @model = model_class[id]
+          for_auth do |u|
+            u.can_edit? @model
+          end
+
           if @model.destroy
             flash[:notice] = "#{model_class.to_s.demodulize.downcase} #{h @model.to_s} deleted."
             redirect Rs()
@@ -191,9 +196,11 @@ module Ramaze
       end
 
       def edit(id = nil)
-        require_admin
-
         if @model = model_class[id]
+          for_auth do |u|
+            u.can_edit? @model
+          end
+        
           @title = "Edit #{model_class.to_s.demodulize.downcase} #{h @model.to_s}"
           @form_action = "edit/#{@model.id}"
 
@@ -270,7 +277,9 @@ module Ramaze
 
         set_plural_model_var @models
 
-        workflow "New #{model_class.to_s.demodulize}", Rs(:new)
+        if user.can_create? model_class.new
+          workflow "New #{model_class.to_s.demodulize}", Rs(:new)e
+        end
 
         render_template :list
       end
@@ -299,11 +308,15 @@ module Ramaze
             end
           end
           
-          # ID component of edit/delete links
-
-          workflow "New #{model_class.to_s.demodulize}", Rs(:new)
-          workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, @model.id)
-          workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
+          if user.can_create? model_class.new
+            workflow "New #{model_class.to_s.demodulize}", Rs(:new)
+          end
+          if user.can_edit? @model
+            workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, @model.id)
+          end
+          if user.can_delete? @model
+            workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
+          end
           
           render_template :show
         elsif id

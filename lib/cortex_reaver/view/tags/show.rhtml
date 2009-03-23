@@ -40,10 +40,12 @@
   </div>
   <div class="footer">
     <ul class="actions">
-      <% if admin? and @tags.size == 1 %>
+      <% if @tags.size == 1 and user.can_edit? @tags.first %>
         <li><a href="/tags/edit/<%= @tags.first.id %>">
           <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
         </a></li>
+      <% end %>
+      <% if @tags.size == 1 and user.can_delete? @tags.first %>
         <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/tags/delete/#{@tags.first.id}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></li>
       <% end %>
     </ul> 

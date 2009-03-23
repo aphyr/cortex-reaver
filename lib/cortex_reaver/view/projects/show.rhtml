@@ -17,10 +17,12 @@
         <img src="/images/comment.gif" class="icon" alt="comment" />
         <%= @project.comment_count %> <%= @project.comment_count == 1 ? 'comment' : 'comments' %>
       </a></li>
-      <% if admin? %>
+      <% if user.can_edit? @project %>
         <li><a href="/projects/edit/<%= @project.id %>">
           <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
         </a></li>
+      <% end %>
+      <% if user.can_delete? @project %>
         <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/projects/delete/#{@project.id}", :onclick => "return confirm('Are you sure you want to delete this project?');" %></li>
       <% end %>
     </ul> 

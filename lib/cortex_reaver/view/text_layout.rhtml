@@ -30,7 +30,7 @@
     <script type="text/javascript" src="/js/jquery.js"></script>
     <script type="text/javascript" defer="defer" src="/js/cookie.js"></script>
     <script type="text/javascript" defer="defer" src="/js/admin.js"></script>
-    <% if admin? %>
+    <% if user.admin? or user.contributor? or user.editor? or user.moderator? %>
       <script type="text/javascript" defer="defer" src="/js/autocompletefb.js"></script>
     <% end %>
   
