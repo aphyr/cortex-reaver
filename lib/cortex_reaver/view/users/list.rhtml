@@ -7,8 +7,10 @@
     <tr>
       <th>Login</th>
       <th>Name</th>
-      <% if admin? %>
+      <% if user.can_edit? CortexReaver::User.new %>
         <th></th>
+      <% end %>
+      <% if user.can_delete? CortexReaver::User.new %>
         <th></th>
       <% end %>
     </tr>
@@ -18,12 +20,14 @@
       <tr>
         <td><%= A(user.login, :href => user.url) %></td>
         <td><%= h user.name %></td>
-        <% if admin? %>
+        <% if session[:user].can_edit? user %>
           <td>
             <a class="edit-link" href="/users/edit/<%= user.id %>">
               <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
             </a>
           </td>
+        <% end %>
+        <% if session[:user].can_delete? user %>
           <td>
             <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{user.id}", :onclick => "return confirm('Are you sure you want to delete this user?');" %>
           </td>

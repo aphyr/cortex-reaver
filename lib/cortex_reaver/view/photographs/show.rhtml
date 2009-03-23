@@ -18,7 +18,7 @@
             <li>
               <a href="<%= @photograph.absolute_window_url %>">Back to Thumbnails</a>
             </li>
-            <% if admin? %>
+            <% if user.can_edit? @photograph %>
               <li>
                 <%= A('Edit', :href => Rs(:edit, @photograph.id)) %>
               </li>

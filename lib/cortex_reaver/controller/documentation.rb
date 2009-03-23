@@ -6,5 +6,8 @@ module CortexReaver
 
     def formatting
     end
+
+    def users
+    end
   end
 end

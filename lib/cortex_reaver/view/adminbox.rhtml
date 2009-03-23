@@ -1,5 +1,5 @@
 <div id="adminbox">
-  <% if admin? %>
+  <% if user.admin? or user.contributor? or user.editor? or user.moderator? %>
     <table class="actions-table">
       <tr>
         <td class="title">Sections</td>
@@ -11,8 +11,10 @@
             <li><a href="/photographs">Photographs</a></li>
             <li><a href="/comments">Comments</a></li>
             <li><a href="/tags">Tags</a></li>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/admin">Admin</a></li>
+            <% if user.admin? %>
+              <li><a href="/users">Users</a></li>
+              <li><a href="/admin">Admin</a></li>
+            <% end %>
           </ul>
         </td>
       </tr>

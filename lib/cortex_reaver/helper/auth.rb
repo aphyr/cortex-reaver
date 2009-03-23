@@ -7,6 +7,20 @@ module Ramaze
         u = session[:user] and u.admin?
       end
 
+      def for_auth(&block)
+        unless yield session[:user]
+          # Failed block
+          if session[:user]
+            flash[:error] = "You don't have permission to do this."
+            redirect :/
+          else
+            flash[:notice] = "Please log in first."
+            session[:target_uri] = request.request_uri
+            redirect R('/users', :login)
+          end
+        end
+      end
+
       # Tries to log in a user by login and password. If successful, sets
       # session[:user] to the user and returns that user. Otherwise returns
       # false.
@@ -24,17 +38,17 @@ module Ramaze
         session.delete :user
       end
 
-      def require_admin
-        if session[:user] and session[:user].admin?
-          true
-        elsif session[:user]
-          flash[:error] = "You must have administrative privileges to do this."
-          redirect :/
-        else
-          flash[:notice] = "Please log in first."
-          session[:target_uri] = request.request_uri
-          redirect R('/users', :login)
+      def require_roles(*roles)
+        for_auth do |u|
+          roles.any? do |role|
+            u.send role
+          end
         end
+      end
+
+      # Shortcut for current user or an anonymous proxy
+      def user
+        session[:user] || CortexReaver::User.new(:name => 'Anonymous')
       end
 
       def error_403

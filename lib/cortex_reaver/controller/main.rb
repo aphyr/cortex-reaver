@@ -24,9 +24,13 @@ module CortexReaver
       if not ids.empty? and @page = Page.get(ids)
         # Render that page.
         @title = @page.title
-        
-        workflow "Edit this page", R(PageController, :edit, @page.id)
-        workflow "Delete this page", R(PageController, :delete, @page.id)
+       
+        if user.can_edit? Page.new
+          workflow "Edit this page", R(PageController, :edit, @page.id)
+        end
+        if user.can_delete? Page.new
+          workflow "Delete this page", R(PageController, :delete, @page.id)
+        end
 
         render_template 'pages/show'
       elsif not ids.empty?
@@ -42,10 +46,18 @@ module CortexReaver
           @sidebar.unshift render_template('photographs/sidebar.rhtml')
         end
 
-        workflow "New Journal", R(JournalController, :new)
-        workflow "New Page", R(PageController, :new)
-        workflow "New Photograph", R(PhotographController, :new)
-        workflow "New Project", R(ProjectController, :new)
+        if user.can_create? Journal.new
+          workflow "New Journal", R(JournalController, :new)
+        end
+        if user.can_create? Page.new
+          workflow "New Page", R(PageController, :new)
+        end
+        if user.can_create? Photograph.new
+          workflow "New Photograph", R(PhotographController, :new)
+        end
+        if user.can_create? Project.new
+          workflow "New Project", R(ProjectController, :new)
+        end
 
         feed 'Photographs', Rs(PhotographController, :atom)
         feed 'Journals', Rs(JournalController, :atom)

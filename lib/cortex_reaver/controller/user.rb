@@ -35,7 +35,7 @@ module CortexReaver
 
     # Listing users outright is a little dodgy.
     before :index do
-      require_admin
+      require_role :admin
     end
 
     def login
