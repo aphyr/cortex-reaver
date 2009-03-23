@@ -278,7 +278,7 @@ module Ramaze
         set_plural_model_var @models
 
         if user.can_create? model_class.new
-          workflow "New #{model_class.to_s.demodulize}", Rs(:new)e
+          workflow "New #{model_class.to_s.demodulize}", Rs(:new)
         end
 
         render_template :list

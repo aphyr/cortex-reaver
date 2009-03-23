@@ -52,6 +52,31 @@ module CortexReaver
         nil
       end
     end
+    
+    # CRUD uses this to construct URLs. Even though we don't need the full
+    # power of Canonical, CRUD is pretty useful. :)
+    def self.canonical_name_attr
+      :login
+    end
+
+    # Get a user
+    def self.get(id)
+      self[:login => id] || self[id]
+    end
+
+    # Returns true if the user is an administrator.
+    def admin?
+      self.admin
+    end
+
+    # Authenticate with password
+    def authenticate(test_password)
+      if self[:password] == self.class.crypt(test_password, self.salt)
+        true
+      else
+        false
+      end
+    end
 
     def can_create?(other)
       if admin?
@@ -80,7 +105,7 @@ module CortexReaver
       if admin?
         # Administrators may delete anything
         true
-      elsif other.created_by == self.id
+      elsif other.respond_to? :created_by and other.created_by == self.id
         # Anybody may delete their own records.
         true
       elsif editor? and not User === other
@@ -98,7 +123,7 @@ module CortexReaver
       if admin?
         # Administrators may edit anything
         true
-      elsif other.created_by == self.id
+      elsif other.respond_to? :created_by and other.created_by == self.id
         # Anybody may edit their own records
         true
       elsif editor? and not User === other
@@ -112,34 +137,19 @@ module CortexReaver
       end
     end
 
-    # CRUD uses this to construct URLs. Even though we don't need the full
-    # power of Canonical, CRUD is pretty useful. :)
-    def self.canonical_name_attr
-      :login
-    end
-
-    # Get a user
-    def self.get(id)
-      self[:login => id] || self[id]
-    end
-
-    # Returns true if the user is an administrator.
-    def admin?
-      self.admin
-    end
-
-    # Authenticate with password
-    def authenticate(test_password)
-      if self[:password] == self.class.crypt(test_password, self.salt)
-        true
-      else
-        false
-      end
-    end
-
     # Returns true if user is a contributor
     def contributor?
       self.contributor
+    end
+
+    # Returns true if user is an editor
+    def editor?
+      self.editor
+    end
+
+    # Returns true if user is a moderator
+    def moderator?
+      self.moderator
     end
 
     # Set user password
