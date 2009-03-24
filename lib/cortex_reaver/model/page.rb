@@ -88,7 +88,6 @@ module CortexReaver
 
       # Look up ids by nested names.
       ids.inject(nil) do |page, name|
-        puts "Searching for #{name} in #{page.inspect}"
         parent_id = page ? page.id : nil
         self[:page_id => parent_id, :name => name]
       end

@@ -17,6 +17,7 @@ module CortexReaver
     # :daemon      - Whether to daemonize or not. Defaults to :true if :mode
     #                is :production, otherwise nil.
     # :adapter     - The Ramaze adapter name (default 'thin')
+    # :cache       - The Ramaze cache to use (default: :memory)
     # :host        - Host to bind to 
     # :port        - Port to bind to (default 7000)
     # :pidfile     - Process ID file for this server. Defaults to 
@@ -44,6 +45,7 @@ module CortexReaver
       self[:plugin_root] = File.join(CortexReaver::HOME_DIR, 'plugins')
       self[:mode] = :production
       self[:adapter] = 'thin'
+      self[:cache] = :memory
       self[:host] = nil
       self[:port] = 7000
       self[:plugins] = []
