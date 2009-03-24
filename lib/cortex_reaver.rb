@@ -205,6 +205,7 @@ module CortexReaver
     # Run Ramaze
     Ramaze.startup(
       :force => true,
+      :cache => config[:cache],
       :adapter => config[:adapter],
       :host => config[:host],
       :port => config[:port]
