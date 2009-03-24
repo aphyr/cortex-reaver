@@ -52,7 +52,27 @@ module CortexReaver
         nil
       end
     end
-    
+
+    # An anonymous proxy user, with no permissions.
+    def self.anonymous
+      # Return singleton if stored
+      return @anonymous_user if @anonymous_user
+
+      # Create anonymous user
+      @anonymous_user = self.new(:name => "Anonymous")
+      def @anonymous_user.can_create? other
+        false
+      end
+      def @anonymous_user.can_edit? other
+        false
+      end
+      def @anonymous_user.can_delete? other
+        false
+      end
+      
+      @anonymous_user
+    end
+
     # CRUD uses this to construct URLs. Even though we don't need the full
     # power of Canonical, CRUD is pretty useful. :)
     def self.canonical_name_attr

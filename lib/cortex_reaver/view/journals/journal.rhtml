@@ -1,9 +1,7 @@
 <div class="journal text-entry <%= @journal.tags.map {|t| 'tagged_' + t.name}.join(' ')%>">
   <h2><a id="journal_<%= @journal.name %>" href="<%= @journal.url %>"><%=h @journal.title %></a></h2>
   <div class="byline">
-    <span class="written">
-      <%= user_link @journal.creator %> on <%= date_line @journal %>
-    </span>
+    <%= author_info @journal %>
     <%= tags_on @journal %>
   </div>
   <div class="body">

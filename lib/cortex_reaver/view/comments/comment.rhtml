@@ -1,9 +1,7 @@
 <div class="comment text-entry">
   <h2><a id="comment_<%= @comment.id %>" href="<%= @comment.url %>"><%=h @comment.title %></a></h2>
   <div class="byline">
-    <span class="written">
-      <%= user_link @comment %> on <%= date_line @comment %>
-    </span>
+    <%= author_info @comment %>
   </div>
   <div class="body">
     <%= @comment.body_cache %>

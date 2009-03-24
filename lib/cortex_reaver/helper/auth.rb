@@ -48,7 +48,7 @@ module Ramaze
 
       # Shortcut for current user or an anonymous proxy
       def user
-        session[:user] || CortexReaver::User.new(:name => 'Anonymous')
+        session[:user] || CortexReaver::User.anonymous
       end
 
       def error_403

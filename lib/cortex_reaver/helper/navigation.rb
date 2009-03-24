@@ -120,6 +120,42 @@ module Ramaze
         s << "\n</ul>"
       end
 
+      # An HTML author/creation line for a model
+      def author_info(model)
+        s = '<span class="author-info">'
+        if model.respond_to? :creator and creator = model.creator
+          c = creator
+        end
+        if model.respond_to? :updater and updater = model.updater
+          u = updater
+        end
+
+        s << '<span class="creator">'
+        s << user_link(model, :creator)
+        s << '</span>'
+        s << ' on <span class="date">'
+        s << model.created_on.strftime('%e %B %Y')
+        s << '</span>'
+
+        ct = model.created_on
+        ut = model.updated_on
+        unless ut.year == ct.year and ut.month == ct.month and ut.day == ct.day
+          # Show the update time as well
+          if c == u
+            s << ' (updated'
+          else
+            s << ' (updated by '
+            s << '<span class="updater">'
+            s << user_link(model, :updater)
+            s << '</span>'
+          end
+          s << ' on <span class="date">'
+          s << ut.strftime('%e %B %Y')
+          s << '</span>)'
+        end
+        s << '</span>'
+      end
+
       # Returns a link to a user.
       def user_link(x, who=:creator)
         case x
