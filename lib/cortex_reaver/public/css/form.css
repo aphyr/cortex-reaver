@@ -100,19 +100,23 @@ textarea {
 }
 
 .p {cursor: pointer;}
+
 .acfb-input{
-	border:medium none;
-	margin:0pt;
-	outline-color:-moz-use-text-color;
-	outline-style:none;
-	outline-width:0pt;
-	padding:3px 0pt 2px;
-	width:150px;
+	width: 10em;
+	border-radius: 6px; 
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px; 
+	border: 1px solid #CAD8F3; 
+	padding: 1px 5px 2px; 
+	background: transparent;
+  margin: 0 5px 4px 0; 
+	font: 11px "Lucida Grande", "Verdana";
 }
-/* TextboxList sample CSS */
+
 * html ul.acfb-holder,*:first-child+html ul.acfb-holder { 
 	padding-bottom: 2px; 
 }
+
 ul.acfb-holder { 
 	margin  : 0; 
 	padding : 4px 5px 0; 
@@ -122,11 +126,13 @@ ul.acfb-holder {
 	overflow: hidden; 
 	font    : 11px "Lucida Grande", "Verdana";
 }
+
 ul.acfb-holder li { 
 	float   : left; 
 	margin  : 0 5px 4px 0; 
 	list-style-type: none; 
 }
+
 ul.acfb-holder li.acfb-data { 
 	border-radius         : 6px; 
 	-moz-border-radius    : 6px; 
@@ -135,6 +141,7 @@ ul.acfb-holder li.acfb-data {
 	padding    : 1px 5px 2px; 
 	background : #DEE7F8; 
 }
+
 .acfb-add {
 	border-radius         : 6px; 
 	-moz-border-radius    : 6px; 
