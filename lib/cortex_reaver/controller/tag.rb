@@ -36,6 +36,17 @@ module CortexReaver
       end
     end
 
+    # Returns a few autocomplete candidates for a given tag by title, separated
+    # by newlines.
+    def autocomplete
+      q = request[:q].gsub(/[^A-Za-z0-9 -_]/, '')
+      if q.empty?
+        respond ''
+      else
+        respond Tag.filter(:title.like(/^#{q}/i)).limit(8).map(:title).join("\n")
+      end
+    end
+    
     def show(*ids)
       # Find tags
       tags = []

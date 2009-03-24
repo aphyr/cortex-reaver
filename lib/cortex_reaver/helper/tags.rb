@@ -6,16 +6,22 @@ module Ramaze
         name = opts[:name]
         title = opts[:title] || name.to_s.titleize
         
-        s = "<p><label for=\"#{name}\">#{title}</label>"
+        s = "<p><label for=\"#{name}\">#{title}</label>\n"
+        s << "<ul id=\"#{name}-holder\" class=\"acfb-holder\">\n"
         s << "<input name=\"#{name}\" id=\"#{name}\" type=\"text\" class=\"acfb-input\" value=\"#{attr_h(tags_on(model, false))}\" />"
-        s << "</p>"
+        s << "</ul></p>"
 
         s << <<EOF
-
 <script type="text/javascript">
-/* <![CDATA[ */
-/* ]]> */
-</script>
+    /* <![CDATA[ */
+    $(document).ready(function() {
+      $("##{name}-holder").autoCompletefb({
+        urlLookup:'/tags/autocomplete',
+        acOptions:{extraParams:{id:'title'}}
+      });
+    });
+    /* ]]> */
+  </script>
 EOF
       end
 
