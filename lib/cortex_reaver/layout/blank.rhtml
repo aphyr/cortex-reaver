@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title><%=h (@title || CortexReaver.config[:site][:name]) %></title>
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="description" content="<%=attr_h CortexReaver.config[:site][:description] %>" />
+    <meta name="generator" content="Cortex Reaver <%= CortexReaver::APP_VERSION %>" />
+    <meta name="keywords" content="<%= attr_h CortexReaver.config[:site][:keywords] %>" />
+    <meta name="author" content="<%= attr_h CortexReaver.config[:site][:author] %>" />
+    <meta name="date" content="<%= Time.now.iso8601 %>" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/admin.css" />
+    <link rel="stylesheet" type="text/css" href="/css/photo.css" />
+    <link rel="stylesheet" type="text/css" href="/css/text.css" />
+    <link rel="stylesheet" type="text/css" href="/css/form.css" />
+    <link rel="stylesheet" type="text/css" href="/css/code.css" />
+    <link rel="stylesheet" type="text/css" href="/css/custom.css" />
+    <% if defined? feeds %>
+      <% feeds.each do |title, feed| %>
+        <link rel="alternate" type="application/atom+xml" href="<%= attr_h feed %>" title="<%= attr_h title %>" />
+      <% end %>
+    <% end %>
+  </head>
+  <body class="blank">
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" defer="defer" src="/js/cookie.js"></script>
+    <script type="text/javascript" defer="defer" src="/js/admin.js"></script>
+    <script type="text/javascript" src="/js/photo.js"></script>
+  
+    <%= render_template 'adminbox.rhtml' %>
+
+    <%= flashbox %>
+            
+    <div id="content">
+      <%= @content %>
+    </div>
+
+    <div id="colophon">
+      Copyright &copy; 2001&mdash;<%= Time.now.strftime('%Y') %> Aphyr
+    </div>
+  </body>
+</html>
