@@ -20,8 +20,12 @@ module CortexReaver
       length_of :name, :maximum => 255
       presence_of :title
     end
-
+ 
     render :body
+
+    def self.atom_url
+      '/journals/atom'
+    end
 
     def self.get(id)
       self[:name => id] || self[id]
@@ -35,8 +39,18 @@ module CortexReaver
       '/journals'
     end
 
-    def self.atom_url
-      '/journals/atom'
+    # Returns a dataset of models viewable by this user
+    def self.viewable_by(user)
+      if user.anonymous?
+        # Show only non-drafts
+        dataset.exclude(:draft)
+      elsif user.admin? or user.editor?
+        # Show everything
+        dataset
+      else
+        # Show all non-drafts and any drafts we created
+        dataset.filter((:draft => false) | (:created_by => user.id))
+      end
     end
 
     def atom_url

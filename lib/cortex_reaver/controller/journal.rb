@@ -34,6 +34,7 @@ module CortexReaver
     on_save do |journal, request|
       journal.title = request[:title]
       journal.name = Journal.canonicalize(request[:name], :id => journal.id)
+      journal.draft = request[:draft]
     end
 
     on_create do |journal, request|

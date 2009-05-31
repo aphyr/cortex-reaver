@@ -247,6 +247,7 @@ module CortexReaver
     end
 
     # Check schema
+    require 'sequel/extensions/migration'
     if check_schema and
        Sequel::Migrator.get_current_migration_version(@db) !=
        Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))

@@ -43,6 +43,11 @@ module CortexReaver
 
     self.window_size = 64
 
+    # Is this the special anonymous user?
+    def anonymous?
+      false
+    end
+
     # Returns an authenticated user by login and password, or nil.
     def self.authenticate(login, password)
       user = self[:login => login]
@@ -60,6 +65,8 @@ module CortexReaver
 
       # Create anonymous user
       @anonymous_user = self.new(:name => "Anonymous")
+
+      # These functions are embedded for speed. Much faster public browsing!
       def @anonymous_user.can_create? other
         false
       end
@@ -68,6 +75,9 @@ module CortexReaver
       end
       def @anonymous_user.can_delete? other
         false
+      end
+      def @anonymous_user.anonymous?
+        true
       end
       
       @anonymous_user
@@ -157,6 +167,22 @@ module CortexReaver
       end
     end
 
+    def can_view?(other)
+      if other.respond_to? :draft and other.draft
+        # Draft
+        if admin? or can_edit? other
+          # User can edit this draft
+          true
+        else
+          # Nope, not yet!
+          false
+        end
+      else
+        # Not a draft
+        true
+      end
+    end
+      
     # Returns true if user is a contributor
     def contributor?
       self.contributor

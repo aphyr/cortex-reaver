@@ -29,6 +29,7 @@ module CortexReaver
       page.title = request[:title]
       page.page_id = request[:page_id]
       page.name = Page.canonicalize request[:name], :id => page.id, :page_id => page.page_id
+      page.draft = request[:draft]
       page.body = request[:body]
     end
 

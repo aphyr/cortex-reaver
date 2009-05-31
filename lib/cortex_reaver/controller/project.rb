@@ -30,8 +30,9 @@ module CortexReaver
 
     on_save do |project, request|
       project.title = request[:title]
-      project.description = request[:description]
       project.name = Project.canonicalize request[:name], :id => project.id
+      project.description = request[:description]
+      project.draft = request[:draft]
       project.body = request[:body]
     end
 
