@@ -38,8 +38,8 @@ module CortexReaver
         error_404
       else
         # Default welcome page
-        @photographs = Photograph.recent
-        @journals = Journal.recent
+        @photographs = Photograph.viewable_by(user).recent
+        @journals = Journal.viewable_by(user).recent
        
         if @photographs.size > 0
           @sidebar ||= []

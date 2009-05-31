@@ -45,6 +45,20 @@ module CortexReaver
       '/photographs'
     end
  
+    # Returns a dataset of models viewable by this user.
+    def self.viewable_by(user, dataset = self.dataset)
+      if user.anonymous?
+        # Show only non-drafts
+        dataset.exclude(:draft)
+      elsif user.admin? or user.editor?
+        # Show everything
+        dataset
+      else
+        # Show all non-drafts and any drafts we created
+        dataset.filter((:draft => false) | (:created_by => user.id))
+      end
+    end
+    
     def atom_url
       '/photographs/atom/' + name
     end

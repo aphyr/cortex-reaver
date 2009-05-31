@@ -95,6 +95,7 @@ module CortexReaver
     # Connect to current DB
     reload_config
     setup_db false
+    require 'sequel/extensions/migration'
     current_version = Sequel::Migrator.get_current_migration_version(db)
 
     puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
@@ -127,6 +128,7 @@ module CortexReaver
     # Connect to dump DB
     file = @values[:load_file]
     dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
+    require 'sequel/extensions/migration'
     current_version = Sequel::Migrator.get_current_migration_version(dump)
 
     # Connect to current DB
@@ -169,6 +171,7 @@ module CortexReaver
 
     puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
 
+    require 'sequel/extensions/migration'
     current_version = Sequel::Migrator.get_current_migration_version(db)
     latest_version = Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
 

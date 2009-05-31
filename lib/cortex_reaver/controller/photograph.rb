@@ -31,6 +31,7 @@ module CortexReaver
     on_save do |photograph, request|
       photograph.title = request[:title]
       photograph.name = Photograph.canonicalize request[:name], :id => photograph.id
+      photograph.draft = request[:draft]
     end
 
     on_second_save do |photograph, request|

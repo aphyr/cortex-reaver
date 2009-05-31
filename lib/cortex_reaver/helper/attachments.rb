@@ -37,7 +37,6 @@ module Ramaze
       # all were successful. Returns an array of attachments which were added.
       def add_attachments(model, attachments)
         attachments.each do |key, file|
-          puts "adding #{key}: #{file.inspect}"
           if tempfile = file[:tempfile] and filename = file[:filename] and not filename.blank?
             model.attachment(filename).file = tempfile
           end

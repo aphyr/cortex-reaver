@@ -265,7 +265,7 @@ module Ramaze
         if self.class.private_method_defined? :feed and model_class.respond_to? :atom_url
           feed @title, model_class.atom_url
         end
-        @models = model_class.window(page)
+        @models = model_class.viewable_by(user, model_class.window(page))
         @page = page
 
         if model_class.count.zero?
@@ -287,6 +287,11 @@ module Ramaze
       def show(id)
         if id and @model = model_class.get(id)
           # Found that model
+          
+          unless user.can_view? model
+            error_403
+          end
+
           # Redirect IDs to names
           raw_redirect(@model.url, :status => 301) if id =~ /^\d+$/
 
