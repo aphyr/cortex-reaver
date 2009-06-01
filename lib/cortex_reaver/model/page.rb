@@ -1,19 +1,20 @@
 module CortexReaver
   class Page < Sequel::Model(:pages)
-    include CortexReaver::Model::Timestamps
-    include CortexReaver::Model::CachedRendering
+    plugin :timestamps
+    plugin :cached_rendering
+    plugin :canonical
+    plugin :attachments
+    plugin :comments
+    plugin :tags
+    plugin :sequenceable
+    plugin :viewable
     include CortexReaver::Model::Renderer
-    include CortexReaver::Model::Canonical
-    include CortexReaver::Model::Attachments
-    include CortexReaver::Model::Comments
-    include CortexReaver::Model::Tags
-    include CortexReaver::Model::Sequenceable
 
-    belongs_to :page, :class => 'CortexReaver::Page'
-    has_many   :pages, :class => 'CortexReaver::Page'
-    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
-    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by' 
-    has_many   :comments, :class => 'CortexReaver::Comment'
+    many_to_one :page, :class => 'CortexReaver::Page'
+    one_to_many   :pages, :class => 'CortexReaver::Page'
+    many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by' 
+    one_to_many   :comments, :class => 'CortexReaver::Comment'
     many_to_many :tags, :class => 'CortexReaver::Tag'
 
     # Top-level pages.
@@ -25,25 +26,7 @@ module CortexReaver
       length_of     :name, :maximum => 255
       presence_of   :title
       length_of     :title, :maximum => 255
-
-      each(:name, :tag => :url_conflict) do |object, attributes, value|
-        if controller = Ramaze::Controller.at(object.url)
-          object.errors['name'] << "conflicts with the #{controller}"
-        end
-      end
     end
-
-    # Reserve names of controllers so we don't conflict.
-    Ramaze::Global.mapping.keys.each do |path|
-      path =~ /\/(.+)(\/|$)/
-      self.reserved_canonical_names << $1 if $1
-    end
-
-    # Also reserve everything in the public directory, as a courtesy.
-    #
-    # I can't stop you from shooting yourself in the foot, but this will help
-    # you aim higher. :)
-    self.reserved_canonical_names += Dir.entries(CortexReaver.config[:public_root]) - ['..', '.']
 
     # Use standard cached renderer
     render :body
@@ -128,7 +111,7 @@ module CortexReaver
     end
 
     # Create a default page if none exists.
-    if table_exists? and Page.count == 0
+    if dataset.table_exists? and Page.count == 0
       Page.new(
         :name => 'about',
         :title => 'About Cortex Reaver',

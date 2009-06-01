@@ -4,11 +4,8 @@ module CortexReaver
     # Pass a YAML file with configuration options. At a minimum, it should specify
     # :database = {:proto, :username, :pasword, :host, :database}
     # or :database = "sequel_connect_string"
-    #
-    # :public_root - The directory public files are hosted from. Defaults to
-    #                HOME_DIR/public.
-    # :view_root   - The directory containing erubis view templates. Defaults to
-    #                Cortex Reaver's builtin templates.
+    # :root        - The directory containing public/, layout/, and view/. 
+    #                Defaults to HOME_DIR.
     # :log_root    - The directory that Cortex Reaver should log to. Defaults to
     #                HOME_DIR/log. If nil, file logging disabled.
     # :plugin_root - The directory that Cortex Reaver plugins live in. Defaults
@@ -39,8 +36,7 @@ module CortexReaver
         File.expand_path(CortexReaver::HOME_DIR),
        'cortex_reaver.db'
       )
-      self[:public_root] = File.join(CortexReaver::HOME_DIR, 'public')
-      self[:view_root] = nil
+      self[:root] = CortexReaver::HOME_DIR
       self[:log_root] = File.join(CortexReaver::HOME_DIR, 'log')
       self[:plugin_root] = File.join(CortexReaver::HOME_DIR, 'plugins')
       self[:mode] = :production
@@ -74,6 +70,24 @@ module CortexReaver
 
       # Compile views
       self[:compile_views] ||= true if self[:mode] == :production
+    end
+    
+    def public_root
+      if self[:root]
+        File.join(self[:root], 'public')
+      end
+    end
+
+    def view_root
+      if self[:root]
+        File.join(self[:root], 'view')
+      end
+    end
+
+    def layout_root
+      if self[:root]
+        File.join(self[:root], 'layout')
+      end
     end
   end
 end

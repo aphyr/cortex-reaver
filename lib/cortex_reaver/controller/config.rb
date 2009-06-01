@@ -1,8 +1,9 @@
 module CortexReaver
   class ConfigController < Ramaze::Controller
     map '/config'
-    layout '/text_layout'
-    template :edit, :form
+    layout(:text_layout)
+
+    alias_view :edit, :form
     engine :Erubis
 
     helper :error,

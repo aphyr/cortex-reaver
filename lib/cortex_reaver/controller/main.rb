@@ -1,23 +1,22 @@
 require 'builder'
 
 module CortexReaver
-  class MainController < Ramaze::Controller
+  class MainController < Controller
     map '/'
-    layout '/text_layout'
+    
+    layout(:text) do |name, wish|
+      !request.xhr? and name != :atom
+    end
+
     helper :cache, 
-      :workflow, 
-      :auth, 
-      :error, 
-      :navigation, 
       :date, 
       :tags, 
-      :form,
       :feeds,
       :pages
 
-    engine :Erubis
-
-    cache :index, :ttl => 60
+    cache_action(:method => :index, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     # the index action is called automatically when no other action is specified
     def index(*ids)
@@ -26,45 +25,48 @@ module CortexReaver
         @title = @page.title
        
         if user.can_edit? Page.new
-          workflow "Edit this page", R(PageController, :edit, @page.id)
+          workflow "Edit this page", PageController.r(:edit, @page.id)
         end
         if user.can_delete? Page.new
-          workflow "Delete this page", R(PageController, :delete, @page.id)
+          workflow "Delete this page", PageController.r(:delete, @page.id)
         end
 
-        render_template 'pages/show'
+        PageController.render_view('show')
       elsif not ids.empty?
         # Didn't have that page
         error_404
       else
         # Default welcome page
-        @photographs = Photograph.viewable_by(user).recent
-        @journals = Journal.viewable_by(user).recent
-       
-        if @photographs.size > 0
+        @photographs = Photograph.recent.viewable_by(user)
+        @journals = Journal.recent.viewable_by(user)
+      
+        if @photographs.count > 0
+          # Show sidebar
           @sidebar ||= []
-          @sidebar.unshift render_template('photographs/sidebar.rhtml')
+          @sidebar.unshift PhotographController.render_view('sidebar')
         end
 
+        # Workflows
         if user.can_create? Journal.new
-          workflow "New Journal", R(JournalController, :new)
+          workflow "New Journal", JournalController.r(:new)
         end
         if user.can_create? Page.new
-          workflow "New Page", R(PageController, :new)
+          workflow "New Page", PageController.r(:new)
         end
         if user.can_create? Photograph.new
-          workflow "New Photograph", R(PhotographController, :new)
+          workflow "New Photograph", PhotographController.r(:new)
         end
         if user.can_create? Project.new
-          workflow "New Project", R(ProjectController, :new)
+          workflow "New Project", ProjectController.r(:new)
         end
 
-        feed 'Photographs', Rs(PhotographController, :atom)
-        feed 'Journals', Rs(JournalController, :atom)
-        feed 'Projects', Rs(ProjectController, :atom)
-        feed 'Comments', Rs(CommentController, :atom)
+        # Feeds
+        feed 'Photographs', PhotographController.r(:atom)
+        feed 'Journals', JournalController.r(:atom)
+        feed 'Projects', ProjectController.r(:atom)
+        feed 'Comments', CommentController.r(:atom)
 
-        render_template 'journals/list.rhtml'
+        JournalController.render_view('list', :journals => @journals)
       end
     end
 

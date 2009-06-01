@@ -23,7 +23,7 @@
     <%= render_template Ramaze::Global.view_root + '/journals/journal.rhtml', 'journal' => journal, 'hide_comments' => true %>
   <% end %>
 
-  <% if @page.nil? and @journals.size > 0 and @journals.all.last.previous %>
+  <% if @page.nil? and @journals.count > 0 and @journals.all.last.previous %>
     <p><a href="<%= @journals.all.last.previous.absolute_window_url %>">Continue reading on journal page <%= @journals.all.last.previous.absolute_window_index %></a></p>
   <% end %>
 </div>

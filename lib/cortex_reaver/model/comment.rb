@@ -1,19 +1,20 @@
 module CortexReaver
     class Comment < Sequel::Model(:comments)
-    include CortexReaver::Model::Timestamps
-    include CortexReaver::Model::CachedRendering
-    include CortexReaver::Model::Renderer
-    include CortexReaver::Model::Comments
-    include CortexReaver::Model::Sequenceable
+    plugin :timestamps
+    plugin :cached_rendering
+    plugin :comments
+    plugin :sequenceable
     
-    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
-    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by'
-    belongs_to :journal, :class => 'CortexReaver::Journal'
-    belongs_to :project, :class => 'CortexReaver::Project'
-    belongs_to :photograph, :class => 'CortexReaver::Photograph'
-    belongs_to :page, :class => 'CortexReaver::Page'
-    belongs_to :comment, :class => 'CortexReaver::Comment'
-    has_many :comments, :class => 'CortexReaver::Comment'
+    include CortexReaver::Model::Renderer
+    
+    many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
+    many_to_one :journal, :class => 'CortexReaver::Journal'
+    many_to_one :project, :class => 'CortexReaver::Project'
+    many_to_one :photograph, :class => 'CortexReaver::Photograph'
+    many_to_one :page, :class => 'CortexReaver::Page'
+    many_to_one :comment, :class => 'CortexReaver::Comment'
+    one_to_many :comments, :class => 'CortexReaver::Comment'
 
     validates do
       presence_of :body
@@ -51,28 +52,42 @@ module CortexReaver
     end
 
     # Infer blank titles
-    before_save(:infer_title) do
+    def before_save
+      return false unless super
+
       if title.blank?
         title = 'Re: ' + parent.title.to_s
         title.gsub!(/^(Re: )+/, 'Re: ')
         self.title = title
       end
+
+      true
     end
 
     # Update parent comment counts
-    before_destroy(:decrement_parent_comment_count) do
+    def before_destroy
+      return false unless super
+
       parent = self.parent
       parent.comment_count -= 1
       parent.skip_timestamp_update = true
       parent.save
+
+      true
     end
     
-    after_create(:increment_parent_comment_count) do
-      # WARNING: If we *reparent* comments as opposed to just posting, this will break.
+    # Increment parent comment count
+    # WARNING: If we *reparent* comments as opposed to just posting, this will
+    # break.
+    def after_create
+      super
+
       parent = self.parent
       parent.comment_count += 1
       parent.skip_timestamp_update = true
       parent.save
+
+      true
     end
 
     render :body, :with => :render_comment

@@ -166,10 +166,10 @@ module Ramaze
         if id
           # Redirect to show
           #
-          # This way, you can (assuming your name doesn't conflict with an existing
-          # action) tell people to visit /journals/my-cool-event, and it will go to
-          # /journals/show/my-cool-event.
-          raw_redirect Rs(:show, id), :status => 301
+          # This way, you can (assuming your name doesn't conflict with an
+          # existing action) tell people to visit /journals/my-cool-event, and
+          # it will go to /journals/show/my-cool-event.
+          raw_redirect rs(:show, id), :status => 301
         else
           # Display index
           page :last
@@ -265,7 +265,7 @@ module Ramaze
         if self.class.private_method_defined? :feed and model_class.respond_to? :atom_url
           feed @title, model_class.atom_url
         end
-        @models = model_class.viewable_by(user, model_class.window(page))
+        @models = model_class.window(page).viewable_by(user)
         @page = page
 
         if model_class.count.zero?
@@ -281,14 +281,14 @@ module Ramaze
           workflow "New #{model_class.to_s.demodulize}", Rs(:new)
         end
 
-        render_template :list
+        render_view(:list)
       end
 
       def show(id)
         if id and @model = model_class.get(id)
           # Found that model
           
-          unless user.can_view? model
+          unless user.can_view? @model
             error_403
           end
 
@@ -322,8 +322,6 @@ module Ramaze
           if user.can_delete? @model
             workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
           end
-          
-          render_template :show
         elsif id
           # Didn't find that model
           error_404

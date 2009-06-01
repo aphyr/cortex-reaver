@@ -1,18 +1,18 @@
 module CortexReaver
   class Project < Sequel::Model(:projects)
-    include CortexReaver::Model::Timestamps
-    include CortexReaver::Model::CachedRendering
+    plugin :timestamps
+    plugin :cached_rendering
+    plugin :canonical
+    plugin :attachments
+    plugin :comments
+    plugin :tags
+    plugin :sequenceable
     include CortexReaver::Model::Renderer
-    include CortexReaver::Model::Canonical
-    include CortexReaver::Model::Attachments
-    include CortexReaver::Model::Comments
-    include CortexReaver::Model::Tags
-    include CortexReaver::Model::Sequenceable
 
     many_to_many :tags, :class => 'CortexReaver::Tag'
-    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
-    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by'
-    has_many :comments, :class => 'CortexReaver::Comment'
+    many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
+    one_to_many :comments, :class => 'CortexReaver::Comment'
 
     validates do
       uniqueness_of :name

@@ -1,19 +1,17 @@
 module CortexReaver
-  class UserController < Ramaze::Controller
+  class UserController < Controller
     MODEL = User
 
     map '/users'
-    layout '/text_layout'
-    template :edit, :form
-    template :new, :form
-    engine :Erubis
+    
+    layout(:text) do |name, wish|
+      !request.xhr?
+    end
+    
+    alias_view :edit, :form
+    alias_view :new, :form
 
-    helper :error,
-      :auth,
-      :form,
-      :workflow,
-      :navigation,
-      :date,
+    helper :date,
       :tags,
       :canonical,
       :crud,
@@ -56,12 +54,12 @@ module CortexReaver
             redirect uri
           else
             # Try the main page.
-            redirect R(:/)
+            redirect MainController.r
           end
         else
           # Nope, no login.
           flash[:error] = "Wrong username or password."
-          redirect Rs(:login)
+          redirect rs(:login)
         end
       end
     end

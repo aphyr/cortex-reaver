@@ -1,8 +1,6 @@
 module CortexReaver
-  class DocumentationController < Ramaze::Controller
+  class DocumentationController < Controller
     map '/documentation'
-    layout '/text_layout'
-    engine :Erubis
 
     def formatting
     end

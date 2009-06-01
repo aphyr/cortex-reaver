@@ -215,7 +215,6 @@ module CortexReaver
     # Start an IRB session
     reload_config
     setup
-    Ramaze::Global.console = true
 
     # Don't let IRB try to interpret our command line
     ARGV.clear

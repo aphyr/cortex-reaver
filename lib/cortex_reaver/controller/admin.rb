@@ -2,7 +2,11 @@ module CortexReaver
   class AdminController < Ramaze::Controller
     
     map '/admin'
-    layout '/text_layout'
+
+    layout(:text_layout) do
+      not request.xhr?
+    end
+
     engine :Erubis
 
     helper :error,

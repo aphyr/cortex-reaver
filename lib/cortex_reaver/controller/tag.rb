@@ -3,9 +3,14 @@ module CortexReaver
     MODEL = Tag
 
     map '/tags'
-    layout '/text_layout'
-    template :edit, :form
-    template :new, :form
+    
+    layout(:text_layout) do |name, wish|
+      !request.xhr?
+    end
+
+    alias_view :edit, :form
+    alias_view :new, :form
+    
     engine :Erubis
 
     helper :cache,
@@ -17,8 +22,8 @@ module CortexReaver
       :canonical,
       :crud
 
-    cache :index, :ttl => 60
-    cache :show, :ttl => 60
+    cache_action :method => :index, :ttl => 120
+    cache_action :method => :show, :ttl => 120
 
     on_save do |tag, request|
       tag.title = request[:title]
