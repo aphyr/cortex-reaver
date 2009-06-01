@@ -1,18 +1,19 @@
 module CortexReaver
   class Journal < Sequel::Model(:journals)
-    include CortexReaver::Model::Timestamps
-    include CortexReaver::Model::CachedRendering
+    plugin :timestamps
+    plugin :cached_rendering
+    plugin :canonical
+    plugin :attachments
+    plugin :comments
+    plugin :tags
+    plugin :sequenceable
+    plugin :viewable
     include CortexReaver::Model::Renderer
-    include CortexReaver::Model::Canonical
-    include CortexReaver::Model::Attachments
-    include CortexReaver::Model::Comments
-    include CortexReaver::Model::Tags
-    include CortexReaver::Model::Sequenceable
 
     many_to_many :tags, :class => 'CortexReaver::Tag'
-    belongs_to :creator, :class => 'CortexReaver::User', :key => 'created_by'
-    belongs_to :updater, :class => 'CortexReaver::User', :key => 'updated_by'
-    has_many :comments, :class => 'CortexReaver::Comment'
+    many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
+    many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
+    one_to_many :comments, :class => 'CortexReaver::Comment'
 
     validates do
       uniqueness_of :name
@@ -37,20 +38,6 @@ module CortexReaver
 
     def self.url
       '/journals'
-    end
-
-    # Returns a dataset of models viewable by this user
-    def self.viewable_by(user)
-      if user.anonymous?
-        # Show only non-drafts
-        dataset.exclude(:draft)
-      elsif user.admin? or user.editor?
-        # Show everything
-        dataset
-      else
-        # Show all non-drafts and any drafts we created
-        dataset.filter((:draft => false) | (:created_by => user.id))
-      end
     end
 
     def atom_url

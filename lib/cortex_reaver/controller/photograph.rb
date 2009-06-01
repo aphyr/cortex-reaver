@@ -1,23 +1,23 @@
 require 'exifr'
 require 'RMagick'
 module CortexReaver
-  class PhotographController < Ramaze::Controller
+  class PhotographController < Controller
     MODEL = Photograph
 
     map '/photographs'
-    layout '/blank_layout'
-    layout '/text_layout' => [:index, :edit, :new, :page]
-    template_paths << 'view'
-    template :edit, :form
-    template :new, :form
-    engine :Erubis
+
+    layout(:blank) do |name, wish|
+      !request.xhr? and name != :atom
+    end
+
+    layout(:text) do |name, wish|
+      [:index, :edit, :new, :page].include? name
+    end
+
+    alias_view :edit, :form
+    alias_view :new, :form
 
     helper :cache,
-      :error,
-      :auth, 
-      :form, 
-      :workflow, 
-      :navigation, 
       :date,
       :tags, 
       :canonical,
@@ -26,7 +26,9 @@ module CortexReaver
       :photographs,
       :feeds
 
-    cache :index, :ttl => 60
+    cache_action(:method => :index, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     on_save do |photograph, request|
       photograph.title = request[:title]

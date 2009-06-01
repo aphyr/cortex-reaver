@@ -1,24 +1,27 @@
 module CortexReaver
-  class PageController < Ramaze::Controller
+  class PageController < Controller
     MODEL = Page
 
     map '/pages'
-    layout '/text_layout'
-    template :edit, :form
-    template :new, :form
-    engine :Erubis
+    
+    layout(:text) do |name, wish|
+      not request.xhr? and name != :atom
+    end
 
-    helper :error,
-      :auth,
-      :form,
-      :workflow,
-      :navigation,
+    alias_view :edit, :form
+    alias_view :new, :form
+
+    helper :cache,
       :date,
       :tags,
       :canonical,
       :crud,
       :attachments,
       :pages
+
+    cache_action(:method => :show, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     on_second_save do |page, request|
       page.tags = request[:tags]

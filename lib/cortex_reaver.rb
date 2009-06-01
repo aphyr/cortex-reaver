@@ -7,6 +7,9 @@ begin
   require 'sequel'
   require 'yaml'
   require 'socket'
+
+  require 'sequel/extensions/migration'
+  require 'sequel/extensions/inflector'
 rescue LoadError => e
   puts e
   puts "You probably need to install some packages Cortex Reaver needs. Try: 
@@ -18,8 +21,8 @@ end
 module CortexReaver
   # Paths
   ROOT = File.expand_path(File.join(__DIR__, '..'))
-  LIB_DIR = File.join(ROOT, 'lib', 'cortex_reaver')
-  HOME_DIR = Dir.pwd
+  LIB_DIR = File.expand_path(File.join(ROOT, 'lib', 'cortex_reaver'))
+  HOME_DIR = File.expand_path(Dir.pwd)
   
   # Some basic initial requirements
   require File.join(LIB_DIR, 'version')
@@ -44,18 +47,27 @@ module CortexReaver
 
   # Prepare Ramaze, create directories, etc.
   def self.init
-    # Tell Ramaze where to find public files and views
-    Ramaze::Global.public_root = File.join(LIB_DIR, 'public')
-    Ramaze::Global.view_root = config[:view_root] || File.join(CortexReaver::LIB_DIR, 'view')
-    Ramaze::Global.compile = config[:compile_views]
+    # Root directory
+    Ramaze::App[:cortex_reaver].options.roots = [LIB_DIR]
+    if config[:root]
+      Ramaze::App[:cortex_reaver].options.roots.unshift(config[:root])
+    end
+
+    # App
+#    Ramaze.options.app.name = "Cortex Reaver #{File.expand_path(config_file)}"
+
+    # Server options
+    Ramaze.options.adapter.handler = config[:adapter]
+    Ramaze.options.adapter.host = config[:host]
+    Ramaze.options.adapter.port = config[:port]
 
     # Check directories
-    if config[:public_root] and not File.directory? config[:public_root]
+    if config[:root] and not File.directory? config.public_root
       # Try to create a public directory
       begin
         FileUtils.mkdir_p config[:public_root]
       rescue => e
-        Ramaze::Log.warn "Unable to create a public directory at #{config[:public_root]}: #{e}."
+        Ramaze::Log.warn "Unable to create a public directory at #{config.public_root}: #{e}."
       end
     end
     if config[:log_root] and not File.directory? config[:log_root]
@@ -75,36 +87,37 @@ module CortexReaver
 
     unless config[:daemon]
       # Log to console
-      Ramaze::Log.loggers << Ramaze::Logger::Informer.new
+      Ramaze::Log.loggers << Logger.new(STDOUT)
     end 
 
     case config[:mode]
     when :production
-      if config[:log_root]
-        # Log to file
-        Ramaze::Log.loggers << Ramaze::Logger::Informer.new(
-          File.join(config[:log_root], 'production.log'),
-          [:error, :info, :notice]
-        )
+      Ramaze.options.mode = :live
+      
+      # Set up cache
+      case config[:cache]
+        when :memcache
+        Ramaze::Cache.options.default = Ramaze::Cache::MemCache
       end
 
-      # Don't reload source code
-      Ramaze::Global.sourcereload = false
-
-      # Don't expose errors
-      Ramaze::Dispatcher::Error::HANDLE_ERROR.update({
-        ArgumentError => [404, 'error_404'],
-        Exception     => [500, 'error_500']
-      })
-    when :development
       if config[:log_root]
         # Log to file
-        Ramaze::Log.loggers << Ramaze::Logger::Informer.new(
+        Ramaze::Log.loggers << Logger.new(
+          File.join(config[:log_root], 'production.log')
+        )
+        Ramaze::Log.level = Logger::Severity::INFO
+      end
+    when :development
+      Ramaze.options.mode = :dev
+
+      if config[:log_root]
+        # Log to file
+        Ramaze::Log.loggers << Logger.new(
           File.join(config[:log_root], 'development.log')
         )
+        Ramaze::Log.level = Logger::Severity::DEBUG
 
         # Also use SQL log
-        require 'logger'
         db.logger = Logger.new(
           File.join(config[:log_root], 'sql.log')
         )
@@ -114,29 +127,13 @@ module CortexReaver
     end
 
     # Prepare view directory
-    if config[:view_root]
-      if not File.directory? config[:view_root]
+    if config.view_root
+      if not File.directory? config.view_root
         # Try to create a view directory
         begin
-          FileUtils.mkdir_p config[:view_root]
+          FileUtils.mkdir_p config.view_root
         rescue => e
           Ramaze::Log.warn "Unable to create a view directory at #{config[:view_root]}: #{e}."
-        end
-      end
-
-      if File.directory? config[:view_root]
-        # Link in default views
-        source = File.join(LIB_DIR, 'view')
-        dest = config[:view_root].sub(/\/$/, '')
-        Find.find(source) do |path|
-          dest_path = path.sub(source, dest)
-          if File.directory? path and not File.exists? dest_path
-            # Link this directory
-            FileUtils.ln_s path, dest_path
-            Find.prune
-          elsif File.file? path and not File.exists? dest_path
-            FileUtils.ln_s path, dest_path
-          end
         end
       end
     end
@@ -153,8 +150,10 @@ module CortexReaver
     # Load controllers and models
     Ramaze::acquire File.join(LIB_DIR, 'snippets', '**', '*')
     Ramaze::acquire File.join(LIB_DIR, 'support', '*')
+    require File.join(LIB_DIR, 'model', 'model')
     Ramaze::acquire File.join(LIB_DIR, 'model', '*')
     Ramaze::acquire File.join(LIB_DIR, 'helper', '*')
+    require File.join(LIB_DIR, 'controller', 'controller')
     Ramaze::acquire File.join(LIB_DIR, 'controller', '*')
     Ramaze::acquire File.join(LIB_DIR, '**', '*')
   end
@@ -179,23 +178,6 @@ module CortexReaver
   def self.run
     # Shutdown callback
     at_exit do
-      # Unlink templates
-      begin
-        if config[:view_root]
-          Find.find(config[:view_root]) do |path|
-            if File.symlink? path # TODO: identify link target
-              begin
-                File.delete path
-              rescue => e
-                Ramaze::Log.error "Unable to unlink symlinked view #{path}: #{e}"
-              end
-            end
-          end
-        end
-      rescue => e2
-        Ramaze::Log.error "Unable to unlink symlinked views in #{config[:view_root]}: #{e}"
-      end
-
       # Remove pidfile
       FileUtils.rm(config[:pidfile]) if File.exist? config[:pidfile]
     end
@@ -203,13 +185,8 @@ module CortexReaver
     Ramaze::Log.info "Cortex Reaver #{Process.pid} stalking victims."
 
     # Run Ramaze
-    Ramaze.startup(
-      :force => true,
-      :cache => config[:cache],
-      :adapter => config[:adapter],
-      :host => config[:host],
-      :port => config[:port]
-    )
+#    Ramaze.start :root => [config[:root], LIB_DIR]
+    Ramaze.start :root => LIB_DIR
 
     puts "Cortex Reaver finished."
   end
@@ -219,11 +196,11 @@ module CortexReaver
     # Connect to DB
     setup_db
 
-    # Prepare Ramaze, check directories, etc.
-    init
-
     # Load library
     self.load
+
+    # Prepare Ramaze, check directories, etc.
+    init
   end
 
   # Connect to DB. If check_schema is false, doesn't check to see that the schema
@@ -239,6 +216,7 @@ module CortexReaver
       string = "#{d[:driver]}://#{d[:user]}:#{d[:password]}@#{d[:host]}/#{d[:database]}"
     end
 
+    # Connect
     begin
       @db = Sequel.connect(string)
     rescue => e
@@ -247,7 +225,6 @@ module CortexReaver
     end
 
     # Check schema
-    require 'sequel/extensions/migration'
     if check_schema and
        Sequel::Migrator.get_current_migration_version(@db) !=
        Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))

@@ -24,9 +24,6 @@ module Ramaze
           if base.respond_to? :cache
             cache :atom, :ttl => 300
           end
-
-          # Don't use layout
-          base.deny_layout :atom
         end
       end
 

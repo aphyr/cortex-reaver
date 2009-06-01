@@ -1,32 +1,38 @@
-module CortexReaver
-  module Model
+module Sequel
+  module Plugins
     # Supports updated_on and created_on behavior
     module Timestamps
-      def self.included(base)
-        base.class_eval do
-          # Create
-          before_create(:init_timestamp) do
-            unless skip_timestamp_update?
-              self.created_on = Time.now
-              self.updated_on = Time.now
-            end
+      module InstanceMethods
+        # Create
+        def before_create
+          return false unless super
+
+          unless skip_timestamp_update?
+            self.created_on = Time.now
+            self.updated_on = Time.now
           end
 
-          # Update
-          before_update(:update_timestamp) do
-            unless skip_timestamp_update?
-              self.updated_on = Time.now
-            end
-          end
+          true
         end
-      end
 
-      def skip_timestamp_update=(boolean)
-        @skip_timestamp_update = boolean
-      end
+        # Update
+        def before_update
+          return false unless super
 
-      def skip_timestamp_update?
-        @skip_timestamp_update
+          unless skip_timestamp_update?
+            self.updated_on = Time.now
+          end
+
+          true
+        end
+
+        def skip_timestamp_update=(boolean)
+          @skip_timestamp_update = boolean
+        end
+
+        def skip_timestamp_update?
+          @skip_timestamp_update
+        end
       end
     end
   end

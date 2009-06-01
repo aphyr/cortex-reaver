@@ -1,3 +1,17 @@
+Version 0.0.12
+  - General
+    - Runs on Innate (kinda)
+    - Runs on Sequel 3.0.0
+    - Can now mark a journal, photo, project, or page as a draft, which does 
+      not appear to people who can't edit it.
+    - Caching now works on a per-user basis, in line with the new permissions
+      model. This will not be an exceptional hit for most sites, as the majority
+      of users are a.) anonymous and hence have the same ID, and b.) will
+      appreciate not staring at random flash messages for other users.
+  - Model
+    - Pages no longer check for conflicts with public directories or controllers
+    - Ported support modules to Sequel plugins
+    - Moved to using Sequel_notnaughty
 Version 0.0.11 (2009-3-25)
   - Controller
     - Added new :cache option to config
@@ -10,7 +24,8 @@ Version 0.0.9 (2009-3-24)
     - Nice display of authors, editors, and times
 Version 0.0.8 (2009-3-23)
   - General
-    - New roles-based access system makes Cortex Reaver more suitable for use by a small community of authors
+    - New roles-based access system makes Cortex Reaver more suitable for use
+      by a small community of authors
   - Model
     - Users now track two users: the creator, and the last person to edit
     - Models support can_create?, can_edit? and can_delete?
@@ -27,7 +42,8 @@ Version 0.0.7 (2009-3-17)
     - Model.tagged_with_any_of array_of_tags
     - Pages are now heirarchical
   - View
-    - If view_root is specified, automatically symlinks in missing view templates from the library version
+    - If view_root is specified, automatically symlinks in missing view 
+      templates from the library version
     - Added little tag icon
     - Helper to generate section links
     - Sections now come with a selected class
@@ -54,7 +70,8 @@ Version 0.0.4 (2008-12-21)
     - Added :compile_views option to config (enabled by default in production)
       which improves rendering performance
     - Switched to Thin adapter, which significantly improves performance.
-    - Dump current database to disk (an SQLite file) with cortex_reaver --dump file
+    - Dump current database to disk (an SQLite file) with cortex_reaver --dump 
+      file
     - Load database from a dump with cortex_reaver --load file
       These are both pretty naive approaches, but since I haven't done anything
       really tricky in Sequel, ought to work okay. Let me know if you spot any

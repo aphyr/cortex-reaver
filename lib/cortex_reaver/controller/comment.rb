@@ -3,9 +3,14 @@ module CortexReaver
     MODEL = Comment
 
     map '/comments'
-    layout '/text_layout'
-    template :edit, :form
-    template :new, :form
+    
+    layout(:text_layout) do |name, wish|
+      not request.xhr? and name != :atom
+    end
+
+    alias_view :edit, :form
+    alias_view :new, :form
+
     engine :Erubis
 
     helper :cache,
@@ -19,7 +24,7 @@ module CortexReaver
       :crud,
       :feeds
 
-    cache :index, :ttl => 60
+    cache_action :method => :index, :ttl => 60
 
     on_save do |comment, request|
       comment.title = request[:title]

@@ -2,23 +2,23 @@ require 'digest/sha2'
 
 module CortexReaver
   class User < Sequel::Model(:users)
-    include CortexReaver::Model::Timestamps
-    include CortexReaver::Model::Sequenceable
+    plugin :timestamps
+    plugin :sequenceable
 
-    has_many :created_comments, :key => 'created_by', :class => 'CortexReaver::Comment'
-    has_many :created_journals, :key => 'created_by', :class => 'CortexReaver::Journal'
-    has_many :created_pages, :key => 'created_by', :class => 'CortexReaver::Page'
-    has_many :created_photographs, :key => 'created_by', :class => 'CortexReaver::Photograph'
-    has_many :created_projects, :key => 'created_by', :class => 'CortexReaver::Project'
-    has_many :updated_comments, :key => 'updated_by', :class => 'CortexReaver::Comment'
-    has_many :updated_journals, :key => 'updated_by', :class => 'CortexReaver::Journal'
-   has_many :updated_pages, :key => 'updated_by', :class => 'CortexReaver::Page'
-    has_many :updated_photographs, :key => 'updated_by', :class => 'CortexReaver::Photograph'
-    has_many :updated_projects, :key => 'updated_by', :class => 'CortexReaver::Project'
+    one_to_many :created_comments, :key => 'created_by', :class => 'CortexReaver::Comment'
+    one_to_many :created_journals, :key => 'created_by', :class => 'CortexReaver::Journal'
+    one_to_many :created_pages, :key => 'created_by', :class => 'CortexReaver::Page'
+    one_to_many :created_photographs, :key => 'created_by', :class => 'CortexReaver::Photograph'
+    one_to_many :created_projects, :key => 'created_by', :class => 'CortexReaver::Project'
+    one_to_many :updated_comments, :key => 'updated_by', :class => 'CortexReaver::Comment'
+    one_to_many :updated_journals, :key => 'updated_by', :class => 'CortexReaver::Journal'
+   one_to_many :updated_pages, :key => 'updated_by', :class => 'CortexReaver::Page'
+    one_to_many :updated_photographs, :key => 'updated_by', :class => 'CortexReaver::Photograph'
+    one_to_many :updated_projects, :key => 'updated_by', :class => 'CortexReaver::Project'
 
     validates do
       uniqueness_of :login
-      length_of     :login, :with => 5..255, :allow_blank => true
+      length_of     :login, :within => 5..255
       format_of     :login, :with => /^[A-Za-z0-9\-_]+$/
       length_of     :name, :maximum => 255
       length_of     :http, :allow_blank => true, :maximum => 255
@@ -26,12 +26,8 @@ module CortexReaver
       length_of     :email, :allow_blank => true, :maximum => 255
       format_of     :email, 
         :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :allow_blank => true
-      confirmation_of :password, :allow_nil => true#, :allow_false => true
-      each(:password_length, :tag => :password_length) do |object, attribute, value|
-        unless value.nil? or (8..255) === value
-          object.errors['password'] << 'must be between 8 and 255 characters.'
-        end
-      end
+      confirmation_of :password
+      length_of     :password_length, :within => 8..255
     end
 
     # Ensure an administrator is always available.
@@ -202,7 +198,7 @@ module CortexReaver
     def password=(password)
       self.salt ||= self.class.new_salt
       self[:password] = self.class.crypt(password, self.salt)
-      @password_length = password.length
+      @password_length = '*' * password.length
     end
 
     # Password confirmation
@@ -258,7 +254,7 @@ module CortexReaver
     public
 
     # Create default user if none exist
-    if table_exists? and count == 0
+    if dataset.table_exists? and count == 0
       u = User.new(
         :login => 'shodan',
         :name => 'Shodan',

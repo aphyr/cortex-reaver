@@ -1,6 +1,6 @@
 module CortexReaver
   class Tag < Sequel::Model(:tags)
-    include CortexReaver::Model::Canonical
+    plugin :canonical
 
     many_to_many :photographs, :class => 'CortexReaver::Photograph'
     many_to_many :journals, :class => 'CortexReaver::Journal'
@@ -18,11 +18,15 @@ module CortexReaver
     end
 
     # When we delete a tag, ensure nothing else is linked to it.
-    before_destroy(:drop_associations) do
+    def before_destroy
+      return false unless super
+      
       remove_all_photographs
       remove_all_journals
       remove_all_projects
       remove_all_pages
+
+      true
     end
 
     # Autocompletes a tag. Returns an array of matching candidates

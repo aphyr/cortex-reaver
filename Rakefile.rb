@@ -29,12 +29,13 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
  
   s.required_ruby_version = '>= 1.8.5'
  
-  s.add_dependency('ramaze', '= 2009.02')
+  s.add_dependency('ramaze', '= 2009.05')
   s.add_dependency('builder', '~> 2.1.2')
   s.add_dependency('erubis', '~> 2.6.2')
   s.add_dependency('sanitize', '~> 1.0.6')
   s.add_dependency('BlueCloth', '~> 1.0.0')
-  s.add_dependency('sequel', '~> 2.11.0')
+  s.add_dependency('sequel', '~> 3.0.0')
+  s.add_dependency('sequel_notnaughty', '~> 0.6.2')
   s.add_dependency('thin', '~> 1.0.0')
   s.add_dependency('exifr', '~> 0.10.7')
   s.add_dependency('coderay', '~> 0.8.260')

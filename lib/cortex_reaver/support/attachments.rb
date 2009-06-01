@@ -1,34 +1,113 @@
 require 'fileutils'
 
-module CortexReaver
-  module Model
+module Sequel
+  module Plugins
     module Attachments
-
       # Attachments allows records to manipulate files associated with them.
       #
       # For our purposes, an attachment represents an object that is associated
-      # with a single parent object. A file represents a file on disk. Attachments
-      # closely wrap files, but shouldn't be confused with them.
+      # with a single parent object. A file represents a file on disk.
 
-      def self.included(base)
-        base.class_eval do
-          # When we delete a record with attachments, delete the attachments first.
-          before_delete(:delete_attachments) do
-            attachments.each do |attachment|
-              attachment.delete
+      module InstanceMethods
+        # When we delete a record with attachments, delete the attachments
+        # first.
+        def before_delete
+          return false unless super
+          attachments.each do |attachment|
+            attachment.delete
+          end
+
+          true
+        end
+
+        # The separator used for public (e.g. HTTP URL) paths.
+        PUBLIC_PATH_SEPARATOR = '/'
+
+        # How many bytes to read at a time when saving files.
+        DEFAULT_ATTACHMENT_DIRECTORY_MODE = 0755
+
+        # Returns a named attachment
+        def attachment(name)
+          Attachment.new(self, name)
+        end
+
+        # Returns the directory which contains attachments for this record.
+        # Forces a save of the record if an ID does not exist.
+        def attachment_path(type = :local, force_save = true)
+          sep = ''
+          case type
+          when :local
+            # We're interested in a local path on disk.
+            sep = File::SEPARATOR
+            path = CortexReaver.config[:public_root].dup
+          when :public
+            # We're interested in a public (e.g. HTTP URL) path.
+            sep = PUBLIC_PATH_SEPARATOR
+            path = ''
+          else
+            raise ArgumentError.new('type must be either :local or :public')
+          end
+
+          # If we don't have an ID, save the record to obtain one.
+          if force_save and id.nil?
+            unless save
+              # Save failed!
+              return nil
             end
           end
+
+          # Complete the path.
+          path << 
+            sep + 'data' + 
+            sep + self.class.to_s.demodulize.underscore.pluralize + 
+            sep + self.id.to_s
+        end
+
+        # Returns an array of attachments.
+        def attachments
+          # Unsaved new records, naturally, have no attachments.
+          return [] if new?
+
+          attachments = Array.new
+          if path = local_attachment_path and File.directory? path
+            begin
+              attachments = Dir.open(path).reject do |name|
+                # Don't include dotfiles
+                name =~ /^\./
+              end
+              attachments.collect! do |name|
+                Attachment.new self, name
+              end
+            rescue
+              # Couldn't read the directory
+            end
+          end
+          attachments
+        end
+
+        # Ensures the attachment directory exists.
+        def create_attachment_directory
+          path = local_attachment_path
+          unless File.directory? path
+            FileUtils.mkdir_p path, :mode => DEFAULT_ATTACHMENT_DIRECTORY_MODE
+          end
+        end
+
+        # Returns the local directory which contains attachments for this
+        # record.
+        def local_attachment_path
+          attachment_path :local  
+        end
+
+        # Returns the public directory which contains attachments for this
+        # record.
+        def public_attachment_path
+          attachment_path :public
         end
       end
 
-      # The separator used for public (e.g. HTTP URL) paths.
-      PUBLIC_PATH_SEPARATOR = '/'
-
-      # How many bytes to read at a time when saving files.
-      DEFAULT_ATTACHMENT_DIRECTORY_MODE = 0755
-
       class Attachment
-        # Attachable::Attachment wraps a file associated with a parent object.
+        # Wraps a file associated with a parent object.
 
         BUFFER_SIZE = 65536
         DEFAULT_MODE = 0644
@@ -62,8 +141,8 @@ module CortexReaver
         end
 
         # Returns a File object for this attachment. Optionally specify a mode 
-        # string, which is passed to File.new. Creates the attachment directory if
-        # necessary.
+        # string, which is passed to File.new. Creates the attachment directory
+        # if necessary.
         def file(how = 'r', mode = nil)
           @parent.create_attachment_directory
           if mode
@@ -84,9 +163,10 @@ module CortexReaver
         #   :copy copies the file contents using FileUtils.cp
         #   :move moves the file.
         #
-        # Ramaze offers us temporary File objects from form uploads. Creating a hard
-        # link is extremely quick, saves disk space, but also doesn't interfere with
-        # the temporary file in case someone else wants access to it.
+        # Ramaze offers us temporary File objects from form uploads. Creating a
+        # hard link is extremely quick, saves disk space, but also doesn't
+        # interfere with the temporary file in case someone else wants access
+        # to it.
         def file=(readable, mode = :hard_link)
           # Create attachment directory if necessary.
           @parent.create_attachment_directory
@@ -152,83 +232,6 @@ module CortexReaver
         def reset_permissions
           FileUtils.chmod(DEFAULT_MODE, path(:local))
         end
-      end
-      
-      # Returns a named attachment
-      def attachment(name)
-        Attachment.new(self, name)
-      end
-
-      # Returns the directory which contains attachments for this record. Forces
-      # a save of the record if an ID does not exist.
-      def attachment_path(type = :local, force_save = true)
-        sep = ''
-        case type
-        when :local
-          # We're interested in a local path on disk.
-          sep = File::SEPARATOR
-          path = CortexReaver.config[:public_root].dup
-        when :public
-          # We're interested in a public (e.g. HTTP URL) path.
-          sep = PUBLIC_PATH_SEPARATOR
-          path = ''
-        else
-          raise ArgumentError.new('type must be either :local or :public')
-        end
-
-        # If we don't have an ID, save the record to obtain one.
-        if force_save and id.nil?
-          unless save
-            # Save failed!
-            return nil
-          end
-        end
-
-        # Complete the path.
-        path << 
-          sep + 'data' + 
-          sep + self.class.to_s.demodulize.underscore.pluralize + 
-          sep + self.id.to_s
-      end
-
-      # Returns an array of attachments.
-      def attachments
-        # Unsaved new records, naturally, have no attachments.
-        return [] if new?
-
-        attachments = Array.new
-        if path = local_attachment_path and File.directory? path
-          begin
-            attachments = Dir.open(path).reject do |name|
-              # Don't include dotfiles
-              name =~ /^\./
-            end
-            attachments.collect! do |name|
-              Attachment.new self, name
-            end
-          rescue
-            # Couldn't read the directory
-          end
-        end
-        attachments
-      end
-
-      # Ensures the attachment directory exists.
-      def create_attachment_directory
-        path = local_attachment_path
-        unless File.directory? path
-          FileUtils.mkdir_p path, :mode => DEFAULT_ATTACHMENT_DIRECTORY_MODE
-        end
-      end
-
-      # Returns the local directory which contains attachments for this record.
-      def local_attachment_path
-        attachment_path :local  
-      end
-
-      # Returns the public directory which contains attachments for this record.
-      def public_attachment_path
-        attachment_path :public
       end
     end
   end
