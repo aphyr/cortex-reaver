@@ -5,7 +5,7 @@ module CortexReaver
     map '/'
     
     layout(:text) do |name, wish|
-      !request.xhr? and name != :atom
+      !request.xhr? and name != 'atom'
     end
 
     helper :cache, 
@@ -14,12 +14,13 @@ module CortexReaver
       :feeds,
       :pages
 
-    cache_action(:method => :index, :ttl => 120) do
-      user.id.to_i.to_s + flash.inspect
-    end
+#    cache_action(:method => :index, :ttl => 120) do
+#      user.id.to_i.to_s + flash.inspect
+#    end
 
     # the index action is called automatically when no other action is specified
     def index(*ids)
+      respond "hey"
       if not ids.empty? and @page = Page.get(ids)
         # Render that page.
         @title = @page.title
@@ -73,6 +74,11 @@ module CortexReaver
     # TODO: We don't implement a collective ATOM feed. Yet.
     def atom
       error_404
+    end
+
+    def clear
+      Ramaze::Cache.action.clear
+      respond "cache cleared"
     end
 
     private
