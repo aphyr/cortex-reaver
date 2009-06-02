@@ -41,7 +41,7 @@ module Sequel
       module InstanceMethods 
         # If tags have changed, make sure to update those tags' counts.
         def after_save
-          return false unless super
+          return false if super == false
 
           if @added_tags
             @added_tags.each do |tag|

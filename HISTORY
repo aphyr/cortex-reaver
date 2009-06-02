@@ -11,7 +11,8 @@ Version 0.0.12
   - Model
     - Pages no longer check for conflicts with public directories or controllers
     - Ported support modules to Sequel plugins
-    - Moved to using Sequel_notnaughty
+    - New validations
+    - Can no longer delete the only administrator
 Version 0.0.11 (2009-3-25)
   - Controller
     - Added new :cache option to config

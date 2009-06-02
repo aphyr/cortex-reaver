@@ -131,7 +131,13 @@ module Ramaze
               rescue => e
                 # An error occurred
                 Ramaze::Log.error e.inspect + e.backtrace.join("\n")
-                flash[:error] = "Couldn't create #{model_class.to_s.demodulize.downcase} #{h request[:title]}: #{h e}."
+
+                if e.is_a? Sequel::ValidationFailed
+                  flash[:error] = "Couldn't update #{model_class.to_s.demodulize.downcase} #{h @model.to_s}, because there were errors in the form."
+                else
+                  flash[:error] = "Couldn't create #{model_class.to_s.demodulize.downcase} #{h request[:title]}: #{h e}."
+                end
+
                 set_singular_model_var @model
               end
             else
@@ -182,16 +188,17 @@ module Ramaze
             u.can_edit? @model
           end
 
-          if @model.destroy
+          begin
+            raise unless @model.destroy
             flash[:notice] = "#{model_class.to_s.demodulize.downcase} #{h @model.to_s} deleted."
-            redirect Rs()
-          else
-            flash[:notice] = "Couldn't delete #{model_class.to_s.demodulize.downcase} #{h @model.to_s}."
+            redirect rs()
+          rescue => e
+            flash[:notice] = "Couldn't delete #{model_class.to_s.demodulize.downcase} #{h @model.to_s}. #{@model.errors.to_s}"
             redirect @model.url
           end
         else
           flash[:error] = "No such #{model_class.to_s.demodulize.downcase} (#{h id}) exists."
-          redirect Rs()
+          redirect rs()
         end
       end
 
@@ -236,12 +243,17 @@ module Ramaze
             rescue => e
               # An error occurred
               Ramaze::Log.error e.inspect + e.backtrace.join("\n")
-              flash[:error] = "Couldn't update #{model_class.to_s.demodulize.downcase} #{h @model.to_s}: #{h e}."
+              
+              if e.is_a? Sequel::ValidationFailed
+                flash[:error] = "Couldn't update #{model_class.to_s.demodulize.downcase} #{h @model.to_s}, because there were errors in the form."
+              else
+                flash[:error] = "Couldn't update #{model_class.to_s.demodulize.downcase} #{h @model.to_s}: #{h e}."
+              end
             end
           end
         else
           flash[:error] = "No such #{model_class.to_s.demodulize.downcase} (#{id}) exists."
-          redirect Rs()
+          redirect rs()
         end
       end
 
@@ -263,7 +275,12 @@ module Ramaze
         if self.class.private_method_defined? :feed and model_class.respond_to? :atom_url
           feed @title, model_class.atom_url
         end
-        @models = model_class.window(page).viewable_by(user)
+
+        @models = model_class.window(page)
+        if @models.respond_to? :viewable_by
+          @models = @models.viewable_by(user)
+        end
+
         @page = page
 
         if model_class.count.zero?
@@ -276,7 +293,7 @@ module Ramaze
         set_plural_model_var @models
 
         if user.can_create? model_class.new
-          workflow "New #{model_class.to_s.demodulize}", Rs(:new)
+          workflow "New #{model_class.to_s.demodulize}", rs(:new)
         end
 
         render_view(:list)
@@ -312,13 +329,13 @@ module Ramaze
           end
           
           if user.can_create? model_class.new
-            workflow "New #{model_class.to_s.demodulize}", Rs(:new)
+            workflow "New #{model_class.to_s.demodulize}", rs(:new)
           end
           if user.can_edit? @model
-            workflow "Edit this #{model_class.to_s.demodulize}", Rs(:edit, @model.id)
+            workflow "Edit this #{model_class.to_s.demodulize}", rs(:edit, @model.id)
           end
           if user.can_delete? @model
-            workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
+            workflow "Delete this #{model_class.to_s.demodulize}", rs(:delete, @model.id)
           end
           
           #render_view(:show)

@@ -10,6 +10,7 @@ begin
 
   require 'sequel/extensions/migration'
   require 'sequel/extensions/inflector'
+  require 'sequel/extensions/blank'
 rescue LoadError => e
   puts e
   puts "You probably need to install some packages Cortex Reaver needs. Try: 
@@ -155,22 +156,7 @@ module CortexReaver
     Ramaze::acquire File.join(LIB_DIR, 'support', '*')
     require File.join(LIB_DIR, 'model', 'model')
     Ramaze::acquire File.join(LIB_DIR, 'helper', '*')
-    Ramaze::acquire File.join(LIB_DIR, 'model', '*')
     require File.join(LIB_DIR, 'controller', 'controller')
-    require File.join(LIB_DIR, 'controller', 'main')
-    require File.join(LIB_DIR, 'controller', 'user')
-    require File.join(LIB_DIR, 'controller', 'page')
-    require File.join(LIB_DIR, 'controller', 'journal')
-    require File.join(LIB_DIR, 'controller', 'photograph')
-    require File.join(LIB_DIR, 'controller', 'project')
-    require File.join(LIB_DIR, 'controller', 'comment')
-    require File.join(LIB_DIR, 'controller', 'tag')
-    require File.join(LIB_DIR, 'controller', 'documentation')
-    require File.join(LIB_DIR, 'controller', 'admin')
-#    require File.join(LIB_DIR, 'controller', 'controller')
-#    require File.join(LIB_DIR, 'controller', 'controller')
-#    require File.join(LIB_DIR, 'controller', 'controller')
-#    Ramaze::acquire File.join(LIB_DIR, 'controller', '*')
   end
 
   # Reloads the site configuration

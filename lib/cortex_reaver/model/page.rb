@@ -20,14 +20,6 @@ module CortexReaver
     # Top-level pages.
     subset :top, :page_id => nil
 
-    validates do
-      uniqueness_of :name
-      presence_of   :name
-      length_of     :name, :maximum => 255
-      presence_of   :title
-      length_of     :title, :maximum => 255
-    end
-
     # Use standard cached renderer
     render :body
 
@@ -88,6 +80,10 @@ module CortexReaver
       '/pages/atom/' + id.to_s
     end
 
+    def to_s
+      title || name
+    end
+
     def url
       if page
         page.url + '/' + name
@@ -96,8 +92,12 @@ module CortexReaver
       end
     end
 
-    def to_s
-      title || name
+    def validates
+      validates_unique :name
+      validates_presence :name
+      validates_max_length 255, :name
+      validates_presence :title
+      validates_max_length 255, :title
     end
 
     # Returns true if this page is located underneath another page.

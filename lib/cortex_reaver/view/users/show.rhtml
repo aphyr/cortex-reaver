@@ -27,7 +27,11 @@
         <li><a href="/users/edit/<%= @user.id %>">
           <img src="/images/edit.gif" class="icon" alt="comment" /> Edit
         </a></li>
-        <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{@user.login}", :onclick => "return confirm('Are you sure you want to delete this user?');" %></li>
+        <li>
+        <a href="/users/delete/<%=@user.id%>"
+           onclick="return confirm('Are you sure you wish to delete this user?');">
+            <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+         </a>
       <% end %>
     </ul>
   </div>

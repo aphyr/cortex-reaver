@@ -12,11 +12,11 @@ module Ramaze
           # Failed block
           if session[:user]
             flash[:error] = "You don't have permission to do this."
-            redirect :/
+            redirect CortexReaver::MainController.r
           else
             flash[:notice] = "Please log in first."
             session[:target_uri] = request.request_uri
-            redirect R('/users', :login)
+            redirect CortexReaver::UserController.r(:login)
           end
         end
       end

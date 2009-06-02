@@ -12,7 +12,7 @@ module Sequel
         # When we delete a record with attachments, delete the attachments
         # first.
         def before_delete
-          return false unless super
+          return false if super == false
           attachments.each do |attachment|
             attachment.delete
           end
