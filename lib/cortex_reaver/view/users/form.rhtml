@@ -2,7 +2,7 @@
 
 <%= errors_on @user %>
 
-<form class="edit-form" action="<%= Rs(@form_action) %>" method="post">
+<form class="edit-form" action="<%= rs(@form_action) %>" method="post">
   <%= form_p :login, :model => @user %>
   <%= form_p 'name', :model => @user %>
   <%= form_p 'http', :description => 'HTTP', :model => @user %>

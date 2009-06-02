@@ -15,11 +15,11 @@ module CortexReaver
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     one_to_many :comments, :class => 'CortexReaver::Comment'
 
-    validates do
-      uniqueness_of :name
-      presence_of :name
-      length_of :name, :maximum => 255
-      presence_of :title
+    def validates
+      validates_unique :name
+      validates_presence :name
+      validates_max_length 255, :name
+      validates_presence :title
     end
  
     render :body

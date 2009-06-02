@@ -5,7 +5,7 @@ module Sequel
       module InstanceMethods
         # Create
         def before_create
-          return false unless super
+          return false if super == false
 
           unless skip_timestamp_update?
             self.created_on = Time.now
@@ -17,7 +17,7 @@ module Sequel
 
         # Update
         def before_update
-          return false unless super
+          return false if super == false
 
           unless skip_timestamp_update?
             self.updated_on = Time.now

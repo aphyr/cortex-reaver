@@ -48,7 +48,7 @@ module Sequel
       module InstanceMethods
         # Before save, render all changed caching fields
         def before_save
-          return false unless super
+          return false if super == false
 
           # Get changed fields to render
           if new?

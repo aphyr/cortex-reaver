@@ -9,12 +9,12 @@ module CortexReaver
 
     subset :unused, :count => 0
 
-    validates do
-      uniqueness_of :name
-      presence_of :name
-      length_of :name, :maximum => 255 
-      presence_of :title
-      length_of :title, :maximum => 255
+    def validates
+      validates_unique :name
+      validates_presence :name
+      validates_max_length 255, :name
+      validates_presence :title
+      validates_max_length 255, :title
     end
 
     # When we delete a tag, ensure nothing else is linked to it.

@@ -18,7 +18,7 @@
   <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td><%= A(user.login, :href => user.url) %></td>
+        <td><%= a user.login, user.url %></td>
         <td><%= h user.name %></td>
         <% if session[:user].can_edit? user %>
           <td>
@@ -29,7 +29,10 @@
         <% end %>
         <% if session[:user].can_delete? user %>
           <td>
-            <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/users/delete/#{user.id}", :onclick => "return confirm('Are you sure you want to delete this user?');" %>
+            <a href="/users/delete/<%=user.id%>"
+               onclick="return confirm('Are you sure you wish to delete this user?');">
+              <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+            </a>
           </td>
         <% end %>
       </tr>

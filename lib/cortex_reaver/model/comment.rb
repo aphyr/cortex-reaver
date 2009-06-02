@@ -16,41 +16,6 @@ module CortexReaver
     many_to_one :comment, :class => 'CortexReaver::Comment'
     one_to_many :comments, :class => 'CortexReaver::Comment'
 
-    validates do
-      presence_of :body
-      length_of :title, :maximum => 255, :allow_nil => true
-      length_of :name, :maximum => 255, :allow_nil => true
-      length_of :http, :maximum => 255, :allow_nil => true
-      length_of :email, :maximum => 255, :allow_nil => true
-      format_of :email,
-        :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :allow_nil => true
-    end
-
-    # Ensure comments with an email specified do *not* conflict with another user.
-    validates_each :email do |object, attribute, value|
-      if (not value.blank?) and User.filter(:email => value).count > 0
-        object.errors[attribute] << 'conflicts with a registered user'
-      end
-    end
-
-    # Ensures comments belong to exactly one parent.
-    validates_each :page_id do |object, attribute, value|
-      count = 0
-      [:page_id, :project_id, :journal_id, :comment_id, :photograph_id].each do |field|
-        unless object[field].blank?
-          count += 1
-          if count > 1
-            object.errors[attribute] << 'has too many kinds of parents'
-            break
-          end
-        end
-      end
-
-      if count == 0
-        object.errors[attribute] << "doesn't have a parent"
-      end
-    end
-
     # Infer blank titles
     def before_save
       return false unless super
@@ -115,12 +80,43 @@ module CortexReaver
       end
     end
 
+    def to_s
+      title || 'comment ' + id.to_s
+    end
+
     def url
       root_parent.url + '#comment_' + id.to_s
     end
 
-    def to_s
-      title || 'comment ' + id.to_s
+    def validates
+      validates_presence :body
+      validates_max_length 255, :title
+      validates_max_length 255, :name
+      validates_max_length 255, :http
+      validates_max_length 255, :email
+      validates_format(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :email)
+
+      # Ensure comments with an email specified do *not* conflict with another
+      # user.
+      if (not email.blank?) and User.filter(:email => value).count > 0
+        self.errors[:email] << 'conflicts with a registered user'
+      end
+
+      # Ensures comments belong to exactly one parent.
+      count = 0
+      [:page_id, :project_id, :journal_id, :comment_id, :photograph_id].each do |field|
+        unless self[field].blank?
+          count += 1
+          if count > 1
+            self.errors[attribute] << 'has too many kinds of parents'
+            break
+          end
+        end
+      end
+
+      if count == 0
+        self.errors[attribute] << "doesn't have a parent"
+      end
     end
   end
 end

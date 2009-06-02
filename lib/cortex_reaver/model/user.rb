@@ -16,26 +16,6 @@ module CortexReaver
     one_to_many :updated_photographs, :key => 'updated_by', :class => 'CortexReaver::Photograph'
     one_to_many :updated_projects, :key => 'updated_by', :class => 'CortexReaver::Project'
 
-    validates do
-      uniqueness_of :login
-      length_of     :login, :within => 5..255
-      format_of     :login, :with => /^[A-Za-z0-9\-_]+$/
-      length_of     :name, :maximum => 255
-      length_of     :http, :allow_blank => true, :maximum => 255
-      uniqueness_of :email
-      length_of     :email, :allow_blank => true, :maximum => 255
-      format_of     :email, 
-        :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :allow_blank => true
-      confirmation_of :password
-      length_of     :password_length, :within => 8..255
-    end
-
-    # Ensure an administrator is always available.
-    validates_each :admin do |object, attribute, value|
-      if admins = User.filter(:admin => true) and admins.size == 1 and admins.first.id == self.id and not value
-        object.errors[attribute] << "can't be unset; only one administrator left!"
-      end
-    end
 
     self.window_size = 64
 
@@ -101,6 +81,16 @@ module CortexReaver
         true
       else
         false
+      end
+    end
+
+    # Ensure that we don't destroy the only admin.
+    def before_destroy
+      return false if super == false
+
+      if admins = User.filter(:admin => true) and admins.count == 1 and admins.first.id == self.id
+        self.errors.add nil, "Can't destroy the only administrator."
+        return false
       end
     end
 
@@ -233,6 +223,25 @@ module CortexReaver
       '/users/show/' + login
     end
 
+    def validate
+      validates_unique(:login, :message => "Already taken.")
+      validates_max_length(255, :login, :message => "Please enter a username shorter than 255 characters.")
+      validates_format(/^[A-Za-z0-9\-_]+$/, :login, :message => "Logins can only contain alphanumeric characters, dashes, and underscores.")
+      validates_max_length(255, :name, :allow_blank => true, :message => "Please enter a name shorter than 255 characters.")
+      validates_max_length(255, :http, :allow_blank => true, :message => "Please enter an HTTP address shorter than 255 characters.")
+      validates_unique(:email, :message => "Already taken.")
+      validates_max_length(255, :email, :message => "Please enter an email address shorter than 255 characters.")
+      validates_format(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :email, :message => "Please enter a valid email address.")
+      validates_confirmation(:password, :message => "Make sure your passwords match.")
+      validates_min_length(8, :password_length, :message => "Passwords must be at least 8 characters.", :allow_nil => true)
+      validates_max_length(255, :password_length, :message => "Passwords must be at most 255 characters.", :allow_nil => true)
+
+      # Ensure an administrator is always available.
+      if admins = User.filter(:admin => true) and admins.count == 1 and admins.first.id == self.id and not admin?
+        errors[:admin] << "can't be unset; only one administrator left!"
+      end
+    end
+
     private
       # Valid characters for salt
       SALT_CHARS = ('0'..'9').to_a + ('a'..'z').to_a + ('A'..'Z').to_a
@@ -258,10 +267,11 @@ module CortexReaver
       u = User.new(
         :login => 'shodan',
         :name => 'Shodan',
+        :email => 'shodan@localhost.localdomain',
         :admin => true
       )
-      u.password = 'shodan'
-      u.save!
+      u.password = 'citadelstation'
+      u.save
     end
   end
 end

@@ -14,7 +14,7 @@ module Sequel
       module InstanceMethods
         # When we delete a model that has comments, remove the comments too.
         def before_destroy
-          return false unless super
+          return false if super == false
 
           comments = self.comments
           remove_all_comments
