@@ -1,30 +1,26 @@
 module CortexReaver
-  class CommentController < Ramaze::Controller
+  class CommentController < Controller
     MODEL = Comment
 
     map '/comments'
     
-    layout(:text_layout) do |name, wish|
-      not request.xhr? and name != :atom
+    layout(:text) do |name, wish|
+      not request.xhr? and name != 'atom'
     end
 
     alias_view :edit, :form
     alias_view :new, :form
-
-    engine :Erubis
+    alias_view :page, :list
 
     helper :cache,
-      :error, 
-      :auth, 
-      :form, 
-      :workflow, 
-      :navigation,
       :date,
       :canonical,
       :crud,
       :feeds
 
-    cache_action :method => :index, :ttl => 60
+    cache_action(:method => :index, :ttl => 60) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     on_save do |comment, request|
       comment.title = request[:title]
@@ -60,15 +56,13 @@ module CortexReaver
     def page(page)
       @title = "Recent Comments"
       @comments = Comment.order(:created_on).reverse.limit(16)
-
-      render_template :list
     end
 
     # This action is referenced by public comment-posting forms.
     def post
       unless request.post?
         flash[:error] = "No comment to post!"
-        redirect_to R(:/)
+        redirect_to MainController.r
       end
      
       # Check for robots
@@ -76,7 +70,7 @@ module CortexReaver
              request[:comment].blank?
         # Robot!?
         flash[:error] = "Cortex Reaver is immune to your drivel, spambot."
-        redirect R(:/)
+        redirect MainController.r
       end 
 
       begin
@@ -115,7 +109,7 @@ module CortexReaver
           raise unless @comment.save
 
           # Clear action cache
-          action_cache.delete '/index'
+          Ramaze::Cache.action.clear
 
           flash[:notice] = "Your comment (<a href=\"##{@comment.url.gsub(/.*#/, '')}\">#{h @comment.title}</a>) has been posted."
           redirect @comment.parent.url
@@ -129,7 +123,7 @@ module CortexReaver
           session[:pending_comment] = @comment
           redirect @comment.parent.url + '#post-comment'
         else
-          redirect R(:/)
+          redirect MainController.r
         end
       end
     end 

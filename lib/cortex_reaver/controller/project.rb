@@ -26,6 +26,9 @@ module CortexReaver
     on_second_save do |project, request|
       project.tags = request[:tags]
       add_attachments(project, request[:attachments])
+      project.body = request[:body]
+
+      MainController.send(:action_cache).clear
     end
 
     on_save do |project, request|
@@ -33,7 +36,6 @@ module CortexReaver
       project.name = Project.canonicalize request[:name], :id => project.id
       project.description = request[:description]
       project.draft = request[:draft]
-      project.body = request[:body]
     end
 
     on_create do |project, request|

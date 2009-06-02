@@ -20,7 +20,6 @@ module CortexReaver
 
     # the index action is called automatically when no other action is specified
     def index(*ids)
-      respond "hey"
       if not ids.empty? and @page = Page.get(ids)
         # Render that page.
         @title = @page.title
@@ -57,14 +56,14 @@ module CortexReaver
         if user.can_create? Photograph.new
           workflow "New Photograph", PhotographController.r(:new)
         end
-        if user.can_create? Project.new
-          workflow "New Project", ProjectController.r(:new)
-        end
+#        if user.can_create? Project.new
+#          workflow "New Project", ProjectController.r(:new)
+#        end
 
         # Feeds
         feed 'Photographs', PhotographController.r(:atom)
         feed 'Journals', JournalController.r(:atom)
-        feed 'Projects', ProjectController.r(:atom)
+#        feed 'Projects', ProjectController.r(:atom)
         feed 'Comments', CommentController.r(:atom)
 
         JournalController.render_view('list', :journals => @journals)

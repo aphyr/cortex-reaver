@@ -1,19 +1,13 @@
 module CortexReaver
-  class AdminController < Ramaze::Controller
+  class AdminController < Controller
     
     map '/admin'
 
-    layout(:text_layout) do
+    layout(:text) do
       not request.xhr?
     end
 
-    engine :Erubis
-
-    helper :error,
-      :auth,
-      :form,
-      :workflow,
-      :aspect
+    helper :aspect
     
     before_all do
       require_roles :admin
