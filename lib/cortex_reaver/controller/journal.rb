@@ -5,7 +5,7 @@ module CortexReaver
     map '/journals'
 
     layout(:text) do |name, wish|
-      not request.xhr? and name != :atom
+      !request.xhr? and name != 'atom'
     end
 
     alias_view :edit, :form

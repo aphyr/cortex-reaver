@@ -1,24 +1,18 @@
 module CortexReaver
-  class TagController < Ramaze::Controller
+  class TagController < Controller
     MODEL = Tag
 
     map '/tags'
     
-    layout(:text_layout) do |name, wish|
+    layout(:text) do |name, wish|
       !request.xhr?
     end
 
+    alias_view :index, :list
     alias_view :edit, :form
     alias_view :new, :form
     
-    engine :Erubis
-
     helper :cache,
-      :error,
-      :auth,
-      :form,
-      :workflow,
-      :navigation,
       :canonical,
       :crud
 
@@ -37,7 +31,6 @@ module CortexReaver
         # Index
         @title = "All Tags"
         @tags = Tag.order(:count).reverse
-        render_template :list
       end
     end
 

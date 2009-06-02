@@ -47,14 +47,14 @@ module CortexReaver
 
   # Prepare Ramaze, create directories, etc.
   def self.init
+    # App
+    Ramaze.options.app.name = :cortex_reaver
+    
     # Root directory
     Ramaze::App[:cortex_reaver].options.roots = [LIB_DIR]
     if config[:root]
       Ramaze::App[:cortex_reaver].options.roots.unshift(config[:root])
     end
-
-    # App
-#    Ramaze.options.app.name = "Cortex Reaver #{File.expand_path(config_file)}"
 
     # Server options
     Ramaze.options.adapter.handler = config[:adapter]
@@ -148,14 +148,29 @@ module CortexReaver
   # Load libraries
   def self.load
     # Load controllers and models
+    require File.join(LIB_DIR, 'config')
+    require File.join(LIB_DIR, 'plugin')
+    require File.join(LIB_DIR, 'version')
     Ramaze::acquire File.join(LIB_DIR, 'snippets', '**', '*')
     Ramaze::acquire File.join(LIB_DIR, 'support', '*')
     require File.join(LIB_DIR, 'model', 'model')
-    Ramaze::acquire File.join(LIB_DIR, 'model', '*')
     Ramaze::acquire File.join(LIB_DIR, 'helper', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'model', '*')
     require File.join(LIB_DIR, 'controller', 'controller')
-    Ramaze::acquire File.join(LIB_DIR, 'controller', '*')
-    Ramaze::acquire File.join(LIB_DIR, '**', '*')
+    require File.join(LIB_DIR, 'controller', 'main')
+    require File.join(LIB_DIR, 'controller', 'user')
+    require File.join(LIB_DIR, 'controller', 'page')
+    require File.join(LIB_DIR, 'controller', 'journal')
+    require File.join(LIB_DIR, 'controller', 'photograph')
+    require File.join(LIB_DIR, 'controller', 'project')
+    require File.join(LIB_DIR, 'controller', 'comment')
+    require File.join(LIB_DIR, 'controller', 'tag')
+    require File.join(LIB_DIR, 'controller', 'documentation')
+    require File.join(LIB_DIR, 'controller', 'admin')
+#    require File.join(LIB_DIR, 'controller', 'controller')
+#    require File.join(LIB_DIR, 'controller', 'controller')
+#    require File.join(LIB_DIR, 'controller', 'controller')
+#    Ramaze::acquire File.join(LIB_DIR, 'controller', '*')
   end
 
   # Reloads the site configuration

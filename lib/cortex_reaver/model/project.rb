@@ -7,6 +7,7 @@ module CortexReaver
     plugin :comments
     plugin :tags
     plugin :sequenceable
+    plugin :viewable
     include CortexReaver::Model::Renderer
 
     many_to_many :tags, :class => 'CortexReaver::Tag'
