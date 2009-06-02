@@ -21,8 +21,8 @@ module Ramaze
           end
 
           # Cache feeds
-          if base.respond_to? :cache
-            cache :atom, :ttl => 300
+          if base.respond_to? :cache_action
+            base.cache_action(:method => :atom, :ttl => 300)
           end
         end
       end

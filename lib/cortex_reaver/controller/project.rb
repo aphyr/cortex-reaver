@@ -1,24 +1,17 @@
 module CortexReaver
-  class ProjectController < Ramaze::Controller
+  class ProjectController < Controller
     MODEL = Project
 
     map '/projects'
     
-    layout(:text_layout) do |name, wish|
-      !request.xhr?
+    layout(:text) do |name, wish|
+      !request.xhr? and name != 'atom'
     end
 
     alias_view :edit, :form
     alias_view :new, :form
     
-    engine :Erubis
-
     helper :cache,
-      :error, 
-      :auth, 
-      :form, 
-      :workflow, 
-      :navigation, 
       :date,
       :tags, 
       :canonical,
@@ -26,7 +19,9 @@ module CortexReaver
       :attachments,
       :feeds
 
-    cache_action :method => :index, :ttl => 60
+    cache_action(:method => :index, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     on_second_save do |project, request|
       project.tags = request[:tags]

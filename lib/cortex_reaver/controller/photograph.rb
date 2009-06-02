@@ -6,12 +6,14 @@ module CortexReaver
 
     map '/photographs'
 
-    layout(:blank) do |name, wish|
-      !request.xhr? and name != :atom
-    end
-
-    layout(:text) do |name, wish|
-      [:index, :edit, :new, :page].include? name
+    layout do |name, wish|
+      if ['index', 'edit', 'new', 'page'].include? name
+        :text
+      elsif request.xhr? or name == 'atom'
+        nil
+      else
+        :blank
+      end
     end
 
     alias_view :edit, :form
@@ -41,7 +43,7 @@ module CortexReaver
       photograph.image = request[:image][:tempfile] if request[:image]
       photograph.infer_date_from_exif! if request[:infer_date]
 
-      MainController.send(:action_cache).clear
+      Ramaze::Cache.action.clear
     end
 
     on_create do |photograph, request|
@@ -55,7 +57,8 @@ module CortexReaver
     for_feed do |photograph, x|
       p photograph
       x.content(
-        render_template('atom_fragment.rhtml', :photograph => photograph), 
+        #render_view('atom_fragment.rhtml', :photograph => photograph), 
+        "a",
         :type => 'html'
       )
     end

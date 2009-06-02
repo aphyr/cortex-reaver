@@ -2,7 +2,7 @@
   <%= page_nav CortexReaver::Photograph, @page %>
 <% end %>
 
-<%= render_template '../photographs/grid.rhtml', :photographs => @photographs %>
+<%= CortexReaver::PhotographController.render_view('grid', :photographs => @photographs) %>
 
 <% if @page %>
   <%= page_nav CortexReaver::Photograph, @page %>

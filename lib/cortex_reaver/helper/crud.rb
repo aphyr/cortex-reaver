@@ -228,9 +228,7 @@ module Ramaze
                 end
 
                 # Invalidate caches
-                if respond_to? :action_cache
-                  action_cache.clear
-                end
+                Ramaze::Cache.action.clear
 
                 flash[:notice] = "Updated #{model_class.to_s.demodulize.downcase} #{h @model.to_s}."
                 redirect @model.url
@@ -322,6 +320,8 @@ module Ramaze
           if user.can_delete? @model
             workflow "Delete this #{model_class.to_s.demodulize}", Rs(:delete, @model.id)
           end
+          
+          #render_view(:show)
         elsif id
           # Didn't find that model
           error_404
