@@ -16,8 +16,12 @@ module CortexReaver
       :canonical,
       :crud
 
-    cache_action :method => :index, :ttl => 120
-    cache_action :method => :show, :ttl => 120
+    cache_action(:method => :index, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
+    cache_action(:method => :show, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
 
     on_save do |tag, request|
       tag.title = request[:title]

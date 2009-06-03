@@ -15,13 +15,7 @@ module CortexReaver
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     one_to_many :comments, :class => 'CortexReaver::Comment'
 
-    def validates
-      validates_unique :name
-      validates_presence :name
-      validates_max_length 255, :name
-      validates_presence :title
-    end
- 
+
     render :body
 
     def self.atom_url
@@ -51,5 +45,13 @@ module CortexReaver
     def to_s
       title || name
     end
+
+    def validate
+      validates_unique :name
+      validates_presence :name
+      validates_max_length 255, :name
+      validates_presence :title
+    end
+ 
   end
 end

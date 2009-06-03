@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <form class="comment-form" action="<%= R(CortexReaver::CommentController, :post) %>" method="post">
+  <form class="comment-form" action="<%= CortexReaver::CommentController.r :post %>" method="post">
     <%= form_p :title, :model => @new_comment %>
     <p class="dont-read-me">
       Please avoid writing anything here unless you are a computer:

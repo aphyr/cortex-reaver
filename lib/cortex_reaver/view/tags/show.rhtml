@@ -6,7 +6,7 @@
         <h3>Pages</h3>
         <ul>
           <% pages.each do |page| %>
-            <li><%= A(page.title, :href => page.url) %></li>
+            <li><a href="<%=page.url%>"><%= h page.title %></a></li>
           <% end %>
         </ul>
       </div>
@@ -16,7 +16,7 @@
         <h3>Projects</h3>
         <ul>
           <% projects.each do |project| %>
-            <li><%= A(project.title, :href => project.url) %></li>
+            <li><a href="<%= project.url%>"><%= h project.title %></a></li>
           <% end %>
         </ul>
       </div>
@@ -26,7 +26,7 @@
         <h3>Journals</h3>
         <ul>
           <% journals.each do |journal| %>
-            <li><%= A(journal.title, :href => journal.url) %></li>
+            <li><a href="<%= journal.url %>"><%=h journal.title%></a></li>
           <% end %>
         </ul>
       </div>
@@ -34,7 +34,7 @@
     <% unless (photographs = CortexReaver::Photograph.tagged_with(@tags)).empty? %>
       <div class="photographs">
         <h3>Photographs</h3>
-        <%= render_template '../photographs/grid.rhtml', :photographs => photographs %>
+        <%= CortexReaver::PhotographController.render_view :grid, :photographs => photographs %>
       </div>
     <% end %>
   </div>
@@ -46,7 +46,12 @@
         </a></li>
       <% end %>
       <% if @tags.size == 1 and user.can_delete? @tags.first %>
-        <li><%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/tags/delete/#{@tags.first.id}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></li>
+        <li>
+          <a href="<%= CortexReaver::TagController.r(:delete, @tags.first.id) %>" 
+            onclick="return confirm('Are you sure you want to delete this tag?');">
+            <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+          </a>
+        </li>
       <% end %>
     </ul> 
   </div>

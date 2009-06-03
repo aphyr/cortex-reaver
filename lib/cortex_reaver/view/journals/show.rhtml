@@ -1,5 +1,5 @@
 <%= model_nav @journal %>
 
-<%= render_template 'journal.rhtml', 'journal' => @journal %>
+<%= CortexReaver::JournalController.render_view :journal, 'journal' => @journal %>
 
 <%= model_nav @journal %>
