@@ -85,9 +85,9 @@ module Sequel
                 tag = nil
               else
                 # Look up existing tag
-                tag = Tag[:title => title]
+                tag = CortexReaver::Tag[:title => title]
                 # Or create new one
-                tag ||= Tag.create(:title => title, :name => Tag.canonicalize(title))
+                tag ||= CortexReaver::Tag.create(:title => title, :name => CortexReaver::Tag.canonicalize(title))
                 unless tag
                   # Everything failed
                   raise RuntimeError.new("couldn't find or create tag for #{title}")

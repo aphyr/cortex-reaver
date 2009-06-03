@@ -1,4 +1,4 @@
-Version 0.0.12
+Version 0.1.0
   - General
     - Runs on Innate (kinda)
     - Runs on Sequel 3.0.0
@@ -13,7 +13,10 @@ Version 0.0.12
     - Ported support modules to Sequel plugins
     - New validations
     - Can no longer delete the only administrator
-Version 0.0.11 (2009-3-25)
+    - Attachments fall back from hard links to file copy on failure.
+  - View
+    - Photographs show exposure time and F-stop
+Version 0.0.10 (2009-3-25)
   - Controller
     - Added new :cache option to config
     - Supports memcached

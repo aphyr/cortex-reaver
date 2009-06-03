@@ -2,7 +2,7 @@
 
 <%= errors_on @photograph %>
 
-<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+<form class="edit-form" action="<%= rs @form_action %>" method="post" enctype="multipart/form-data">
   <%= form_p :title, :model => @photograph %>
   <%= live_name_field @photograph %>
   <%= live_tags_field @photograph %>

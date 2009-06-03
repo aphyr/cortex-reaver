@@ -8,6 +8,12 @@ module Sequel
       # For our purposes, an attachment represents an object that is associated
       # with a single parent object. A file represents a file on disk.
 
+      # The separator used for public (e.g. HTTP URL) paths.
+      PUBLIC_PATH_SEPARATOR = '/'
+
+      # How many bytes to read at a time when saving files.
+      DEFAULT_ATTACHMENT_DIRECTORY_MODE = 0755
+
       module InstanceMethods
         # When we delete a record with attachments, delete the attachments
         # first.
@@ -19,12 +25,6 @@ module Sequel
 
           true
         end
-
-        # The separator used for public (e.g. HTTP URL) paths.
-        PUBLIC_PATH_SEPARATOR = '/'
-
-        # How many bytes to read at a time when saving files.
-        DEFAULT_ATTACHMENT_DIRECTORY_MODE = 0755
 
         # Returns a named attachment
         def attachment(name)
@@ -39,7 +39,7 @@ module Sequel
           when :local
             # We're interested in a local path on disk.
             sep = File::SEPARATOR
-            path = CortexReaver.config[:public_root].dup
+            path = CortexReaver.config.public_root.dup
           when :public
             # We're interested in a public (e.g. HTTP URL) path.
             sep = PUBLIC_PATH_SEPARATOR
@@ -174,11 +174,14 @@ module Sequel
           if readable.respond_to? :path
             ret = case mode
             when :hard_link
-              FileUtils.rm local_path if File.exist? local_path
-              FileUtils.ln readable.path, local_path
-            when :soft_link
-              FileUtils.rm local_path if File.exist? local_path
-              FileUtils.ln_s readable.path, local_path
+              begin
+                FileUtils.rm local_path if File.exist? local_path
+                FileUtils.ln readable.path, local_path
+              rescue
+                # Hmm, try copy. Could be a cross-device link, or the FS
+                # doesn't support it.
+                FileUtils.copy readable.path, local_path
+              end
             when :copy
               FileUtils.rm local_path if File.exist? local_path
               FileUtils.copy readable.path, local_path
@@ -186,7 +189,7 @@ module Sequel
               FileUtils.rm local_path if File.exist? local_path
               FileUtils.move readable.path, local_path
             else
-              raise RuntimeError.new("mode must be :hard_link, :soft_link, :copy, or :move--got #{mode.inspect}")
+              raise RuntimeError.new("mode must be :hard_link :copy, or :move--got #{mode.inspect}")
             end
             reset_permissions
             ret
@@ -236,3 +239,5 @@ module Sequel
     end
   end
 end
+
+CortexReaver::Attachment = Sequel::Plugins::Attachments::Attachment

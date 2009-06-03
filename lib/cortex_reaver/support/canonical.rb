@@ -3,19 +3,12 @@ module Sequel
     # Supports canonical, url-safe identifiers for records, inferred from other
     # fields.
     module Canonical
-      module InstanceMethods
+      module ClassMethods
         # The canonical name attribute
         CANONICAL_NAME_ATTR = :name
         # The attribute we infer the canonical name from, if not set.
         CANONICAL_INFERENCE_ATTR = :title
 
-        # Lower case, remove special chars, and replace with hyphens.
-        def self.formalize(string)
-          string.downcase.gsub(/'"/, '').gsub(/[^a-z0-9_]/, '-').squeeze('-')[0..250].sub(/-$/, '')
-        end
-      end
-
-      module ClassMethods
         # Canonical names which cannot be reserved.
         def reserved_canonical_names
           @reserved_canonical_names ||= []
@@ -29,7 +22,7 @@ module Sequel
         # with opts[:id]
         def canonicalize(string, opts={})
           # Lower case, remove special chars, and replace with hyphens.
-          proper = Canonical.formalize string
+          proper = formalize string
 
           # If proper is blank, just return it at this point.
           if proper.blank?
@@ -89,6 +82,11 @@ module Sequel
           else
             @canonical_name_attr || CANONICAL_NAME_ATTR
           end
+        end
+
+        # Lower case, remove special chars, and replace with hyphens.
+        def formalize(string)
+          string.downcase.gsub(/'"/, '').gsub(/[^a-z0-9_]/, '-').squeeze('-')[0..250].sub(/-$/, '')
         end
 
         # Canonicalize only in the context of our parent's namespace.  Takes a

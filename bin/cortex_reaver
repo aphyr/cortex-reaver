@@ -161,12 +161,14 @@ module CortexReaver
     reload_config
     response = open("http://#{config[:host] || 'localhost'}:#{config[:port]}/")
     puts response.status.join(' ');
+
   when :migrate
     version = @values[:schema_version]
 
     # Get ready
     reload_config
     setup_db false
+    self.load
     init
 
     puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
@@ -235,6 +237,7 @@ module CortexReaver
 
   when :test
     require File.join(DIR, '..', 'spec', 'main.rb')
+
   else
     abort("Unknown action: #{@action}")
   end

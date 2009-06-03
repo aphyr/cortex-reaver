@@ -24,6 +24,11 @@ module Ramaze
           #   journal.title = request[:title]
           #   journal.body = request[:body].downcase
           # end
+          # 
+          # You can also define on_save, on_second_save, and on_update methods
+          # which will be called after the blocks. The difference is that the
+          # block forms are evaluated in the class, and the method forms are
+          # evaluated in the context of the instance.
           
           def self.on_create(&block)
             unless block_given? and block.arity == 2
@@ -84,14 +89,6 @@ module Ramaze
             const_set('PLURAL_MODEL_VAR', const_get('SINGULAR_MODEL_VAR').pluralize)
           end
 
-          # Prevent conflicts with our 0-ary action methods.  Not needed if
-          # we're using controller/show/name instead of controller/name
-          #
-          #begin
-          #  const_get('MODEL').reserved_canonical_names += ['index', 'new']
-          #rescue
-          #end
-
           # This action can't be in the normal module body, or it breaks things.
           def new
             # You need to be able to create one of these.
@@ -112,8 +109,14 @@ module Ramaze
                   if block = self.class.on_save_block
                     block.call(@model, request)
                   end
+                  if respond_to? :on_save
+                    on_save(@model, request)
+                  end
                   if block = self.class.on_create_block
                     block.call(@model, request)
+                  end
+                  if respond_to? :on_create
+                    on_create(@model, request)
                   end
 
                   # Save for the first time
@@ -122,6 +125,11 @@ module Ramaze
                   # Second save callback, if applicable
                   if block = self.class.on_second_save_block
                     block.call(@model, request)
+                  end
+                  if respond_to? :on_second_save
+                    on_second_save @model, request
+                  end
+                  if block or respond_to? :on_second_save
                     raise unless @model.save
                   end
 
@@ -175,6 +183,7 @@ module Ramaze
           # This way, you can (assuming your name doesn't conflict with an
           # existing action) tell people to visit /journals/my-cool-event, and
           # it will go to /journals/show/my-cool-event.
+          respond id.inspect
           raw_redirect rs(:show, id), :status => 301
         else
           # Display index
@@ -221,8 +230,14 @@ module Ramaze
                 if block = self.class.on_save_block
                   block.call(@model, request)
                 end
+                if respond_to? :on_save
+                  on_save @model, request
+                end
                 if block = self.class.on_update_block
                   block.call(@model, request)
+                end
+                if respond_to? :on_update
+                  on_update @model, request
                 end
 
                 # Save
@@ -231,6 +246,11 @@ module Ramaze
                 # Second callbacks and save if applicable
                 if block = self.class.on_second_save_block
                   block.call(@model, request)
+                end
+                if respond_to? :on_second_save
+                  on_second_save @model, request
+                end
+                if block or respond_to? :on_second_save
                   raise unless @model.save
                 end
 
@@ -299,7 +319,7 @@ module Ramaze
         render_view(:list)
       end
 
-      def show(id)
+      def show(id = nil)
         if id and @model = model_class.get(id)
           # Found that model
           
@@ -337,8 +357,6 @@ module Ramaze
           if user.can_delete? @model
             workflow "Delete this #{model_class.to_s.demodulize}", rs(:delete, @model.id)
           end
-          
-          #render_view(:show)
         elsif id
           # Didn't find that model
           error_404

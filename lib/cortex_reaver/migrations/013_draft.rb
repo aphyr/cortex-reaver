@@ -2,9 +2,9 @@ module CortexReaver
   class DraftSchema < Sequel::Migration
     def down
       alter_table(:pages)       { drop_column :draft }
-      alter_table(:projects)    { add_column :draft }
-      alter_table(:journals)    { add_column :draft }
-      alter_table(:photographs) { add_column :draft }
+      alter_table(:projects)    { drop_column :draft }
+      alter_table(:journals)    { drop_column :draft }
+      alter_table(:photographs) { drop_column :draft }
     end
 
     def up

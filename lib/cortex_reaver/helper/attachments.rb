@@ -4,6 +4,24 @@ module Ramaze
     module Attachments
       Helper::LOOKUP << self
 
+      def self.included(base)
+        base.instance_eval do
+          # Saves all attachments from a request which match form to model.
+          # Returns true if all were successful. Returns an array of
+          # attachments which were added.
+          def self.add_attachments(model, attachments)
+            return unless attachments.respond_to? :each
+
+            attachments.each do |key, file|
+              if tempfile = file[:tempfile] and filename = file[:filename] and not filename.blank?
+                model.attachment(filename).file = tempfile
+              end
+            end
+            attachments
+          end
+        end
+      end
+
       # Deletes an attachment on a model identified by id.
       def delete_attachment(id, name)
         unless @model = model_class.get(id)
@@ -32,17 +50,6 @@ module Ramaze
       end
 
       private
-
-      # Saves all attachments from a request which match form to model. Returns true if
-      # all were successful. Returns an array of attachments which were added.
-      def add_attachments(model, attachments)
-        attachments.each do |key, file|
-          if tempfile = file[:tempfile] and filename = file[:filename] and not filename.blank?
-            model.attachment(filename).file = tempfile
-          end
-        end
-        attachments
-      end
 
       # Renders an attachments form for a model. Shows current attachments,
       # provides links to edit/delete, and a multiple-upload box. Doesn't

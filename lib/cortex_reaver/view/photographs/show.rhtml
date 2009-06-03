@@ -20,7 +20,7 @@
             </li>
             <% if user.can_edit? @photograph %>
               <li>
-                <%= A('Edit', :href => Rs(:edit, @photograph.id)) %>
+                <%= a('Edit', r(:edit, @photograph.id)) %>
               </li>
             <% end %>
             <% if next_photo = @photograph.next %>
@@ -42,11 +42,11 @@
 
       <h2>
         <% if previous_photo %>
-          <%= A('&laquo;', :href => previous_photo.url) %>
+          <%= a('&laquo;', previous_photo.url) %>
         <% end %>
         <%=h @photograph.title %>
         <% if next_photo %>
-          <%= A('&raquo;', :href => next_photo.url) %>
+          <%= a('&raquo;', next_photo.url) %>
         <% end %>
       </h2>
       <div class="byline">
@@ -78,7 +78,7 @@
       <div class="comments">
         <a id="comments"></a>
         <% @photograph.comments_dataset.order(:created_on).all.each do |comment| %>
-          <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
+          <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
         <% end %>
       </div>
 
@@ -102,7 +102,7 @@
   <tr>
     <td class="border_left"></td>
     <td class="content">
-      <%= render_template '../comments/post_form.rhtml', 'comment' => @new_comment %>
+      <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
     </td>
     <td class="border_right"></td>
   </tr>

@@ -20,7 +20,7 @@
 
 <div class="journals">
   <% @journals.all.each do |journal| %>
-    <%= render_template Ramaze::Global.view_root + '/journals/journal.rhtml', 'journal' => journal, 'hide_comments' => true %>
+    <%= CortexReaver::JournalController.render_view :journal, 'journal' => journal, 'hide_comments' => true %>
   <% end %>
 
   <% if @page.nil? and @journals.count > 0 and @journals.all.last.previous %>
