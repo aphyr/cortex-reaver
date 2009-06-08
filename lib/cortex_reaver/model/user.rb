@@ -184,6 +184,12 @@ module CortexReaver
       self.moderator
     end
 
+    # Name falls back to login if blank
+    def name
+      name = self[:name]
+      name.blank? ? login : name
+    end
+
     # Set user password
     def password=(password)
       self.salt ||= self.class.new_salt

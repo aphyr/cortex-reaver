@@ -9,7 +9,7 @@ module CortexReaver
 
     subset :unused, :count => 0
 
-    def validates
+    def validate
       validates_unique :name
       validates_presence :name
       validates_max_length 255, :name
@@ -19,7 +19,7 @@ module CortexReaver
 
     # When we delete a tag, ensure nothing else is linked to it.
     def before_destroy
-      return false unless super
+      return false if super == false
       
       remove_all_photographs
       remove_all_journals

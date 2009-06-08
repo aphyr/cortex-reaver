@@ -162,7 +162,7 @@ module Ramaze
         case x
         when CortexReaver::User
           name = x.name || x.login
-          A(name, :href => x.url)
+          "<a href=\"#{attr_h x.url}\">#{h name}</a>"
         when CortexReaver::Comment
           if x.send(who)
             # Use attached creator/whoever

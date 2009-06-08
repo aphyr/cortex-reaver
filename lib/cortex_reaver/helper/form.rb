@@ -89,7 +89,7 @@ module Ramaze
 
         case type
         when 'textarea'
-          f << "<textarea name=\"#{id}\" id=\"#{id}\">#{default}</textarea>"
+          f << "<textarea name=\"#{id}\" id=\"#{id}\">#{Rack::Utils::escape_html default}</textarea>"
         when 'checkbox'
           f << "<input type=\"checkbox\" name=\"#{id}\" id=\"#{id}\" #{default ? 'checked="checked"' : ''} />"
         else

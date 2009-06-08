@@ -4,11 +4,11 @@ module Sequel
       module DatasetMethods
         def viewable_by(user)
           if user.anonymous?
-            self.exclude(:draft)
+            self.exclude(:draft => true)
           elsif user.admin? or user.editor?
             self
           else
-            self.filter(:draft => false).or(:created_by => user.id)
+            self.exclude(:draft => true).or(:created_by => user.id)
           end
         end
       end

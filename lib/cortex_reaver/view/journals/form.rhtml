@@ -9,7 +9,7 @@
 
   <%= form_p :body, :model => @journal, :type => 'textarea', :description => 'Body (<a href="/documentation/formatting" />Formatting Help</a>)' %>
 
-  <%= form_p :draft, :model => @journal, :type => 'checkbox', :description => 'This is a draft' %>
   <%= attachment_form @journal %>
+  <%= form_p :draft, :model => @journal, :type => 'checkbox', :description => 'This is a draft' %>
   <input type="submit" name="submit" />
 </form>

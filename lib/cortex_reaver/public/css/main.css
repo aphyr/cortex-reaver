@@ -248,6 +248,10 @@ th {
   display: none;
 }
 
+.draft, .draft h2 a {
+  color: #777;
+}
+
 .current {
   font-weight: bolder;
 }
