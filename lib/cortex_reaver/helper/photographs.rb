@@ -24,9 +24,9 @@ module Ramaze
       # 1/60 => '1/60th'
       def neat_time(rational)
         if rational.denominator == 1
-          rational.numerator.ordinal.to_s
+          rational.numerator.to_s + ' seconds'
         else
-          "#{rational.numerator}/#{rational.denominator.ordinal.to_s}"
+          "#{rational.numerator}/#{rational.denominator.ordinal.to_s} of a second"
         end
       end
     end
