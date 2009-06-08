@@ -30,7 +30,7 @@ module CortexReaver
 
     def index(*ids)
       if ids.size > 0
-        raw_redirect Rs([:show] + ids), :status => 301
+        raw_redirect rs([:show] + ids), :status => 301
       else
         # Index
         @title = "All Tags"

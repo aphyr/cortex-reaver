@@ -109,7 +109,7 @@ module CortexReaver
 
     # Connect to dump DB
     dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
-    Sequel::Migrator.apply dump, LIB_DIR/:migrations, current_version
+    Sequel::Migrator.apply dump, File.join(LIB_DIR,:migrations), current_version
 
     # Copy tables
     db.tables.each do |table|
