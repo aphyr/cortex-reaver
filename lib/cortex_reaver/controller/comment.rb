@@ -11,6 +11,7 @@ module CortexReaver
     alias_view :edit, :form
     alias_view :new, :form
     alias_view :page, :list
+    alias_view :index, :list
 
     helper :cache,
       :date,
@@ -18,7 +19,7 @@ module CortexReaver
       :crud,
       :feeds
 
-    cache_action(:method => :index, :ttl => 60) do
+    cache_action(:method => :index, :ttl => 120) do
       user.id.to_i.to_s + flash.inspect
     end
 

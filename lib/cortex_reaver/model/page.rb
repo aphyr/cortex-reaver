@@ -92,7 +92,7 @@ module CortexReaver
       end
     end
 
-    def validates
+    def validate
       validates_unique :name
       validates_presence :name
       validates_max_length 255, :name

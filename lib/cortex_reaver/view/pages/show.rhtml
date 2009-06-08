@@ -1,4 +1,4 @@
-<div class="page <%= @page.tags.map {|t| 'tagged_' + t.name}.join(' ')%>" id="page_<%= @page.name %>">
+<div class="page <%= @page.tags.map {|t| 'tagged_' + t.name}.join(' ')%> <%= @page.draft ? 'draft' : ''%>" id="page_<%= @page.name %>">
   <div class="body">
     <%= @page.body_cache %>
     <div class="clear"></div>

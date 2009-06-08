@@ -2,12 +2,13 @@
 
 <%= errors_on @page %>
 
-<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+<form class="edit-form" action="<%= rs(@form_action) %>" method="post" enctype="multipart/form-data">
   <%= page_select 'page_id', :default_id => @page.page_id, :skip_id => @page.id, :description => 'Parent page' %>
   <%= form_p 'title', :model => @page %>
   <%= live_name_field @page %>
   <%= live_tags_field @page %>
   <%= form_p :body, :model => @page, :type => 'textarea' %>
   <%= attachment_form @page %>
+  <%= form_p :draft, :model => @page, :type => 'checkbox', :description => 'This is a draft' %>
   <input type="submit" name="submit" />
 </form>

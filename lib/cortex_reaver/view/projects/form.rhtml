@@ -9,5 +9,6 @@
   <%= form_p :description, :model => @project %> 
   <%= form_p :body, :model => @project, :type => 'textarea' %>
   <%= attachment_form @project %>
+  <%= form_p :draft, :model => @project, :type => 'checkbox', :description => 'This is a draft' %>
   <input type="submit" name="submit" />
 </form>

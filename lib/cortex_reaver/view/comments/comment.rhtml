@@ -19,7 +19,10 @@
       <% end %>
       <% if user.can_delete? @comment %>
         <li>
-          <%= A '<img src="/images/delete.gif" class="icon" alt="delete" /> Delete', :href => "/comments/delete/#{@comment.id}", :onclick => "return confirm('Are you sure you wish to delete this comment?');" %></li>
+          <a href="<%= CortexReaver::CommentController.r(:delete, @comment.id) %>" onclick="return confirm('Are you sure you want to delete this comment?');">
+            <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+          </a>
+        </li>
       <% end %>
     </ul>
   </div>

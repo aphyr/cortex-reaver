@@ -8,6 +8,9 @@ Version 0.1.0
       model. This will not be an exceptional hit for most sites, as the majority
       of users are a.) anonymous and hence have the same ID, and b.) will
       appreciate not staring at random flash messages for other users.
+    - Ampersands and other special HTML characters survive the round-trip in 
+      editing. I'm still trying to figure out the best way to interpret 
+      entities given the wide variety of contexts they could appear in.
   - Model
     - Pages no longer check for conflicts with public directories or controllers
     - Ported support modules to Sequel plugins

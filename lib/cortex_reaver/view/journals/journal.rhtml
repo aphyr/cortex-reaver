@@ -1,4 +1,4 @@
-<div class="journal text-entry <%= @journal.tags.map {|t| 'tagged_' + t.name}.join(' ')%>">
+<div class="journal text-entry <%= @journal.tags.map {|t| 'tagged_' + t.name}.join(' ')%> <%= @journal.draft ? 'draft' : ''%>">
   <h2><a id="journal_<%= @journal.name %>" href="<%= @journal.url %>"><%=h @journal.title %></a></h2>
   <div class="byline">
     <%= author_info @journal %>

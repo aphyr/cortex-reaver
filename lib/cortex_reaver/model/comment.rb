@@ -88,7 +88,7 @@ module CortexReaver
       root_parent.url + '#comment_' + id.to_s
     end
 
-    def validates
+    def validate
       validates_presence :body
       validates_max_length 255, :title
       validates_max_length 255, :name

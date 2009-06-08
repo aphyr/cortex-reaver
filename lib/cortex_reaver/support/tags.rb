@@ -59,7 +59,9 @@ module Sequel
 
         # Remove tags on deletion
         def before_destroy
+          Ramaze::Log.debug 'remove tags'
           return false unless super
+          Ramaze::Log.debug 'removing tags'
 
           tags.each do |tag|
             tag.count -= 1
@@ -70,6 +72,7 @@ module Sequel
             end
           end
           remove_all_tags
+
 
           true
         end

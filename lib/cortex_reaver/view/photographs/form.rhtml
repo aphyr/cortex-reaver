@@ -11,9 +11,13 @@
     <input id="image" name="image" size="30" type="file" />
     </p>
   <p>
-  <label for="infer_date">Infer date from EXIF tag?</label>
+
+  <%= form_p :draft, :model => @photograph, :type => 'checkbox', :description => 'This is a draft' %>
+
+  <p>
     <input id="infer_date" name="infer_date" type="checkbox" value="1" checked="checked" />
+    <label class="checkbox" for="infer_date">Infer date from EXIF tag?</label>
   </p>
 
-  <input type="submit" name="submit" />
+  <p><input type="submit" name="submit" /></p>
 </form>

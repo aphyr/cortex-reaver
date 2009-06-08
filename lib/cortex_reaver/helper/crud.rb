@@ -183,7 +183,6 @@ module Ramaze
           # This way, you can (assuming your name doesn't conflict with an
           # existing action) tell people to visit /journals/my-cool-event, and
           # it will go to /journals/show/my-cool-event.
-          respond id.inspect
           raw_redirect rs(:show, id), :status => 301
         else
           # Display index
@@ -202,7 +201,12 @@ module Ramaze
             flash[:notice] = "#{model_class.to_s.demodulize.downcase} #{h @model.to_s} deleted."
             redirect rs()
           rescue => e
-            flash[:notice] = "Couldn't delete #{model_class.to_s.demodulize.downcase} #{h @model.to_s}. #{@model.errors.to_s}"
+            flash[:notice] = "Couldn't delete #{model_class.to_s.demodulize.downcase} #{h @model.to_s}."
+            if @model.errors.size > 0
+              flash[:notice] << ' ' + @model.errors.to_s
+            else
+              flash[:notice] << ' ' + e.message
+            end
             redirect @model.url
           end
         else
@@ -277,7 +281,7 @@ module Ramaze
         end
       end
 
-      def page(page)
+      def page(page = nil)
         page = case page
         when Symbol
           page
@@ -291,6 +295,11 @@ module Ramaze
           page.to_i
         end
 
+        if page.is_a? Integer and (page < 0 or page > model_class.window_count)
+          # This page isn't in the sequence!
+          error_404
+        end
+
         @title = "#{model_class.to_s.demodulize.pluralize.titleize}"
         if self.class.private_method_defined? :feed and model_class.respond_to? :atom_url
           feed @title, model_class.atom_url
@@ -302,13 +311,6 @@ module Ramaze
         end
 
         @page = page
-
-        if model_class.count.zero?
-          # There are NO models
-        elsif @models.empty?
-          # Empty page
-          error_404
-        end
 
         set_plural_model_var @models
 

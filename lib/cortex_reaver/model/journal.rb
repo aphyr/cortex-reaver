@@ -15,7 +15,6 @@ module CortexReaver
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     one_to_many :comments, :class => 'CortexReaver::Comment'
 
-
     render :body
 
     def self.atom_url

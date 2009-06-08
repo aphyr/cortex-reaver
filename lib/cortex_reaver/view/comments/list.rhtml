@@ -1,5 +1,5 @@
 <div class="comments">
   <% @comments.all.each do |comment| %>
-    <%= render_template 'comment.rhtml', 'comment' => comment, 'hide_comments' => true %>
+    <%= CortexReaver::CommentController.render_view 'comment', 'comment' => comment, 'hide_comments' => true %>
   <% end %>
 </div>

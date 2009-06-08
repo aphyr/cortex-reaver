@@ -28,7 +28,7 @@ module CortexReaver
       add_attachments(project, request[:attachments])
       project.body = request[:body]
 
-      MainController.send(:action_cache).clear
+      Ramaze::Cache.action.clear
     end
 
     on_save do |project, request|
