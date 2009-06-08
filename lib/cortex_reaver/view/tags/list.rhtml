@@ -18,12 +18,16 @@
       <% max_count = top_tag ? top_tag.count : 1 %>
       <% @tags.each do |tag| %>
         <tr>
-          <td class="title"><%= A(tag.title, :href => tag.url) %></td>
+          <td class="title"><%= CortexReaver::TagController.a(tag.title, :show, tag.name) %></td>
            <% if user.can_edit? tag %>
              <td><a href="/tags/edit/<%= tag.id %>">Edit</a></td>
            <% end %>
            <% if user.can_delete? tag %>
-            <td><%= A 'Delete', :href => "/tags/delete/#{tag.id}", :onclick => "return confirm('Are you sure you want to delete this tag?');" %></td>
+             <td>
+               <a href="<%= CortexReaver::TagController.r(:delete, tag.id) %>" onclick="return confirm('Are you sure you want to delete this tag?');">
+                 <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+               </a>
+             </td>
           <% end %>
          <td class="count" style="width: <%= admin? ? 60 : 80 %>%"><div class="percent-bar" style="width: <%= tag.count.to_f / max_count * 100 %>%"><%= tag.count %></div></td>
         </tr>

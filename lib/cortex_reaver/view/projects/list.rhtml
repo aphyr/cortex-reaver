@@ -16,7 +16,7 @@
     <tbody>
       <% @projects.each do |project| %>
         <tr>
-          <td><%= a project.title, project.url %></td>
+          <td><%= CortexReaver::ProjectController.a(project.title, project.name) %></td>
           <td><%= project.description %></td>
           <% if user.can_edit? project %>
             <td><a href="<%= CortexReaver::ProjectController.r(:edit, project.id) %>">Edit</a></td>

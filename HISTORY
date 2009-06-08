@@ -1,6 +1,6 @@
 Version 0.1.0
   - General
-    - Runs on Innate (kinda)
+    - Runs on Innate 
     - Runs on Sequel 3.0.0
     - Can now mark a journal, photo, project, or page as a draft, which does 
       not appear to people who can't edit it.

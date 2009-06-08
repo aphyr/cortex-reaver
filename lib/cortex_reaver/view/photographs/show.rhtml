@@ -12,7 +12,7 @@
           <ul class="actions">
             <% if previous_photo = @photograph.previous %>
               <li>
-                <%= A('&laquo; Previous', :href => previous_photo.url) %>
+                <a href="<%= previous_photo.url %>">&laquo; Previous</a>
               </li>
             <% end %>
             <li>
@@ -25,7 +25,7 @@
             <% end %>
             <% if next_photo = @photograph.next %>
               <li>
-                <%= A('Next &raquo;', :href => next_photo.url) %>
+                <a href="<%= next_photo.url %>">Next &raquo;</a>
               </li>
             <% end %>
           </ul>
@@ -42,11 +42,11 @@
 
       <h2>
         <% if previous_photo %>
-          <%= a('&laquo;', previous_photo.url) %>
+          <a href="<%= previous_photo.url %>">&laquo;</a>
         <% end %>
         <%=h @photograph.title %>
         <% if next_photo %>
-          <%= a('&raquo;', next_photo.url) %>
+          <a href="<%= next_photo.url %>">&raquo;</a>
         <% end %>
       </h2>
       <div class="byline">
