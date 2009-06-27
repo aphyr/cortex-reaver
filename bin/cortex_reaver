@@ -236,7 +236,7 @@ module CortexReaver
     stop
 
   when :test
-    require File.join(DIR, '..', 'spec', 'main.rb')
+    require File.join(LIB_DIR, '..', '..', 'spec', 'main')
 
   else
     abort("Unknown action: #{@action}")
