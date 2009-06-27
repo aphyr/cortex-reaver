@@ -1,13 +1,16 @@
-#!/usr/bin/env ruby
+#!/usr/bin/ruby
 
-require 'ramaze/spec/helper'
+require 'ramaze'
+#require '/var/lib/gems/1.8/gems/rack-1.0.0/lib/rack/test'
+#require "#{Ramaze::ROOT}/../spec/helper"
 
 begin
   # Create a new CR setup
-  bin = "#{File.dirname(__FILE__)}/../bin/cortex_reaver"
+  bin = File.expand_path("#{File.dirname(__FILE__)}/../bin/cortex_reaver")
   root = "/tmp/cortex-reaver-test-#{Process.pid}"
+  Dir.mkdir root
   Dir.chdir root
-  `#{bin} --migrate`
+  `#{bin} --migrate --force`
   `#{bin} --start`
   
   describe 'Main Controller' do
@@ -37,9 +40,9 @@ begin
   
 ensure
   begin
-    `bin --stop`
+    `#{bin} --stop`
   rescue => e
     puts "Unable to stop Cortex Reaver: #{e}"
   end
-  FileUtils.rm_rf root
+#  FileUtils.rm_rf root
 end

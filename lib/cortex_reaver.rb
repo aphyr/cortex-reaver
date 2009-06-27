@@ -66,7 +66,7 @@ module CortexReaver
     if config[:root] and not File.directory? config.public_root
       # Try to create a public directory
       begin
-        FileUtils.mkdir_p config[:public_root]
+        FileUtils.mkdir_p config.public_root
       rescue => e
         Ramaze::Log.warn "Unable to create a public directory at #{config.public_root}: #{e}."
       end

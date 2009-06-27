@@ -25,6 +25,7 @@
         <link rel="alternate" type="application/atom+xml" href="<%= attr_h feed %>" title="<%= attr_h title %>" />
       <% end %>
     <% end %>
+    <%= CortexReaver::MainController.render_view('head') %>
   </head>
   <body>
     <script type="text/javascript" src="/js/jquery.js"></script>
