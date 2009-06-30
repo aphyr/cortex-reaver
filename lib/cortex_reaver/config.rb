@@ -25,6 +25,8 @@ module CortexReaver
     #
     # Site configuration options
     # :site = {
+    #   :url         - The public-facing URL of the site. Defaults to 
+    #                  http://localhost.
     #   :name        - The name of the site
     #   :author      - The site author's name
     #   :keywords    - Keywords describing the site
@@ -47,6 +49,7 @@ module CortexReaver
       self[:plugins] = []
 
       self[:site] = {
+        :url => 'http://localhost'
         :name => 'Cortex Reaver',
         :description => "Stalks the dark corridors of this station, converting humans to Shodan's perfection.",
         :keywords => 'Cortex Reaver, blog',
