@@ -2,14 +2,7 @@
   <a id="post-comment">
   <h2>Post a Comment</h2>
 
-  <% unless @new_comment.errors.empty? %>
-    <div class="form-errors">
-      <ul>
-      <% @new_comment.errors.each do |attribute, error| %>
-        <li><%= attribute.to_s.titleize %> <%= error %>.</li>
-      <% end %>
-    </div>
-  <% end %>
+  <%= errors_on @new_comment %>
 
   <form class="comment-form" action="<%= CortexReaver::CommentController.r :post %>" method="post">
     <%= form_p :title, :model => @new_comment %>
