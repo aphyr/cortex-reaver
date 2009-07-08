@@ -1,3 +1,8 @@
+Version 0.1.1
+  - View
+    - New head template for common js, css, etc.
+    - New tracker template just before </body> for analytics bugs.
+    - New keybinding code.
 Version 0.1.0
   - General
     - Runs on Innate 

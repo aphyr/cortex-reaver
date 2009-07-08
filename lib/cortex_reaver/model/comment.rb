@@ -90,11 +90,11 @@ module CortexReaver
 
     def validate
       validates_presence :body
-      validates_max_length 255, :title
-      validates_max_length 255, :name
-      validates_max_length 255, :http
-      validates_max_length 255, :email
-      validates_format(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :email)
+      validates_max_length 255, :title, :allow_blank => true
+      validates_max_length 255, :name, :allow_blank => true 
+      validates_max_length 255, :http, :allow_blank => true
+      validates_max_length 255, :email, :allow_blank => true
+      validates_format(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/, :email, :allow_blank => true)
 
       # Ensure comments with an email specified do *not* conflict with another
       # user.

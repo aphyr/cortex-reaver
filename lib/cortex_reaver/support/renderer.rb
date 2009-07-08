@@ -131,15 +131,18 @@ module CortexReaver
       def syntax_highlight(text)
         return text if text.nil?
 
-        text.gsub(/<cr:code\s.*?(lang="(.*?)").*?>(.*?)<\/cr:code>/m) do |match|
+        text = text.gsub(/<cr:code([^>]+lang="(.*?)".*?)?>(.*?)<\/cr:code>/m) do |match|
           lang = $2
           code = $3
 
           # Replace entities
           code.gsub!('&', '&quot;')
 
-          unless lang.empty?
-            # Parse with CodeRay.
+          if lang.blank?
+            # Insert stripped code into code tags.
+            code = '<div class="code"><code>' + code.strip + '</code></div>'
+          else
+            # Parse with CodeRay and insert.
             code = '<div class="code"><code>' + CodeRay.scan(code, lang.to_sym).html.strip + '</code></div>'
           end
 
@@ -150,7 +153,9 @@ module CortexReaver
           # this still pastes cleanly, but displays like a terminal.
           code.gsub!("\n", '<br />')
           code.gsub!(/( {2})/) { |match| '&nbsp;' * $1.length }
+          code
         end
+        text
       end
 
       def sanitize_html(html)

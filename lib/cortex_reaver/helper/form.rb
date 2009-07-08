@@ -8,7 +8,10 @@ module Ramaze
         unless model.errors.empty?
           s = "<div class=\"form-errors\">\n<h3>Errors</h3>\n<ul>\n"
           model.errors.each do |attribute, error|
-            s << "<li>#{attribute} #{error}</li>\n"
+            if error.kind_of? Array
+              error = error.join(', ')
+            end
+            s << "<li>#{attribute.to_s.titleize} #{error}.</li>\n"
           end
           s << "</ul></div>"
         end
@@ -25,17 +28,11 @@ module Ramaze
 
         f = ''
 
-        unless model.errors.empty?
-          f << "<div class=\"form-errors\">\n"
-          f << "<ul>\n"
-          model.errors.each do |attribute, error|
-            f << "<li>#{attribute} #{error}\n</li>"
-          end
-          f << "</ul>\n"
-          f << "</div>\n"
+        if model
+          f << errors_on(model) 
         end
 
-        f = "<form action=\"#{action}\" method=\"post\" class=\"edit-form\">"
+        f << "<form action=\"#{action}\" method=\"post\" class=\"edit-form\">"
 
         fields.each do |field|
           case field
