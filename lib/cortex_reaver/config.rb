@@ -49,7 +49,7 @@ module CortexReaver
       self[:plugins] = []
 
       self[:site] = {
-        :url => 'http://localhost'
+        :url => 'http://localhost',
         :name => 'Cortex Reaver',
         :description => "Stalks the dark corridors of this station, converting humans to Shodan's perfection.",
         :keywords => 'Cortex Reaver, blog',
