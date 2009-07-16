@@ -269,7 +269,7 @@ module CortexReaver
     public
 
     # Create default user if none exist
-    if dataset.table_exists? and count == 0
+    if db.table_exists?(table_name) and count == 0
       u = User.new(
         :login => 'shodan',
         :name => 'Shodan',
