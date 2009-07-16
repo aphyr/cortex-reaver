@@ -161,7 +161,11 @@ module CortexReaver
 
   # Reloads the site configuration
   def self.reload_config
-    @config = CortexReaver::Config.load(File.read(config_file))
+    begin
+      @config = CortexReaver::Config.load(File.read(config_file))
+    rescue Errno::ENOENT
+      @config = CortexReaver::Config.new
+    end
   end
 
   # Restart Cortex Reaver

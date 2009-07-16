@@ -28,7 +28,7 @@ cortex_reaver --migrate # Initialize an SQLite database.
 cortex_reaver --start   # Start the daemon.
 
 Then point your web browser at localhost:7000, hit control-x, and log in with
-username "shodan", password "shodan".
+username "shodan", password "citadelstation".
 
 You can check Cortex Reaver's status with --status, and when you're done, shut
 it down with --stop.
