@@ -66,7 +66,7 @@ module CortexReaver
 
     def logout
       if user = do_logout
-        flash[:notice] = "Goodbye, #{user.name}"
+        flash[:notice] = "Goodbye, #{user.name}."
       end
       redirect '/'
     end  

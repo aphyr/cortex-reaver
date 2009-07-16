@@ -59,7 +59,6 @@ module CortexReaver
       @values[:load_file] = file
     end
 
-
     o.on '-m', '--migrate [version]',
       'Migrate the database to schema version, or to the latest version' do |version|
       @action = :migrate
@@ -236,7 +235,7 @@ module CortexReaver
     stop
 
   when :test
-    require File.join(LIB_DIR, '..', '..', 'spec', 'main')
+    require File.join(LIB_DIR, '..', '..', 'spec', 'spec')
 
   else
     abort("Unknown action: #{@action}")
