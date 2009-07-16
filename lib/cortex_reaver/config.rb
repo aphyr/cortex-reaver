@@ -1,95 +1,134 @@
 module CortexReaver
   # Contains site-specific configuration information for a CortexReaver site.
-  class Config < Hash
-    # Pass a YAML file with configuration options. At a minimum, it should specify
-    # :database = {:proto, :username, :pasword, :host, :database}
-    # or :database = "sequel_connect_string"
-    # :root        - The directory containing public/, layout/, and view/. 
-    #                Defaults to HOME_DIR.
-    # :log_root    - The directory that Cortex Reaver should log to. Defaults to
-    #                HOME_DIR/log. If nil, file logging disabled.
-    # :plugin_root - The directory that Cortex Reaver plugins live in. Defaults
-    #                to HOME_DIR/plugins.
-    # :mode        - Cortex Reaver mode: either :development or :production
-    # :daemon      - Whether to daemonize or not. Defaults to :true if :mode
-    #                is :production, otherwise nil.
-    # :adapter     - The Ramaze adapter name (default 'thin')
-    # :cache       - The Ramaze cache to use (default: :memory)
-    # :host        - Host to bind to 
-    # :port        - Port to bind to (default 7000)
-    # :pidfile     - Process ID file for this server. Defaults to 
-    #                HOME_DIR/cortex_reaver_<host>_<port>.pid
-    # :compile_views - Whether to cache compiled view templates. Defaults to
-    #                  true in production mode.
-    # :plugins     - Which plugins to enable. Defaults to [].
-    #
-    # Site configuration options
-    # :site = {
-    #   :url         - The public-facing URL of the site. Defaults to 
-    #                  http://localhost.
-    #   :name        - The name of the site
-    #   :author      - The site author's name
-    #   :keywords    - Keywords describing the site
-    #   :description - A short description of the site.
-    # }
-    def initialize(file)
+  class Config < Construct
+    def initialize(*args)
+      super *args
+
       # Defaults
-      self[:database] = 'sqlite:////' + File.join(
-        File.expand_path(CortexReaver::HOME_DIR),
-       'cortex_reaver.db'
-      )
-      self[:root] = CortexReaver::HOME_DIR
-      self[:log_root] = File.join(CortexReaver::HOME_DIR, 'log')
-      self[:plugin_root] = File.join(CortexReaver::HOME_DIR, 'plugins')
-      self[:mode] = :production
-      self[:adapter] = 'thin'
-      self[:cache] = :memory
-      self[:host] = nil
-      self[:port] = 7000
-      self[:plugins] = []
+      define :root,
+        :desc => 'The local directory where CortexReaver runs.',
+        :default => CortexReaver::HOME_DIR
+      define :log_root,
+        :desc => 'Directory where logs are stored.',
+        :default => File.join(root, 'log')
+      define :layout_root,
+        :desc => 'Local directory where layouts are found.',
+        :default => File.join(root, 'layout')
+      define :plugin_root,
+        :desc => 'Local directory where plugins are found.',
+        :default => File.join(root, 'plugins')
+      define :public_root,
+        :desc => 'Local directory where public files are found.',
+        :default => File.join(root, 'public')
+      define :view_root,
+        :desc => 'Local directory where views are found.',
+        :default => File.join(root, 'view')
 
-      self[:site] = {
-        :url => 'http://localhost',
-        :name => 'Cortex Reaver',
-        :description => "Stalks the dark corridors of this station, converting humans to Shodan's perfection.",
-        :keywords => 'Cortex Reaver, blog',
-        :author => 'Shodan'
-      }
 
-      # Load from file
-      if File.exists? file
-        begin
-          self.merge!(YAML.load(File.read(file)))
-        rescue => e
-          raise RuntimeError.new("unable to load local configuration file #{file}: (#{e.message})")
+      define :database, :default => Construct.new
+      database.define :adapter,
+        :desc => 'Database adapter',
+        :default => 'sqlite'
+      database.define :username,
+        :desc => 'Username',
+        :default => nil
+      database.define :password,
+        :desc => 'Database password',
+        :default => nil
+      database.define :host,
+        :desc => 'Host to connect to for the database.',
+        :default => nil
+      database.define :port,
+        :desc => 'Database port',
+        :default => nil
+      database.define :database,
+        :desc => 'The database on the server to connect to.',
+        :default => '/' + File.expand_path(File.join(root, 'cortex_reaver.db'))
+      database.define :string,
+        :desc => 'A Sequel connection string. If present, overrides the other DB fields.',
+        :default => nil
+
+      def database.str
+        if string
+          string
+        else
+          str = ''
+          str << adapter + '://' if adapter
+          str << username if username
+          str << ':' + password if username and password
+          str << '@' if username or password
+          str << host if host
+          str << ':' + port if host and port
+          str << '/'
+          str << database if database
         end
       end
 
-      # Pidfile
-      self[:pidfile] ||= File.join(CortexReaver::HOME_DIR, "cortex_reaver_#{self[:host] ? self[:host].to_s + '_' : ''}#{self[:port]}.pid")
 
-      # Daemon mode
-      self[:daemon] ||= true if self[:mode] == :production
+      define :mode,
+        :desc => 'Development or production mode.',
+        :default => :production
+      define :adapter,
+        :desc => 'The web server adapter used for Cortex Reaver.',
+        :default => 'thin'
+      define :cache,
+        :desc => 'The caching system used. One of :memory or :memcache',
+        :default => :memory
+      define :host,
+        :desc => 'Host address to bind to.',
+        :default => nil
+      define :port,
+        :desc => 'Port to bind to.',
+        :default => 7000
 
-      # Compile views
-      self[:compile_views] ||= true if self[:mode] == :production
+      define :plugins,
+        :desc => 'Plugins configuration space.',
+        :default => Construct.new
+      plugins.define :enabled, 
+        :desc => 'Plugin names to enable.',
+        :default => []
+
+      define :site,
+        :desc => 'Site configuration options',
+        :default => Construct.new
+      site.define :url,
+        :desc => 'The URL base for the web site. No trailing /.',
+        :default => 'http://localhost'
+      site.define :name,
+        :desc => 'The name of this web site. Used in titles, metadata, etc.',
+        :default => 'Cortex Reaver'
+      site.define :description,
+        :desc => 'A brief description of this site.',
+        :default => "Stalks the dark corridors of this station, converting humans to Shodan's perfection."
+      site.define :keywords,
+        :desc => 'Site keywords',
+        :default => 'Cortex Reaver, blog'
+      site.define :author,
+        :desc => 'The primary author of this site, used in copyright & metadata.',
+        :default => 'Shodan'
+
+      define :pidfile,
+        :desc => 'Filename which stores the process ID of Cortex Reaver.',
+        :default => File.join(root, "cortex_reaver_#{host ? host.to_s + '_' : ''}#{port}.pid")
+      define :daemon,
+        :desc => "Whether to daemonize. Enabled by default in production mode."
+      define :compile_views,
+        :desc => 'Whether to compile views. Enabled by default in production.'
     end
-    
-    def public_root
-      if self[:root]
-        File.join(self[:root], 'public')
+
+    def compile_views
+      if include? :compile_views
+        self[:compile_views]
+      else
+        mode == :production
       end
     end
 
-    def view_root
-      if self[:root]
-        File.join(self[:root], 'view')
-      end
-    end
-
-    def layout_root
-      if self[:root]
-        File.join(self[:root], 'layout')
+    def daemon
+      if include? :daemon
+        self[:daemon]
+      else
+        mode == :production
       end
     end
   end

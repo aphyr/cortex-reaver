@@ -111,7 +111,7 @@ module CortexReaver
     end
 
     # Create a default page if none exists.
-    if dataset.table_exists? and Page.count == 0
+    if db.table_exists?(table_name) and Page.count == 0
       Page.new(
         :name => 'about',
         :title => 'About Cortex Reaver',

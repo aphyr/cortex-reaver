@@ -5,7 +5,7 @@ begin
   require 'rubygems'
   require 'ramaze'
   require 'sequel'
-  require 'yaml'
+  require 'construct'
   require 'socket'
 
   require 'sequel/extensions/migration'
@@ -140,9 +140,9 @@ module CortexReaver
     end
 
     # Load plugins
-    config[:plugins].each do |plugin|
+    config.plugins.enabled.each do |plugin|
       Ramaze::Log.info "Loading plugin #{plugin}"
-      require File.join(config[:plugin_root], plugin)
+      require File.join(config.plugin_root, plugin)
     end
   end
 
@@ -161,7 +161,7 @@ module CortexReaver
 
   # Reloads the site configuration
   def self.reload_config
-    @config = CortexReaver::Config.new(config_file)
+    @config = CortexReaver::Config.load(File.read(config_file))
   end
 
   # Restart Cortex Reaver
@@ -180,7 +180,7 @@ module CortexReaver
     # Shutdown callback
     at_exit do
       # Remove pidfile
-      FileUtils.rm(config[:pidfile]) if File.exist? config[:pidfile]
+      FileUtils.rm(config.pidfile) if File.exist? config.pidfile
     end
 
     Ramaze::Log.info "Cortex Reaver #{Process.pid} stalking victims."
@@ -211,15 +211,9 @@ module CortexReaver
       raise RuntimeError.new("no configuration available!")
     end
 
-    # Build Sequel connection string
-    unless (string = config[:database]).is_a? String
-      d = config[:database]
-      string = "#{d[:driver]}://#{d[:user]}:#{d[:password]}@#{d[:host]}/#{d[:database]}"
-    end
-
     # Connect
     begin
-      @db = Sequel.connect(string)
+      @db = Sequel.connect(config.database.str)
     rescue => e
       Ramaze::Log.error("Unable to connect to database: #{e}.")
       abort
@@ -244,32 +238,22 @@ module CortexReaver
     reload_config
 
     # Check PID
-    if File.file? config[:pidfile]
-      pid = File.read(config[:pidfile], 20).strip
+    if File.file? config.pidfile
+      pid = File.read(config.pidfile, 20).strip
       abort "Cortex Reaver already running? (#{pid})"
     end
 
     puts "Activating Cortex Reaver."
     setup
 
-    # Check port availability
-#    begin
-#      socket = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
-#      sockaddr = Socket.pack_sockaddr_in(*[config[:port], config[:host]])
-#      socket.bind(sockaddr)
-#      socket.close
-#    rescue => e
-#      abort "Unable to bind to port #{config[:host]}:#{config[:port]} (#{e})"
-#    end
-
-    if config[:daemon]
+    if config.daemon
       fork do
         # Drop console, create new session
         Process.setsid
         exit if fork
 
         # Write pidfile
-        File.open(config[:pidfile], 'w') do |file|
+        File.open(config.pidfile, 'w') do |file|
           file << Process.pid
         end
 
@@ -294,16 +278,16 @@ module CortexReaver
   def self.stop
     reload_config
 
-    unless config[:pidfile]
+    unless config.pidfile
       abort "No pidfile to stop."
     end
 
-    unless File.file? config[:pidfile]
-      abort "Cortex Reaver not running? (check #{config[:pidfile]})"
+    unless File.file? config.pidfile
+      abort "Cortex Reaver not running? (check #{config.pidfile})"
     end
 
     # Get PID
-    pid = File.read(config[:pidfile], 20).strip
+    pid = File.read(config.pidfile, 20).strip
     unless (pid = pid.to_i) != 0
       abort "Invalid process ID in pidfile (#{pid})."
     end
@@ -337,11 +321,11 @@ module CortexReaver
     # Remove pidfile if killed.
     if killed
       begin
-        FileUtils.rm(config[:pidfile])
+        FileUtils.rm(config.pidfile)
       rescue Errno::ENOENT
         # Pidfile gone
       rescue => e
-        puts "Unable to remove pidfile #{config[:pidfile]}: #{e}."
+        puts "Unable to remove pidfile #{config.pidfile}: #{e}."
       end
     end
   end
