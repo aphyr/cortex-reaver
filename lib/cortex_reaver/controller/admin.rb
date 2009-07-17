@@ -16,6 +16,29 @@ module CortexReaver
     def index
     end
 
+    def configuration
+      if request.post?
+        begin
+          # Update config
+          # View sections
+          CortexReaver.config.view.sections = []
+          request['view.sections'].split("\n").each do |line|
+            parts = line.strip.split(' ')
+            if parts.size > 1
+              CortexReaver.config.view.sections << [parts[0..-2].join(' '), parts[-1]]
+            end
+          end
+
+          # Save
+          CortexReaver.config.save
+          flash[:notice] = "Configuration saved."
+        rescue => e
+          Ramaze::Log.error e.inspect + e.backtrace.join("\n")
+          flash[:error] = "Unable to update configuration: #{h e}"
+        end
+      end
+    end
+
     # Recalculate comment counts
     def update_comments
       [Journal, Page, Project, Photograph].each do |klass|

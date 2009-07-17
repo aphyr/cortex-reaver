@@ -114,6 +114,21 @@ module CortexReaver
         :desc => "Whether to daemonize. Enabled by default in production mode."
       define :compile_views,
         :desc => 'Whether to compile views. Enabled by default in production.'
+
+      define :view, 
+        :desc => "Configuration options for content display.",
+        :default => Construct.new
+      view.define :sections,
+        :desc => "A list of top-level sections for navigation. First is the human-readable name, and second is the URI for the link.",
+        :default => [
+          ['Journals', '/journals'],
+          ['Photographs', '/photographs'],
+          ['Projects', '/projects'],
+          ['Tags', '/tags'],
+          ['Comments', '/comments'],
+          ['About', '/about']
+        ]
+
     end
 
     def compile_views
@@ -129,6 +144,14 @@ module CortexReaver
         self[:daemon]
       else
         mode == :production
+      end
+    end
+
+    # Saves self to disk
+    def save
+      Ramaze::Log.info "Saving config #{to_yaml}"
+      File.open(CortexReaver.config_file, 'w') do |file|
+        file.write to_yaml
       end
     end
   end

@@ -24,6 +24,12 @@ textarea {
   margin-top: 2px;
   float: left;
 }
+
+.edit-form label.textarea {
+  width: auto;
+  float: none;
+}
+
 .edit-form label.checkbox {
   width: auto;
   float: none;
