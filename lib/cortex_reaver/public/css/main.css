@@ -3,11 +3,7 @@ body {
   font-size: 90%;
   margin: 0;
   padding: 0;
-  background: #f6f6f6 url(/images/body.png) repeat-x scroll 0px 0px;
-}
-
-body.blank {
-  padding: 0em 1em;
+  background: #f0f0f0;
 }
 
 img {
@@ -52,25 +48,18 @@ th {
 
 #top {
   margin: 0px auto;
-  width: 760px;
-  height: 210px;
+  width: 800px;
   background: transparent;
   text-align: center;
-  border-width: 0px 1px;
-  border-style: solid;
-  border-color: #666;
 }
 
 #sections {
   margin: 0px auto;
-  width: 760px;
+  width: 800px;
   background: url(/images/sections.png) repeat-x;
   height: 24px;
   font-size: 12px;
   text-align: center;
-  border-width: 0px 1px;
-  border-style: solid;
-  border-color: #666;
 }
 
 #sections ul {
@@ -88,30 +77,26 @@ th {
 }
 
 #middle {
+  background: url('/images/sheet.png') repeat-y;
   margin: 0px auto;
-  width: 760px;
-  border: 1px solid #666;
+  width: 800px;
 }
 
 #columns {
-  margin: 0px;
+  margin: 0 20px;
   padding: 0px;
-  width: 100%;
   border-collapse: collapse;
 }
 
 #main {
   vertical-align: top;
-  background: #fff;
   padding: 0.8em;
   border-top: none;
 }
 
 #sidebar {
   vertical-align: top;
-  background: #c6c6c6;
   padding: 6px;
-  border-left: 1px solid #bbb;
   width: 158px;
 }
 
@@ -126,13 +111,13 @@ th {
 }
 
 #colophon {
+  width: 800px;
+  margin: 0 auto;
+  padding: 50px 0 30px;
   font-size: 80%;
-  margin: 2em;
-  padding: 2em; 
   text-align: center;
+  background: url('/images/sheet-bottom.png') top no-repeat;
 }
-
-
 
 /* Actions */
 .actions {

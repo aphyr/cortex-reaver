@@ -48,7 +48,7 @@
     </div>
 
     <div id="colophon">
-      Copyright &copy; 2001&mdash;<%= Time.now.strftime('%Y') %> <%=h CortexReaver.config[:site][:author] %>
+    Copyright &copy; <%=CortexReaver.config.earliest_content.year %>&mdash;<%= Time.now.strftime('%Y') %> <%=h CortexReaver.config[:site][:author] %>
     </div>
 
     <%= CortexReaver::MainController.render_view('tracker') %>

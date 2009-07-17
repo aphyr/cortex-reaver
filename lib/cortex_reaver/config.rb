@@ -147,6 +147,16 @@ module CortexReaver
       end
     end
 
+    # Returns the earliest thing in the CortexReaver DB, for copyright.
+    def earliest_content
+      @earliest_content ||= [
+        CortexReaver::Journal.dataset.min(:created_on),
+        CortexReaver::Page.dataset.min(:created_on),
+        CortexReaver::Photograph.dataset.min(:created_on),
+        CortexReaver::Project.dataset.min(:created_on)
+      ].min
+    end
+
     # Saves self to disk
     def save
       Ramaze::Log.info "Saving config #{to_yaml}"
