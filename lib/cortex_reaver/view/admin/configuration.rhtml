@@ -1,0 +1,7 @@
+<h2>Configuration</h2>
+
+<form class="edit-form" action="<%= CortexReaver::AdminController.r :configuration %>" method="post">
+  <% config = CortexReaver.config %>
+  <%= form_p 'view.sections', :type => :textarea, :description => config.view.schema[:sections][:desc], :default => CortexReaver.config.view.sections.map{ |p| p.join(' ') }.join("\n") %>
+  <input type="submit" value="Update Configuration" />
+</form>
