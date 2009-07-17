@@ -20,14 +20,7 @@
     </div>
 
     <div id="sections">
-      <%= section_nav([
-            ['Journals', '/journals'],
-            ['Photographs', '/photographs'],
-            ['Projects', '/projects'],
-            ['Tags', '/tags'],
-            ['Comments', '/comments'],
-            ['About', '/about']
-      ]) %>
+      <%= section_nav CortexReaver.config.view.sections %>
     </div>
 
     <div id="middle">

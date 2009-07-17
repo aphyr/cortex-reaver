@@ -55,7 +55,7 @@ module Ramaze
       #   :default => The default value for the field (inferred from model and id)
       #   :p_class => Class attached to the paragraph
       def form_p(id, params = {})
-        type = params[:type]
+        type = params[:type].to_s
         p_class = params[:p_class]
         description = params[:description] || id.to_s.titleize
         model = params[:model]
@@ -76,12 +76,11 @@ module Ramaze
         end
 
         f = "<p #{p_class.nil? ? '' : 'class="' + attr_h(p_class) + '"'}>"
-        unless type == 'checkbox' or type == 'hidden'
+        if type == 'checkbox' or type == 'hidden'
+        elsif type == 'textarea'
+          f << "<label class=\"textarea\" for=\"#{id}\">#{description}</label><br />"
+        else
           f << "<label for=\"#{id}\">#{description}</label>"
-        end
-
-        if type == 'textarea'
-          f << '<br />'
         end
 
         case type
