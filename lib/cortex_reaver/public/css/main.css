@@ -79,11 +79,12 @@ th {
 #middle {
   background: url('/images/sheet.png') repeat-y;
   margin: 0px auto;
-  width: 800px;
+  padding: 0px 20px;
+  width: 760px;
 }
 
 #columns {
-  margin: 0 20px;
+  width: 760px;
   padding: 0px;
   border-collapse: collapse;
 }
