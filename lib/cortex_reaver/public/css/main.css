@@ -56,7 +56,7 @@ th {
 #sections {
   margin: 0px auto;
   width: 800px;
-  background: url(/images/sections.png) repeat-x;
+  background: url(/images/sections.png) repeat-y;
   height: 24px;
   font-size: 12px;
   text-align: center;
