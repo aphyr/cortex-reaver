@@ -39,28 +39,28 @@ module CortexReaver; module Plugins
 
   # Twitter plugin for Cortex Reaver.
   module Twitter
-    config = CortexReaver.config.plugins.twitter = OpenStruct.new
+    Config = CortexReaver.config.plugins.twitter = Construct.new
+
     # Whether or not to include replies. If this is false, the most recent
     # non-reply tweets will be displayed.
-    config.include_replies = false
+    Config.define :include_replies, :default => false
 
     # Time in seconds to cache results. It's a good idea to keep this nice
     # and high both to improve the performance of your site and to avoid
     # pounding on Twitter's servers. Default is 600 seconds (10 minutes).
-    'cache_ttl' => 600,
+    Config.define :cache_ttl, :default => 600
 
     # Request timeout in seconds.
-    'request_timeout' => 3,
+    Config.define :request_timeout, :default => 3
 
     # If Twitter fails to respond at least this many times in a row, no new
     # requests will be sent until the failure_timeout expires in order to
     # avoid hindering your blog's performance.
-    'failure_threshold' => 3,
+    Config.define :failure_threshold, :default => 3
 
     # After the failure_threshold is reached, the plugin will wait this many
     # seconds before trying again. Default is 600 seconds (10 minutes).
-    'failure_timeout' => 600
-  }
+    Config.define :failure_timeout, :default => 600
 
     class << self
 
@@ -110,7 +110,7 @@ module CortexReaver; module Plugins
         options = {:count => 5}.merge(options)
         count   = options[:count].to_i
 
-        count += 10 unless Config.twitter['include_replies']
+        count += 10 unless Config.include_replies
         count = 200 if count > 200
 
         url = "http://twitter.com/statuses/user_timeline/#{user}.json?count=" <<
@@ -122,12 +122,12 @@ module CortexReaver; module Plugins
 
         tweets = []
 
-        Timeout.timeout(Config.twitter['request_timeout'], StandardError) do
+        Timeout.timeout(Config.request_timeout, StandardError) do
           tweets = JSON.parse(open(url).read)
         end
 
         # Weed out replies if necessary.
-        unless Config.twitter['include_replies']
+        unless Config.include_replies
           tweets.delete_if do |tweet|
             !tweet['in_reply_to_status_id'].nil? ||
                 !tweet['in_reply_to_user_id'].nil?
@@ -151,17 +151,17 @@ module CortexReaver; module Plugins
 
         @failures = 0
 
-        return cache.store(url, tweets, :ttl => Config.twitter['cache_ttl'])
+        return cache.store(url, tweets, :ttl => Config.cache_ttl)
 
       rescue => e
-        Ramaze::Log.error "Thoth::Plugin::Twitter: #{e.message}"
+        Ramaze::Log.error "CortexReaver::Plugins::Twitter: #{e.message}"
 
         @failures ||= 0
         @failures += 1
 
-        if @failures >= Config.twitter['failure_threshold']
-          @skip_until = Time.now + Config.twitter['failure_timeout']
-          Ramaze::Log.error "Thoth::Plugin::Twitter: Twitter failed to respond #{@failures} times. Will retry after #{@skip_until}."
+        if @failures >= Config.failure_threshold
+          @skip_until = Time.now + Config.failure_timeout
+          Ramaze::Log.error "CortexReaver::Plugins::Twitter: Twitter failed to respond #{@failures} times. Will retry after #{@skip_until}."
         end
 
         return []
