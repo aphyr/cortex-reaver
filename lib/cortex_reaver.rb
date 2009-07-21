@@ -100,6 +100,7 @@ module CortexReaver
         when :memcache
         Ramaze::Cache.options.default = Ramaze::Cache::MemCache
       end
+      
 
       if config[:log_root]
         # Log to file
@@ -127,6 +128,9 @@ module CortexReaver
       raise ArgumentError.new("unknown Cortex Reaver mode #{config[:mode].inspect}. Expected one of [:production, :development].")
     end
 
+    # Create plugin cache
+    Ramaze::Cache.add(:plugin)
+
     # Prepare view directory
     if config.view_root
       if not File.directory? config.view_root
@@ -142,7 +146,11 @@ module CortexReaver
     # Load plugins
     config.plugins.enabled.each do |plugin|
       Ramaze::Log.info "Loading plugin #{plugin}"
-      require File.join(config.plugin_root, plugin)
+      begin
+        require File.join(config.plugin_root, plugin)
+      rescue LoadError => e
+        require File.join(LIB_DIR, 'plugins', plugin)
+      end
     end
   end
 

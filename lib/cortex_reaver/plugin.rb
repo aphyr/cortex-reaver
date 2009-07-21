@@ -1,4 +1,4 @@
 module CortexReaver
-  module Plugin
+  module Plugins
   end
 end
