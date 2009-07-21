@@ -30,6 +30,17 @@
           <div class="top"><a href="/">Site</a></div>
           <%= section_nav CortexReaver.config.view.sections %>
         </div>
+
+        <div id="twitter" class="box">
+          <div class="top"><a href="http://twitter.com/aphyr_">Status</a></div>
+          <ul class="text">
+            <li class="status">
+              <% tweet = CortexReaver::Plugins::Twitter.recent_tweets('aphyr_', :count => 1).first %>
+              <%= tweet[:html] %><br />
+              <span class="date"><%=h tweet[:created_at].strftime("%b %d %H:%M") %></span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div id="main-container">

@@ -7,6 +7,11 @@ body {
   background: #fff;
 }
 
+/* Boxes */
+.box > * > li {
+  background: #ccc;
+}
+
 /* Actions */
 .actions li {
   background: #aaa;

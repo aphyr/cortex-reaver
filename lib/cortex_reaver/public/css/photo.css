@@ -52,7 +52,7 @@ body {
 #top.photo h1 {
 }
 
-#top h1 a {
+h1 a, h2 a, h3 a {
   color: #555;
 }
 
@@ -136,7 +136,13 @@ body {
   margin: 0;
   margin-top: 3px !important;
 }
-
+.box > .text > li {
+  color: #333;
+  text-transform: none;
+  font-size: 90%;
+  font-weight: normal;
+  padding: 4px 8px;
+}
 
 #sections ul {
   padding: 0;
@@ -247,10 +253,21 @@ table.grid {
 
 /* Forms */
 
+/* Status */
+.status {
+  font-size: 80%;
+  text-align: justify;
+}
+
 /* Colophon */
 #colophon {
   text-align: right;
   font-size: smaller;
   color: #aaa;
   padding: 20px 0;
+}
+
+/* Date */
+.date {
+  font-size: 80%;
 }
