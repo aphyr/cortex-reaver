@@ -96,7 +96,7 @@ module Ramaze
               u.can_create? model_class.new
             end
 
-            @title = "New #{h model_class.to_s.demodulize.titleize}"
+            @title = "New #{model_class.to_s.demodulize.titleize}"
             @form_action = :new
 
             if request.post?
@@ -221,7 +221,7 @@ module Ramaze
             u.can_edit? @model
           end
         
-          @title = "Edit #{model_class.to_s.demodulize.downcase} #{h @model.to_s}"
+          @title = "Edit #{model_class.to_s.demodulize.downcase} #{@model.to_s}"
           @form_action = "edit/#{@model.id}"
 
           set_singular_model_var @model
@@ -332,7 +332,7 @@ module Ramaze
           # Redirect IDs to names
           raw_redirect(@model.url, :status => 301) if id =~ /^\d+$/
 
-          @title = h @model.to_s
+          @title = @model.to_s
           set_singular_model_var @model
 
           if @model.class.associations.include? :comments
