@@ -1,30 +1,12 @@
 <% columns = 4 %>
 <% i = 0 %>
-<table class="photographs grid">
+<table class="photographs grid" cellspacing="10">
   <tr>
     <% @photographs.all.each do |photograph| %>
-      <td>
-        <table class="thumbnail frame" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="border_top_left"></td>
-            <td class="border_top"></td>
-            <td class="border_top_right"></td>
-          </tr>
-          <tr>
-            <td class="border_left"></td>
-            <td id="photograph_<%= photograph.name %>" class="content">
-              <a href="<%= photograph.url %>">
-                <img src="<%= photograph.thumbnail_public_path %>" class="grid thumbnail" alt="<%=h photograph.title %>" />
-              </a>
-            </td>
-            <td class="border_right"></td>
-          </tr>
-          <tr>
-            <td class="border_bottom_left"></td>
-            <td class="border_bottom"></td>
-            <td class="border_bottom_right"></td>
-          </tr>
-        </table>
+      <td id="photograph_<%= photograph.name %>" class="photo thumb">
+        <a href="<%= photograph.url %>">
+          <img src="<%= photograph.path(:public, 'grid') %>" alt="<%=h photograph.title %>" />
+        </a>
       </td>
       <% if (i += 1) == 4 %>
     </tr>
@@ -34,3 +16,22 @@
     <% end %>
   </tr>
 </table>
+
+<script type="text/javascript">
+  /* <![CDATA[ */
+  $(document).ready(function() {
+    $('.grid .photo').each(function(i) {
+      var elem = $(this);
+      elem.corners("10px");
+      elem.hover(
+        function() {
+          elem.animate( {backgroundColor: "#444"}, 1);
+        },
+        function() {
+          elem.animate( {backgroundColor: "#111"}, 200 );
+        }
+        );
+    });
+  });
+  /* ]]> */
+</script>

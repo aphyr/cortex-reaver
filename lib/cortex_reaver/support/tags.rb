@@ -11,10 +11,9 @@ module Sequel
         # Returns all models with ALL the following tags:
         def tagged_with(tags, all=true)
           # Find map between this model and tags, e.g. pages_tags
-          map = [table_name.to_s, 'tags'].sort.join('_').to_sym
-          
-          # The name in the mapping table which points to us
-          own_id = (table_name.to_s.singularize + '_id').to_sym
+          reflection = self.association_reflection(:tags)
+          map = reflection[:join_table]
+          own_id = reflection[:left_key]
           
           # The tag IDs to search for
           ids = tags.map { |t| t.id }
@@ -73,8 +72,19 @@ module Sequel
           end
           remove_all_tags
 
-
           true
+        end
+
+        # Finds related models by tags.
+        def related_by_tags
+          # Find map between this model and tags, e.g. pages_tags
+          reflection = self.association_reflection(:tags)
+          map = reflection[:join_table]
+          own_id = reflection[:left_key]
+          tags = self.tags.map(:id)
+          self.class.filter(
+            CortexReaver.db[map].filter(:tag_id => tags).group_and_count(own_id).reverse.map(:photograph_ids)
+          )
         end
 
         # Set tags from a string, or array of tags. Finds existing tags or

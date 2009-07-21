@@ -1,3 +1,37 @@
+body {
+  background: #eee;
+  color: #000;
+}
+
+#main {
+  background: #fff;
+}
+
+/* Actions */
+.actions li {
+  background: #aaa;
+  color: #000;
+}
+.actions li.elided {
+  color: #555;
+}
+.actions li.current {
+  background: #202020;
+  color: #fff;
+}
+.actions li a {
+  color: #000;
+}
+.actions li.current a {
+  color: #fff !important;
+}
+
+/* Colophon */
+#colophon {
+  color: #555;
+}
+
+/* Text entries */
 .text-entry .byline {
   color: #666;
   position: relative;

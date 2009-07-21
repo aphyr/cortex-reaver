@@ -141,7 +141,7 @@ module CortexReaver
      
     # Drop current migrations and move to the dump's version
     system($0, '-f', '-m', '0')
-    Sequel::Migrator.apply db, LIB_DIR/:migrations, current_version
+    Sequel::Migrator.apply db, File.join(LIB_DIR, 'migrations'), current_version
 
     # Copy tables
     dump.tables.each do |table|

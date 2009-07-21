@@ -149,12 +149,12 @@ module CortexReaver
 
     # Returns the earliest thing in the CortexReaver DB, for copyright.
     def earliest_content
-      @earliest_content ||= [
+      @earliest_content ||= DateTime.parse([
         CortexReaver::Journal.dataset.min(:created_on),
         CortexReaver::Page.dataset.min(:created_on),
         CortexReaver::Photograph.dataset.min(:created_on),
         CortexReaver::Project.dataset.min(:created_on)
-      ].min
+      ].min)
     end
 
     # Saves self to disk
