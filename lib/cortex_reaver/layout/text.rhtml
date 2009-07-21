@@ -3,54 +3,75 @@
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <% if @feeds %>
-      <% @feeds.each do |title, feed| %>
+    <% if defined? feeds %>
+      <% feeds.each do |title, feed| %>
         <link rel="alternate" type="application/atom+xml" href="<%= attr_h feed %>" title="<%= attr_h title %>" />
       <% end %>
     <% end %>
+    
     <%= CortexReaver::MainController.render_view('head') %>
+    <link rel="stylesheet" type="text/css" href="/css/text.css" />
   </head>
-  <body>
+  <body class="text">
     <%= CortexReaver::MainController.render_view('js') %>
-  
-    <div id="top">
-      <a href="/">
-        <img id="header" src="/images/header.png" alt="<%= attr_h CortexReaver.config[:site][:name] %>" />
-      </a>
-    </div>
+    <script type="text/javascript" src="/js/photo.js"></script>
 
-    <div id="sections">
-      <%= section_nav CortexReaver.config.view.sections %>
-    </div>
+    <%= CortexReaver::MainController.render_view('adminbox') %>
 
-    <div id="middle">
-      <table id="columns">
-        <tbody>
-          <tr>
-            <td id="main">
-              <%= CortexReaver::MainController.render_view('adminbox') %>
+    <%= flashbox %>
+            
+    <div id="content">
+      <div id="top">
+        <h1><%=h (@title || CortexReaver.config.site.name) %></h1>
+      </div>
+     
+      <div id="boxes">
+        <div id="sections" class="box">
+          <div class="top"><a href="/">Site</a></div>
+          <%= section_nav CortexReaver.config.view.sections %>
+        </div>
+      </div>
 
-              <%= flashbox %>
+      <div id="main-container">
+        <div id="main">
+          <%= @content %>
+        </div>
 
-              <div id="content">
-                <%= @content %>
-              </div>
-            </td>
-
-            <% if @sidebar %>
-              <td id="sidebar">
-                <%= @sidebar %>
-              </td>
-            <% end %>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="colophon">
-    Copyright &copy; <%=CortexReaver.config.earliest_content.year %>&mdash;<%= Time.now.strftime('%Y') %> <%=h CortexReaver.config[:site][:author] %>
+        <div id="colophon">
+          Copyright &copy; <%=h CortexReaver.config.site.author %> <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>
+        </div>
+      </div>
     </div>
 
     <%= CortexReaver::MainController.render_view('tracker') %>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+      $(document).ready(function() {
+        $('#top').corners("10px");
+        $('#top .actions li:first').corners("10px left");
+        $('#top .actions li:last').corners("10px right");
+        $('#main').corners("10px");
+
+        $('.box .top').corners("10px top");
+        $('.box > *').each(function() {
+          $(this).find('li:last').corners("10px bottom");
+        });
+
+        $('.pagination').each(function() {
+          $(this).find('li:first').corners("left");
+          $(this).find('li:last').corners("right");
+        });
+        $('.pagination li').not('.elided').add('.actions > li').each(function(i) {
+          $(this).fadeTo(0,0.5);
+          $(this).hover(
+            function() { $(this).fadeTo(0,1) },
+            function() { $(this).fadeTo(200,0.5) }
+          );
+        });
+
+      });
+    /* ]]> */
+    </script>
   </body>
 </html>

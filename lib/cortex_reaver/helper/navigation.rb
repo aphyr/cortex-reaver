@@ -117,7 +117,7 @@ module Ramaze
           pages.inject(pages.first - 1) do |previous, i|
             if (i - previous) > 1
               # These pages are not side-by-side.
-              links << '<li>&hellip;</li>'
+              links << '<li class="elided">&hellip;</li>'
             end
 
             if i == page
@@ -143,14 +143,14 @@ module Ramaze
 
       # Produces a section navigation list from an array of titles to urls.
       def section_nav(sections)
-        s = "<ul>\n"
+        s = "<ul class=\"actions\">\n"
         sections.each do |section|
           title = section.first
-          url = section.last
+          url = section.last.to_s
           klass = url.gsub(/\//, '').gsub(/_/, '-')
-          s << '<li><a class="' + klass
-          s << ' selected' if request.request_uri == url 
-          s << '" href="' + attr_h(url) + '">'
+          s << '<li class="' + klass
+          s << ' current' if request.request_uri[url]
+          s << '"><a href="' + attr_h(url) + '">'
           s << title
           s << "</a></li>\n"
         end

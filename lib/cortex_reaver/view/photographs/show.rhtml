@@ -1,114 +1,72 @@
-<table class="photo frame" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="border_top_left"></td>
-    <td class="border_top"></td>
-    <td class="border_top_right"></td>
-  </tr>
-  <tr>
-    <td class="border_left"></td>
-    <td id="photograph_<%= @photograph.name %>" class="content">
-      <div id="canvas">
-        <div id="bar">
-          <ul class="actions">
-            <% if previous_photo = @photograph.previous %>
-              <li>
-                <a href="<%= previous_photo.url %>">&laquo; Previous</a>
-              </li>
-            <% end %>
-            <li>
-              <a href="<%= @photograph.absolute_window_url %>">Back to Thumbnails</a>
-            </li>
-            <% if user.can_edit? @photograph %>
-              <li>
-                <%= a('Edit', r(:edit, @photograph.id)) %>
-              </li>
-            <% end %>
-            <% if next_photo = @photograph.next %>
-              <li>
-                <a href="<%= next_photo.url %>">Next &raquo;</a>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-        <script type="text/javascript">
-          /* <![CDATA[ */
-          $('#bar').css('margin-bottom', -1 * $('#bar').height());
-          /* ]]> */
-        </script> 
+<style type="text/css">
+  #content {
+    margin: 30px;
+  }
+</style>
 
-        <img src="<%= @photograph.full_public_path %>" id="photo" alt="<%= attr_h @photograph.title %>" title="<%= attr_h @photograph.title %>" />
+<div id="top" class="photo">
+  <ul class="photo actions">
+    <% if previous_photo = @photograph.previous %>
+      <li>
+        <a href="<%= previous_photo.url %>"><img src="/images/prev_40.png" alt="Previous" /></a>
+      </li>
+    <% end %>
+    <li>
+    <a href="<%= @photograph.absolute_window_url %>"><img src="/images/grid_40.png" alt="Back to thumbnails" /></a>
+    </li>
+    <% if user.can_edit? @photograph %>
+      <li>
+        <a href="<%= r(:edit, @photograph.id) %>"><img src="/images/edit_40.png" alt="Edit" /></a>
+      </li>
+    <% end %>
+    <% if next_photo = @photograph.next %>
+      <li>
+      <a href="<%= next_photo.url %>"><img src="/images/next_40.png" alt="Next"></a>
+      </li>
+    <% end %>
 
-      </div>
+    <h1><%=h @photograph.title %></h1>
 
-      <h2>
-        <% if previous_photo %>
-          <a href="<%= previous_photo.url %>">&laquo;</a>
-        <% end %>
-        <%=h @photograph.title %>
-        <% if next_photo %>
-          <a href="<%= next_photo.url %>">&raquo;</a>
-        <% end %>
-      </h2>
-      <div class="byline">
-        <div class="description"><%= description_of @photograph %></div>
-        <% unless @photograph.tags.empty? %>
-          <div class="tags"><%= tags_on @photograph %></div>
-        <% end %>
-      </div>
-    </td>
-    <td class="border_right"></td>
-  </tr>
-  <tr>
-    <td class="border_bottom_left"></td>
-    <td class="border_bottom"></td>
-    <td class="border_bottom_right"></td>
-  </tr>
-</table>
+    <div id="copyright">
+      Copyright &copy; <%= @photograph.created_on.year %> <%= @photograph.creator.name %>
+    </div>
+  </ul>
+</div>
 
-<% unless @photograph.comments.empty? %>
-<table class="text frame" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="border_top_left"></td>
-    <td class="border_top"></td>
-    <td class="border_top_right"></td>
-  </tr>
-  <tr>
-    <td class="border_left"></td>
-    <td class="content">
-      <div class="comments">
-        <a id="comments"></a>
-        <% @photograph.comments_dataset.order(:created_on).all.each do |comment| %>
-          <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
-        <% end %>
-      </div>
+<div id="photograph_<%= @photograph.name %>" class="photo full">
+  <div class="frame">
+    
+    <img src="<%= @photograph.full_public_path %>" id="photo" alt="<%= attr_h @photograph.title %>" title="<%= attr_h @photograph.title %>" />
 
-    </td>
-    <td class="border_right"></td>
-  </tr>
-  <tr>
-    <td class="border_bottom_left"></td>
-    <td class="border_bottom"></td>
-    <td class="border_bottom_right"></td>
-  </tr>
-</table>
-<% end %>
+    <div class="byline">
+      <div class="description"><%= description_of @photograph %></div>
+      <% unless @photograph.tags.empty? %>
+        <div class="tags"><%= tags_on @photograph %></div>
+      <% end %>
+    </div>
+  </div>
 
-<table class="text frame" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="border_top_left"></td>
-    <td class="border_top"></td>
-    <td class="border_top_right"></td>
-  </tr>
-  <tr>
-    <td class="border_left"></td>
-    <td class="content">
-      <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
-    </td>
-    <td class="border_right"></td>
-  </tr>
-  <tr>
-    <td class="border_bottom_left"></td>
-    <td class="border_bottom"></td>
-    <td class="border_bottom_right"></td>
-  </tr>
-</table>
+  <% unless @photograph.comments.empty? %>
+  <div class="comments">
+    <a id="comments"></a>
+    <% @photograph.comments_dataset.order(:created_on).all.each do |comment| %>
+      <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
+    <% end %>
+  </div>
+  <% end %>
+
+  <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
+</div>
+
+<script type="text/javascript">
+  /* <![CDATA[ */
+  $(document).ready(function() {
+    $('.photo.full .frame').corners("10px");
+    $('.photo .byline').fadeTo(0,0.5);
+    $('.photo .tags.each0').hover(
+      function() { $(this).fadeTo(0,1) },
+      function() { $(this).fadeTo(200,0.5) }
+    );
+  });
+  /* ]]> */
+</script>

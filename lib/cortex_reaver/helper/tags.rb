@@ -1,6 +1,26 @@
 module Ramaze
   module Helper
     module Tags
+      Helper::LOOKUP << self
+
+      # Finds models with a given tag.
+      def tagged(tags)
+        tags = tags.split(',').map! do |tag|
+          CortexReaver::Tag.get(tag.gsub(/[^-_\w]+/, '').strip)
+        end
+
+        @title = "#{model_class.to_s.demodulize.pluralize.titleize}: #{tags.join(', ')}"
+        @models = model_class.tagged_with(tags)
+        set_plural_model_var @models
+
+        if user.can_create? model_class.new
+          workflow "New #{model_class.to_s.demodulize}", rs(:new)
+        end
+
+        render_view(:list)
+      end
+
+      private
       # Adds an AJAX-ified tag editor for a model.
       def live_tags_field(model, opts={:name => 'tags'})
         name = opts[:name]

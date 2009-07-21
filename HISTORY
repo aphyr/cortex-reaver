@@ -1,3 +1,9 @@
+Version 0.2.0
+  - View
+    - Redesigned retro-fi stylesheet.
+    - More JQuery polish
+    - Automatic copyright dates
+    - Fixed bug where nested comments wouldn't render.
 Version 0.1.1
   - View
     - New head template for common js, css, etc.
