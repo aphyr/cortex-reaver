@@ -35,7 +35,7 @@ module CortexReaver
     end
 
     # Listing users outright is a little dodgy.
-    before :index do
+    before(:index, :page) do
       for_auth do |u|
         u.admin?
       end

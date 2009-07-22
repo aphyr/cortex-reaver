@@ -16,40 +16,38 @@
     <%= CortexReaver::MainController.render_view('js') %>
     <script type="text/javascript" src="/js/photo.js"></script>
 
-    <%= CortexReaver::MainController.render_view('adminbox') %>
-
-    <%= flashbox %>
             
     <div id="content">
       <div id="top">
+        <% if @model %>
+          <%= model_nav @model %>
+        <% end %>
         <h1><%=h (@title || CortexReaver.config.site.name) %></h1>
       </div>
-     
-      <div id="boxes">
-        <div id="sections" class="box">
-          <div class="top"><a href="/">Site</a></div>
-          <%= section_nav CortexReaver.config.view.sections %>
-        </div>
 
-        <div id="twitter" class="box">
-          <div class="top"><a href="http://twitter.com/aphyr_">Status</a></div>
-          <ul class="text">
-            <li class="status">
-              <% tweet = CortexReaver::Plugins::Twitter.recent_tweets('aphyr_', :count => 1).first %>
-              <%= tweet[:html] %><br />
-              <span class="date"><%=h tweet[:created_at].strftime("%b %d %H:%M") %></span>
-            </li>
-          </ul>
-        </div>
+      <div id="boxes">
+        <% sidebars.unshift [:sections, CortexReaver::MainController.render_view(:sections)] %>
+        <%= sidebar_box %>
       </div>
 
       <div id="main-container">
+        <%= CortexReaver::MainController.render_view('adminbox') %>
+        
         <div id="main">
+ 
+          <%= flashbox %>
+
           <%= @content %>
         </div>
 
         <div id="colophon">
-          Copyright &copy; <%=h CortexReaver.config.site.author %> <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>
+          Copyright &copy; <% if @model %>
+            <%= @model.updated_on.year %>
+            <%= user_link @model %> 
+          <% else %>
+            <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>    
+            <%=h CortexReaver.config.site.author %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -80,7 +78,6 @@
             function() { $(this).fadeTo(200,0.5) }
           );
         });
-
       });
     /* ]]> */
     </script>

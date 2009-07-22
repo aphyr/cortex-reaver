@@ -39,17 +39,27 @@ module Ramaze
         s << '</span>'
       end
 
-      # Returns a div with next/up/previous links for the record.
+      # Returns a list with next/up/previous links for the record.
       def model_nav(model)
-        n = '<div class="navigation actions">'
+        if not model.respond_to? :next
+          # Not applicable
+          return
+        elsif CortexReaver::User === model or CortexReaver::Page === model
+          return
+        end
+
+        n = '<ul class="' + model.class.to_s.underscore + ' navigation actions">'
         if model.previous
-          n << '  <a class="previous" href="' + model.previous.url + '">&laquo; Previous ' + model.class.to_s.demodulize + '</a>'
+          n << '  <li><a class="previous" href="' + model.previous.url + '">&laquo; Previous ' + model.class.to_s.demodulize + '</a></li>'
         end
-        n << '  <a class="up" href="' + model.absolute_window_url + '">Back to ' + model.class.to_s.demodulize.pluralize + '</a>'
+        n << '  <li><a class="up" href="' + model.absolute_window_url + '">Back to ' + model.class.to_s.demodulize.pluralize + '</a></li>'
+        if user.can_edit? model
+          n << '  <li><a class="edit" href="' + r(:edit, model.id).to_s + '">Edit</a></li>'
+        end
         if model.next
-          n << '  <a class="next" href="' + model.next.url + '">Next ' + model.class.to_s.demodulize + ' &raquo;</a>'
+          n << '  <li><a class="next" href="' + model.next.url + '">Next ' + model.class.to_s.demodulize + ' &raquo;</a></li>'
         end
-        n << '</div>'
+        n << '</li>'
       end
 
       # Generate pagination links from a Sequenceable class and index.

@@ -32,6 +32,7 @@
         $('#top .actions li:first').corners("10px left");
         $('#top .actions li:last').corners("10px right");
         $('#main').corners("10px");
+        $('.comments .comment').corners("10px");
 
         $('.box .top').corners("10px top");
         $('.box > *').each(function() {
@@ -40,7 +41,7 @@
         
         $('.pagination').each(function() {
           $(this).find('li:first').corners("left");
-          $(this).find('li:last')..corners("right");
+          $(this).find('li:last').corners("right");
         });
         $('.pagination li').not('.elided').add('.actions > li').each(function(i) {
           $(this).fadeTo(0,0.5);
@@ -49,7 +50,6 @@
             function() { $(this).fadeTo(200,0.5) }
           );
         });
-
       });
     /* ]]> */
     </script>
