@@ -54,6 +54,18 @@ textarea {
   margin: 0;
 }
 
+/* Blanks */
+.blank textarea, .blank input {
+  padding: 2px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #555;
+}
+.blank input[type=submit]:hover {
+  background: #555;
+  border: 1px solid #aaa;
+}
+
 /* Autocomplete */
 
 .ac_results {

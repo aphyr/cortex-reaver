@@ -1,6 +1,14 @@
 Version 0.2.0
+  - General
+    - Runs on Ramaze 2009.06
+    - Takes advantage of Construct for configuration
+  - Plugins
+    - New twitter plugin, thanks to Ryan Grove
+  - Controller
+    - New sidebar system
   - View
-    - Redesigned retro-fi stylesheet.
+    - Redesigned retro-scifi stylesheet.
+    - Things are a bit of a mess internally; more cleanup will happen.
     - More JQuery polish
     - Automatic copyright dates
     - Fixed bug where nested comments wouldn't render.

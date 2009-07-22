@@ -1,19 +1,37 @@
+#adminbox_inside {
+  background: #fff;
+  padding: 10px;
+  margin: 2px;
+}
+
 #adminbox {
   display: none;
-  padding: 0.5em;
-  margin: -1px 0 1em 0;
-  background-color: #eaeaea;
-  border: 1px solid #aaa;
-  border-top: none;
+  padding: 10px;
+  margin: 0 0 10px 0;
+  background: #fff;
   font-size: 80%;
 }
 
-#main #adminbox {
-  margin: -1em 0em 1em 0em;
+.blank #adminbox {
+  background: #111;
+  margin: 10px;
+  color: #fff;
+}
+.blank #adminbox_inside {
+  background: #111;
 }
 
 #adminbox .actions-table {
   width: 100%;
+}
+
+#adminbox .actions li {
+  display: inline;
+  background: transparent;
+  color: #000;
+}
+#adminbox .actions li a {
+  display: inline;
 }
 
 #adminbox p {

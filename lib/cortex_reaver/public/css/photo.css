@@ -4,7 +4,11 @@ body {
   margin: 0;
   padding: 0;
   background: #202020;
-  color: #555;
+  color: #888;
+}
+
+.blank a {
+  color: #EB9D25;
 }
 
 #content {
@@ -24,7 +28,7 @@ body {
 
 #top h1 {
   padding: 6px 0px;
-  color: #555;
+  color: #666;
   position: absolute;
   right: 0px;
   left: 280px;
@@ -52,12 +56,34 @@ body {
 #top.photo h1 {
 }
 
+h1, h2 {
+  border-bottom: none;
+}
 h1 a, h2 a, h3 a {
-  color: #555;
+  color: #aaa;
 }
 
+#top .actions > li {
+  display: inline-block;
+}
 #top .actions > li > a {
   padding: 10px;
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  line-height: 200px;
+}
+#top .actions a.previous {
+  background: url('/images/prev_40.png') no-repeat center;
+}
+#top .actions a.up {
+  background: url('/images/grid_40.png') no-repeat center;
+}
+#top .actions a.edit {
+  background: url('/images/edit_40.png') no-repeat center;
+}
+#top .actions a.next {
+  background: url('/images/next_40.png') no-repeat center;
 }
 
 #main-container {
@@ -144,6 +170,13 @@ h1 a, h2 a, h3 a {
   padding: 4px 8px;
 }
 
+.strip .photo {
+  padding: 20px;
+  height: auto;
+  background-color: #d4d4d4;
+  margin-top: 4px;
+}
+
 #sections ul {
   padding: 0;
 }
@@ -161,16 +194,6 @@ h1 a, h2 a, h3 a {
   background: transparent;
   margin: 0 auto;
   padding: 0;
-}
-
-#colophon {
-  background-image: none;
-  color: #aaa;
-}
-
-/* Photo navigation */
-.photo.actions li {
-  display: inline-block;
 }
 
 /* Actions */
@@ -224,7 +247,7 @@ h1 a, h2 a, h3 a {
 
 /* Grid */
 
-table.grid {
+.grid {
   width: 100%;
   vertical-align: middle;
 }
@@ -256,7 +279,32 @@ table.grid {
 /* Status */
 .status {
   font-size: 80%;
-  text-align: justify;
+  text-align: left !important;
+}
+.status .date {
+  display: block;
+  text-align: right !important;
+  font-size: 80%;
+}
+
+/* Comments */
+.blank .comments .comment {
+  max-width: 760px;
+  padding: 10px;
+  background: #111;
+  color: #ccc;
+  margin: 0;
+  margin-top: 10px;
+}
+.blank .comments h2 a {
+  color: #aaa;
+}
+.blank .post.comment_form {
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  max-width: 700px;
+  padding: 10px;
 }
 
 /* Colophon */
@@ -267,7 +315,3 @@ table.grid {
   padding: 20px 0;
 }
 
-/* Date */
-.date {
-  font-size: 80%;
-}

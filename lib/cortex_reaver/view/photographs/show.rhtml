@@ -5,32 +5,15 @@
 </style>
 
 <div id="top" class="photo">
-  <ul class="photo actions">
-    <% if previous_photo = @photograph.previous %>
-      <li>
-        <a href="<%= previous_photo.url %>"><img src="/images/prev_40.png" alt="Previous" /></a>
-      </li>
-    <% end %>
-    <li>
-    <a href="<%= @photograph.absolute_window_url %>"><img src="/images/grid_40.png" alt="Back to thumbnails" /></a>
-    </li>
-    <% if user.can_edit? @photograph %>
-      <li>
-        <a href="<%= r(:edit, @photograph.id) %>"><img src="/images/edit_40.png" alt="Edit" /></a>
-      </li>
-    <% end %>
-    <% if next_photo = @photograph.next %>
-      <li>
-      <a href="<%= next_photo.url %>"><img src="/images/next_40.png" alt="Next"></a>
-      </li>
-    <% end %>
+  <%= model_nav @photograph %>
 
-    <h1><%=h @photograph.title %></h1>
+  <h1><%=h @photograph.title %></h1>
 
-    <div id="copyright">
-      Copyright &copy; <%= @photograph.created_on.year %> <%= @photograph.creator.name %>
-    </div>
-  </ul>
+  <div id="copyright">
+    Copyright &copy;
+    <%= @photograph.updated_on.year %>
+    <%= user_link @photograph %>
+  </div>
 </div>
 
 <div id="photograph_<%= @photograph.name %>" class="photo full">
@@ -62,11 +45,6 @@
   /* <![CDATA[ */
   $(document).ready(function() {
     $('.photo.full .frame').corners("10px");
-    $('.photo .byline').fadeTo(0,0.5);
-    $('.photo .tags.each0').hover(
-      function() { $(this).fadeTo(0,1) },
-      function() { $(this).fadeTo(200,0.5) }
-    );
   });
   /* ]]> */
 </script>

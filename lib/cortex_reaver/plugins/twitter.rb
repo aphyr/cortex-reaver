@@ -41,6 +41,9 @@ module CortexReaver; module Plugins
   module Twitter
     Config = CortexReaver.config.plugins.twitter = Construct.new
 
+    # The twitter username to look for
+    Config.define :username, :default => 'aphyr_'
+
     # Whether or not to include replies. If this is false, the most recent
     # non-reply tweets will be displayed.
     Config.define :include_replies, :default => false
@@ -100,7 +103,7 @@ module CortexReaver; module Plugins
       # Gets a Hash containing recent tweets for the specified _user_. The only
       # valid option currently is <code>:count</code>, which specifies the
       # maximum number of tweets that should be returned.
-      def recent_tweets(user, options = {})
+      def recent_tweets(user = Config.username, options = {:count => 1})
         if @skip_until
           return [] if @skip_until > Time.now
           @skip_until = nil

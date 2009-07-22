@@ -20,9 +20,11 @@
 <script type="text/javascript">
   /* <![CDATA[ */
   $(document).ready(function() {
-    $('.grid .photo').each(function(i) {
+    $('.grid').corners('10px');
+
+    $('.blank .grid .photo').each(function(i) {
       var elem = $(this);
-      elem.corners("10px");
+      elem.corners("6px");
       elem.hover(
         function() {
           elem.animate( {backgroundColor: "#444"}, 1);
@@ -30,7 +32,20 @@
         function() {
           elem.animate( {backgroundColor: "#111"}, 200 );
         }
-        );
+      );
+    });
+
+    $('.text .grid .photo').each(function(i) {
+      var elem = $(this);
+      elem.corners("6px");
+      elem.hover(
+        function() {
+          elem.animate( {backgroundColor: "#ccc"}, 1);
+        },
+        function() {
+          elem.animate( {backgroundColor: "#eee"}, 200 );
+        }
+      );
     });
   });
   /* ]]> */

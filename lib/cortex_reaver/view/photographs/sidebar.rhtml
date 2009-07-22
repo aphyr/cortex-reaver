@@ -1,7 +1,10 @@
-<% @photographs.all.each do |photograph| %>
-  <div class="box" id="photograph_<%= photograph.name %>">
+<div class="top"><a href="/photographs">Images</a></div>
+<ul class="photographs strip">
+  <% @photographs.all.each do |photograph| %>
+  <li class="photo thumb" id="photograph_<%= photograph.name %>">
     <a href="<%= photograph.url %>">
-      <img src="<%= photograph.thumbnail_public_path %>" class="grid thumbnail" alt="<%=h photograph.title %>" />
+      <img src="<%= photograph.thumbnail_public_path %>" alt="<%=attr_h photograph.title %>" />
     </a>
-  </div>
-<% end %>
+  </li>
+  <% end %>
+</ul>

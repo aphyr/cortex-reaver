@@ -1,6 +1,6 @@
 module CortexReaver
   APP_NAME = 'Cortex Reaver'
-  APP_VERSION = '0.1.1'
+  APP_VERSION = '0.2.0'
   APP_AUTHOR = 'Kyle Kingsbury'
   APP_EMAIL = 'aphyr@aphyr.com'
   APP_URL = 'http://aphyr.com'

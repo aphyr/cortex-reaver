@@ -70,6 +70,11 @@ module CortexReaver
       self[:login => id] || self[id]
     end
 
+    # Class URL
+    def self.url
+      '/users'
+    end
+
     # Returns true if the user is an administrator.
     def admin?
       self.admin

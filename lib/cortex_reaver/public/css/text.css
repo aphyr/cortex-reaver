@@ -3,13 +3,20 @@ body {
   color: #000;
 }
 
+h1 a, h2 a, h3 a {
+  color: #202020;
+}
+
 #main {
   background: #fff;
 }
 
 /* Boxes */
+.box .top {
+  color: #fff;
+}
 .box > * > li {
-  background: #ccc;
+  background: #d4d4d4;
 }
 
 /* Actions */
@@ -45,7 +52,7 @@ body {
 .text-entry .footer {
   background: #eee;
   border-bottom: 1px dashed #aaa;
-  margin-bottom: 1.5em;
+  margin-bottom: 25px;
   padding: 2px;
 }
 
@@ -61,4 +68,12 @@ body {
 
 .text-entry .byline {
   margin-bottom: 2em;
+}
+
+/* Embedded photo grids */
+.photographs.grid {
+}
+
+.grid .photo {
+  background: #eee;
 }

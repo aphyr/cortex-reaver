@@ -10,18 +10,18 @@
   </div>
   <div class="footer">
     <ul class="actions">
-      <li><a href="<%= @journal.url %>#comments">
+      <li><a class="comment" href="<%= @journal.url %>#comments">
         <img src="/images/comment.gif" class="icon" alt="comment" />
         <%= @journal.comment_count %> <%= @journal.comment_count == 1 ? 'comment' : 'comments' %>
       </a></li>
       <% if user.can_edit? @journal %>
-        <li><a class="edit-link" href="/journals/edit/<%= @journal.id %>">
+        <li><a class="edit" href="/journals/edit/<%= @journal.id %>">
           <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
         </a></li>
       <% end %>
       <% if user.can_delete? @journal %>
         <li>
-          <a href="<%= CortexReaver::JournalController.r(:delete, @journal.id) %>" onclick="return confirm('Are you sure you want to delete this journal?');">
+          <a class="delete" href="<%= CortexReaver::JournalController.r(:delete, @journal.id) %>" onclick="return confirm('Are you sure you want to delete this journal?');">
             <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
           </a>
         </li>
