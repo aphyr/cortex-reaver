@@ -26,7 +26,7 @@ module Ramaze
       def delete_attachment(id, name)
         unless @model = model_class.get(id)
           flash[:error] = "No such #{model_class.to_s.downcase} (#{h id}) exists."
-          redirect Rs()
+          redirect rs()
         end
 
         # You need to be able to edit the model before removing attachments!
@@ -57,7 +57,7 @@ module Ramaze
       def attachment_form(model)
        s = "<div id=\"files\" class=\"files\">\n  <ul>\n    "
        model.attachments.each do |attachment|
-         s << "<li><a href=\"#{attachment.public_path}\">#{attachment.name}</a> (#{A('delete', :href => Rs(:delete_attachment, model.name, attachment.name))})</li>\n"
+         s << "<li><a href=\"#{attachment.public_path}\">#{attachment.name}</a> (#{a('delete', :href => rs(:delete_attachment, model.name, attachment.name))})</li>\n"
        end
        s << "</ul>\n</div>\n\n"
 
