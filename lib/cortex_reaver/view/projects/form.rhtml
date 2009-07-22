@@ -2,7 +2,7 @@
 
 <%= errors_on @project %>
 
-<form class="edit-form" action="<%= Rs(@form_action) %>" method="post" enctype="multipart/form-data">
+<form class="edit-form" action="<%= rs(@form_action) %>" method="post" enctype="multipart/form-data">
   <%= form_p 'title', :model => @project %>
   <%= live_name_field @project %>
   <%= live_tags_field @project %>
