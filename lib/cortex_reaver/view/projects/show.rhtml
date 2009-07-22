@@ -33,7 +33,7 @@
     <div class="comments">
       <a id="comments" />
       <% @project.comments_dataset.order(:created_on).all.each do |comment| %>
-        <%= render_template '../comments/comment.rhtml', 'comment' => comment %>
+        <%= CortexReaver::CommentController.render_view :comment, :comment => comment %>
       <% end %>
     </div>
 
