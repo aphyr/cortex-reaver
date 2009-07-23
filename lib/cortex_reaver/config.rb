@@ -64,7 +64,6 @@ module CortexReaver
         end
       end
 
-
       define :mode,
         :desc => 'Development or production mode.',
         :default => :production
@@ -128,7 +127,26 @@ module CortexReaver
           ['Comments', '/comments'],
           ['About', '/about']
         ]
+      view.define :sidebar,
+        :desc => "An array of sidebars: [path, view]. Path is matched against the current request path. * globs to any non-slash characters, ** globs to all characters. The view is a string referencing the view in view/sidebar/ to render.
+        
+For example, if you wanted to render view/sidebar/tweet.rhtml using the twitter plugin, but only on the main page, you could do:
 
+  ['/', 'twitter']
+
+Or to render a related entries box on all photograph pages...
+
+  ['/photographs/show/*', 'related']
+
+You can also just provide a regex for the path, in which case it is matched directly against path_info. For example, here's how I show some custom tags on /photographs and other photo index pages:
+
+  [/^\/photographs(\/(page|tagged))?/, 'explore_photos']
+  [/^\/journals(\/(page|tagged))?/, 'explore_journals']
+",
+        :default => [
+          ['**', 'sections'],
+          ['/', 'photographs']
+        ]
     end
 
     def compile_views
@@ -149,12 +167,15 @@ module CortexReaver
 
     # Returns the earliest thing in the CortexReaver DB, for copyright.
     def earliest_content
-      @earliest_content ||= DateTime.parse([
+      return @earliest_content if @earliest_content
+
+      @earliest_content = [
         CortexReaver::Journal.dataset.min(:created_on),
         CortexReaver::Page.dataset.min(:created_on),
         CortexReaver::Photograph.dataset.min(:created_on),
         CortexReaver::Project.dataset.min(:created_on)
-      ].min)
+      ].min
+      @earliest_content = DateTime.parse(@earliest_content) if @earliest_content.kind_of? String
     end
 
     # Saves self to disk
