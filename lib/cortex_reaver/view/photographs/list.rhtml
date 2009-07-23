@@ -3,21 +3,7 @@
 </div>
 
 <div id="boxes">
-  <div id="sections" class="box">
-    <div class="top"><a href="/">Site</a></div>
-    <%= section_nav CortexReaver.config.view.sections %>
-  </div>
-
-  <div id="explore" class="box">
-    <div class="top">Explore</div>
-    <%= section_nav([
-      ['Favorites', CortexReaver::PhotographController.r(:tagged, :favorite)],
-      ['Macro', CortexReaver::PhotographController.r(:tagged, :macro)],
-      ['Landscapes', CortexReaver::PhotographController.r(:tagged, :landscape)],
-      ['Abstract', CortexReaver::PhotographController.r(:tagged, :abstract)],
-      ['Portraits', CortexReaver::PhotographController.r(:tagged, :portrait)]
-    ]) %>
-  </div>
+  <%= sidebar %>
 </div>
 
 <div id="main-container">

@@ -37,15 +37,7 @@ module CortexReaver
         error_404
       else
         # Default welcome page
-        @photographs = Photograph.recent.viewable_by(user)
         @journals = Journal.recent.viewable_by(user)
-
-        # Twitter
-        sidebar :twitter, render_view(:tweet, :tweets => CortexReaver::Plugins::Twitter.recent_tweets)
-
-        if @photographs.count > 0
-          sidebar :photographs, PhotographController.render_view('sidebar')
-        end
 
         # Workflows
         if user.can_create? Journal.new
