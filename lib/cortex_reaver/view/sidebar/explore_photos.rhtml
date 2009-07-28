@@ -1,0 +1,7 @@
+<!-- Here's an example of how to make a custom navigation sidebar box -->
+<div class="explore box">
+  <div class="top">Explore</div>
+  <%= section_nav([
+    ['Favorites', CortexReaver::PhotographController.r(:tagged, :favorite)]
+  ]) %>
+</div>
