@@ -28,9 +28,10 @@ module CortexReaver
       :feeds,
       :pages
 
-#    cache_action(:method => :index, :ttl => 120) do
-#      user.id.to_i.to_s + flash.inspect
-#    end
+    cache_action(:method => :index, :ttl => 120) do
+      user.id.to_i.to_s + flash.inspect
+    end
+    cache_action(:method => :sitemap, :ttl => 300)
 
     # the index action is called automatically when no other action is specified
     def index(*ids)
