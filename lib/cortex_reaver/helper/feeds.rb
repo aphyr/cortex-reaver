@@ -58,20 +58,20 @@ module Ramaze
 #        url_base << ":#{port}" unless port == 80
 
         x.feed(:xmlns => 'http://www.w3.org/2005/Atom') do
-          x.id CortexReaver.config[:site][:url]
-          x.title "#{CortexReaver.config[:site][:name]} - #{model_class.to_s.demodulize.titleize}"
+          x.id CortexReaver.config.site.url
+          x.title "#{CortexReaver.config.site.name} - #{model_class.to_s.demodulize.titleize}"
           # x.subtitle
           x.updated updated
-          x.link :href => CortexReaver.config[:site][:url]
-          x.link :href => (CortexReaver.config[:site][:url].chomp('/') + model_class.atom_url), :rel => 'self'
+          x.link :href => full_url('/')
+          x.link :href => full_url(model_class.atom_url), :rel => 'self'
 
           recent.all do |model|
             x.entry do
-              x.id CortexReaver.config[:site][:url].chomp('/') + model.url
+              x.id full_url(model.url)
               x.title model.title
               x.published model.created_on.xmlschema
               x.updated model.updated_on.xmlschema
-              x.link :href => CortexReaver.config[:site][:url].chomp('/') + model.url, :rel => 'alternate'
+              x.link :href => full_url(model.url), :rel => 'alternate'
 
               x.author do
                 x.name model.creator.name
