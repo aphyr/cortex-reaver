@@ -39,6 +39,11 @@ module Ramaze
         s << '</span>'
       end
 
+      # Returns a full URL from a relative one.
+      def full_url(relative)
+        "#{CortexReaver.config.site.url.chomp('/')}#{relative}"
+      end
+
       # Returns a list with next/up/previous links for the record.
       def model_nav(model)
         if not model.respond_to? :next

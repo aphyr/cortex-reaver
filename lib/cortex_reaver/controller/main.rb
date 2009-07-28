@@ -5,7 +5,21 @@ module CortexReaver
     map '/'
     
     layout(:text) do |name, wish|
-      !request.xhr? and name != 'atom'
+      if request.xhr? or name == 'atom' or name == 'sitemap'
+        false
+      else
+        true
+      end
+    end
+
+    # We provide an XML sitemap.
+    provide(:xml, :type => 'text/xml') do |action, value|
+      Ramaze::Log.info action
+      if action.method == 'sitemap'
+        value
+      else
+        nil
+      end
     end
 
     helper :cache, 
@@ -68,9 +82,74 @@ module CortexReaver
       error_404
     end
 
-    def clear
-      Ramaze::Cache.action.clear
-      respond "cache cleared"
+    # XML sitemap.
+    def sitemap
+      error_404 unless request.path_info =~ /\.xml$/
+
+      x = Builder::XmlMarkup.new(:indent => 2)
+      x.instruct!
+
+      x.urlset(:xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9") do
+        # Front page
+        x.url do
+          x.loc full_url('/')
+          x.lastmod Time.parse(Journal.dataset.min(:updated_on).to_s).xmlschema
+          x.changefreq 'hourly'
+          x.priority 1.0
+        end
+
+        # Indexes
+        [JournalController, PhotographController, ProjectController].each do |c|
+          x.url do
+            x.loc full_url(c.r)
+            x.lastmod Time.parse(c::MODEL.dataset.min(:updated_on).to_s).xmlschema
+            x.changefreq 'hourly'
+            x.priority 0.9
+          end
+        end
+
+        # Comments
+        x.url do
+          x.loc full_url('/comments')
+          x.lastmod Time.parse(Comment.dataset.min(:updated_on).to_s).xmlschema
+          x.changefreq 'always'
+          x.priority 0.5
+        end
+
+        # Individual pages
+        Page.each do |page|
+          x.url do
+            x.loc full_url(page.url)
+            x.lastmod page.updated_on.xmlschema
+            x.changefreq 'weekly'
+            x.priority 0.9
+          end
+        end
+        Journal.each do |journal|
+          x.url do
+            x.loc full_url(journal.url)
+            x.lastmod journal.updated_on.xmlschema
+            x.changefreq 'weekly'
+            x.priority 0.8
+          end
+        end
+        Photograph.each do |photograph|
+          x.url do
+            x.loc full_url(photograph.url)
+            x.lastmod photograph.updated_on.xmlschema
+            x.changefreq 'weekly'
+            x.priority 0.8
+          end
+        end
+        Project.each do |project|
+          x.url do
+            x.loc full_url(project.url)
+            x.lastmod project.updated_on.xmlschema
+            x.changefreq 'weekly'
+            x.priority 0.8
+          end
+        end
+      end
     end
 
     private
