@@ -31,7 +31,9 @@ module CortexReaver
     cache_action(:method => :index, :ttl => 120) do
       user.id.to_i.to_s + flash.inspect
     end
-    cache_action(:method => :sitemap, :ttl => 300)
+    cache_action(:method => :sitemap, :ttl => 300) do
+      request.path_info
+    end
 
     # the index action is called automatically when no other action is specified
     def index(*ids)
@@ -118,7 +120,7 @@ module CortexReaver
         end
 
         # Individual pages
-        Page.each do |page|
+        Page.all.each do |page|
           x.url do
             x.loc full_url(page.url)
             x.lastmod page.updated_on.xmlschema
@@ -126,7 +128,7 @@ module CortexReaver
             x.priority 0.9
           end
         end
-        Journal.each do |journal|
+        Journal.all.each do |journal|
           x.url do
             x.loc full_url(journal.url)
             x.lastmod journal.updated_on.xmlschema
@@ -134,7 +136,7 @@ module CortexReaver
             x.priority 0.8
           end
         end
-        Photograph.each do |photograph|
+        Photograph.all.each do |photograph|
           x.url do
             x.loc full_url(photograph.url)
             x.lastmod photograph.updated_on.xmlschema
@@ -142,7 +144,7 @@ module CortexReaver
             x.priority 0.8
           end
         end
-        Project.each do |project|
+        Project.all.each do |project|
           x.url do
             x.loc full_url(project.url)
             x.lastmod project.updated_on.xmlschema
