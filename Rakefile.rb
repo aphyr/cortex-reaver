@@ -27,21 +27,21 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.has_rdoc = true
  
-  s.required_ruby_version = '>= 1.8.5'
+  s.required_ruby_version = '>= 1.8.6'
  
   s.add_dependency('ramaze', '= 2009.06')
   s.add_dependency('builder', '~> 2.1.2')
   s.add_dependency('erubis', '~> 2.6.2')
   s.add_dependency('sanitize', '~> 1.0.6')
   s.add_dependency('BlueCloth', '~> 1.0.0')
-  s.add_dependency('sequel', '~> 3.0.0')
+  s.add_dependency('sequel', '~> 3.2.0')
   s.add_dependency('sequel_notnaughty', '~> 0.6.2')
   s.add_dependency('thin', '~> 1.0.0')
   s.add_dependency('exifr', '~> 0.10.7')
   s.add_dependency('coderay', '~> 0.8.260')
   s.add_dependency('construct', '~> 0.1.2')
 # This doesn't work right on Debian yet
-#  s.add_dependency('RMagick', '~> 2.5.1')
+  s.add_dependency('rmagick', '~> 2.5.1')
 end
  
 Rake::GemPackageTask.new(cortex_reaver_gemspec) do |p|
