@@ -114,9 +114,9 @@ module Sequel
         # refresh.
         def next(refresh_cache = false)
           if refresh_cache
-            @next = sequence.filter(sequence_order > send(sequence_order)).limit(1).first
+            @next = sequence.filter{|o| o.__send__(sequence_order) > send(sequence_order)}.limit(1).first
           else
-            @next ||= sequence.filter(sequence_order > send(sequence_order)).limit(1).first
+            @next ||= sequence.filter{|o| o.__send__(sequence_order) > send(sequence_order)}.limit(1).first
           end
         end
 
@@ -132,16 +132,16 @@ module Sequel
        
         # Returns the number of succeeding records
         def next_count
-          sequence.filter(sequence_order > send(sequence_order)).count
+          sequence.filter{|o| o.__send__(sequence_order) > send(sequence_order)}.count
         end
 
         # Returns the previous record in the sequence. Caches--use
         # previous(true) to refresh.
         def previous(refresh_cache = false)
           if refresh_cache
-            @previous = sequence.filter(sequence_order < send(sequence_order)).reverse.limit(1).first
+            @previous = sequence.filter{|o| p o; o.__send__(sequence_order) < send(sequence_order)}.reverse.limit(1).first
           else
-            @previous ||= sequence.filter(sequence_order < send(sequence_order)).reverse.limit(1).first
+            @previous ||= sequence.filter{|o| o.__send__(sequence_order) < send(sequence_order)}.reverse.limit(1).first
           end 
         end
 
@@ -157,7 +157,7 @@ module Sequel
 
         # Returns the number of preceding records
         def previous_count
-          sequence.filter(sequence_order < send(sequence_order)).count
+          sequence.filter{|o| o.__send__(sequence_order) < send(sequence_order)}.count
         end
 
         alias :position :previous_count
