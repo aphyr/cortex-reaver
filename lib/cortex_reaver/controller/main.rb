@@ -35,6 +35,10 @@ module CortexReaver
       request.path_info
     end
 
+    def cache
+      respond Ramaze::Cache.action.stats
+    end
+
     # the index action is called automatically when no other action is specified
     def index(*ids)
       if not ids.empty? and @page = Page.get(ids)

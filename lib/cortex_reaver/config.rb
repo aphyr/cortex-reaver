@@ -80,6 +80,14 @@ module CortexReaver
         :desc => 'Port to bind to.',
         :default => 7000
 
+      define :memcache,
+        :desc => "Memcache options",
+        :default => Construct.new
+
+      memcache.define :servers,
+        :desc => "Servers to use. An array of strings like 'host:port:weight'",
+        :default => ['localhost']
+
       define :plugins,
         :desc => 'Plugins configuration space.',
         :default => Construct.new
