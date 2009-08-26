@@ -45,8 +45,10 @@ module CortexReaver
       journal.updater = session[:user]
     end
 
-    for_feed do |journal, x|
-      x.content journal.body_cache, :type => 'html'
+    for_feed do |journal, entry|
+      entry << (content = LibXML::XML::Node.new('content'))
+      content << journal.body_cache.to_s
+      content['type'] = 'html'
     end
   end
 end
