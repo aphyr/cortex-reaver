@@ -95,13 +95,16 @@ module CortexReaver
     case config[:mode]
     when :production
       Ramaze.options.mode = :live
-      
+     
       # Set up cache
       case config[:cache]
         when :memcache
-        Ramaze::Cache.options.default = Ramaze::Cache::MemCache
+          Ramaze::Cache::MemCache::OPTIONS[:servers] = config.memcache.servers
+          Ramaze::Cache.options.default = Ramaze::Cache::MemCache
       end
-      
+
+      # Cache templates
+      Innate::View.options.read_cache = true
 
       if config[:log_root]
         # Log to file
@@ -113,7 +116,7 @@ module CortexReaver
     when :development
       Ramaze.options.mode = :dev
 
-      if config[:log_root]
+      if config.log_root
         # Log to file
         Ramaze::Log.loggers << Logger.new(
           File.join(config[:log_root], 'development.log')
@@ -122,7 +125,7 @@ module CortexReaver
 
         # Also use SQL log
         db.logger = Logger.new(
-          File.join(config[:log_root], 'sql.log')
+          File.join(config.log_root, 'sql.log')
         )
       end
     else
@@ -139,7 +142,7 @@ module CortexReaver
         begin
           FileUtils.mkdir_p config.view_root
         rescue => e
-          Ramaze::Log.warn "Unable to create a view directory at #{config[:view_root]}: #{e}."
+          Ramaze::Log.warn "Unable to create a view directory at #{config.view_root}: #{e}."
         end
       end
     end
