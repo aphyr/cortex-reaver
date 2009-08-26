@@ -54,13 +54,10 @@ module CortexReaver
       photograph.updater = session[:user]
     end
 
-    for_feed do |photograph, x|
-      p photograph
-      x.content(
-        #render_view('atom_fragment.rhtml', :photograph => photograph), 
-        "a",
-        :type => 'html'
-      )
+    for_feed do |photograph, entry|
+      entry << (content = LibXML::XML::Node.new('content'))
+      entry << render_view(:atom_fragment, :photograph => photograph)
+      entry['type'] = 'html'
     end
   end
 end

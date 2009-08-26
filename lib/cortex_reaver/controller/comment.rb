@@ -49,8 +49,10 @@ module CortexReaver
       journal.updater = session[:user]
     end
 
-    for_feed do |comment, x|
-      x.content comment.body_cache, :type => 'html'
+    for_feed do |comment, entry|
+      entry << (content = LibXML::XML::Node.new('content'))
+      entry['type'] = 'html'
+      entry << comment.body_cache.to_s
     end
 
     # We only really care about tracking recent comments.
