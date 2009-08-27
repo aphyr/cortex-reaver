@@ -1,0 +1,18 @@
+/* Percentage Bar */
+.percent-bar {
+  display: block;
+  background-color: #555;
+  color: #fff;
+  font-size: 75%;
+  padding: 0.2em;
+}
+
+.text-entry .actions li, .tag .actions li {
+  display: inline;
+  background: transparent;
+  color: #000;
+}
+.text-entry .actions li a, .tag .actions li a {
+  display: inline;
+}
+
