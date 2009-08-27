@@ -1,4 +1,4 @@
-require 'builder'
+require 'libxml'
 
 module CortexReaver
   class MainController < Controller
@@ -93,70 +93,98 @@ module CortexReaver
     def sitemap
       error_404 unless request.path_info =~ /\.xml$/
 
-      x = Builder::XmlMarkup.new(:indent => 2)
-      x.instruct!
+      doc = LibXML::XML::Document.new
+      doc.root = (root = LibXML::XML::Node.new('urlset'))
+      root['xmlns'] = "http://www.sitemaps.org/schemas/sitemap/0.9"
+      
+      # Front page
+      root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+          loc << full_url('/')
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+          lastmod << Time.parse(Journal.dataset.min(:updated_on).to_s).xmlschema
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+          changefreq << 'hourly'
+        url << (priority = LibXML::XML::Node.new('priority'))
+          priority << '1.0'
 
-      x.urlset(:xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9") do
-        # Front page
-        x.url do
-          x.loc full_url('/')
-          x.lastmod Time.parse(Journal.dataset.min(:updated_on).to_s).xmlschema
-          x.changefreq 'hourly'
-          x.priority 1.0
-        end
-
-        # Indexes
-        [JournalController, PhotographController, ProjectController].each do |c|
-          x.url do
-            x.loc full_url(c.r)
-            x.lastmod Time.parse(c::MODEL.dataset.min(:updated_on).to_s).xmlschema
-            x.changefreq 'hourly'
-            x.priority 0.9
-          end
-        end
-
-        # Comments
-        x.url do
-          x.loc full_url('/comments')
-          x.lastmod Time.parse(Comment.dataset.min(:updated_on).to_s).xmlschema
-          x.changefreq 'always'
-          x.priority 0.5
-        end
-
-        # Individual pages
-        Page.all.each do |page|
-          x.url do
-            x.loc full_url(page.url)
-            x.lastmod page.updated_on.xmlschema
-            x.changefreq 'weekly'
-            x.priority 0.9
-          end
-        end
-        Journal.all.each do |journal|
-          x.url do
-            x.loc full_url(journal.url)
-            x.lastmod journal.updated_on.xmlschema
-            x.changefreq 'weekly'
-            x.priority 0.8
-          end
-        end
-        Photograph.all.each do |photograph|
-          x.url do
-            x.loc full_url(photograph.url)
-            x.lastmod photograph.updated_on.xmlschema
-            x.changefreq 'weekly'
-            x.priority 0.8
-          end
-        end
-        Project.all.each do |project|
-          x.url do
-            x.loc full_url(project.url)
-            x.lastmod project.updated_on.xmlschema
-            x.changefreq 'weekly'
-            x.priority 0.8
-          end
-        end
+      # Indexes
+      [JournalController, PhotographController, ProjectController].each do |c|
+        root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+        url << (priority = LibXML::XML::Node.new('priority'))
+        
+        loc << full_url(c.r)
+        lastmod << Time.parse(c::MODEL.dataset.min(:updated_on).to_s).xmlschema
+        changefreq << 'hourly'
+        priority << '0.9'
       end
+
+      # Comments
+      root << (url = LibXML::XML::Node.new('url'))
+      url << (loc = LibXML::XML::Node.new('loc'))
+      url << (lastmod = LibXML::XML::Node.new('lastmod'))
+      url << (changefreq = LibXML::XML::Node.new('changefreq'))
+      url << (priority = LibXML::XML::Node.new('priority'))
+      
+      loc << full_url('/comments')
+      lastmod << Time.parse(Comment.dataset.min(:updated_on).to_s).xmlschema
+      changefreq << 'always'
+      priority << '0.5'
+
+      # Individual pages
+      Page.all.each do |page|
+        root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+        url << (priority = LibXML::XML::Node.new('priority'))
+
+        loc << full_url(page.url)
+        lastmod << page.updated_on.xmlschema
+        changefreq << 'weekly'
+        priority << '0.9'
+      end
+      Journal.all.each do |journal|
+        root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+        url << (priority = LibXML::XML::Node.new('priority'))
+      
+        loc << full_url(journal.url)
+        lastmod << journal.updated_on.xmlschema
+        changefreq << 'weekly'
+        priority << '0.8'
+      end
+      Photograph.all.each do |photograph|
+        root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+        url << (priority = LibXML::XML::Node.new('priority'))
+          
+        loc << full_url(photograph.url)
+        lastmod << photograph.updated_on.xmlschema
+        changefreq << 'weekly'
+        priority << '0.8'
+      end
+      Project.all.each do |project|
+        root << (url = LibXML::XML::Node.new('url'))
+        url << (loc = LibXML::XML::Node.new('loc'))
+        url << (lastmod = LibXML::XML::Node.new('lastmod'))
+        url << (changefreq = LibXML::XML::Node.new('changefreq'))
+        url << (priority = LibXML::XML::Node.new('priority'))
+
+        loc << full_url(project.url)
+        lastmod << project.updated_on.xmlschema
+        changefreq << 'weekly'
+        priority << '0.8'
+      end
+
+      doc
     end
 
     private
