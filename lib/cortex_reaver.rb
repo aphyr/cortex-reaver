@@ -4,7 +4,7 @@ begin
   require 'forwardable' # Patch for broken Thin...
   require 'find'
   require 'rubygems'
-  gem 'ramaze', "=2009.05"
+  gem 'ramaze', "=2009.06"
   require 'ramaze'
   require 'sequel'
   require 'construct'
