@@ -1,0 +1,11 @@
+.attachments {
+  margin-bottom: 1em;
+}
+
+.attachments table {
+  width: 100%;
+}
+
+.attachments td.date {
+  text-align: right;
+}

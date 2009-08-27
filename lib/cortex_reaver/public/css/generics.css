@@ -1,0 +1,40 @@
+img {
+  border: none;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a[href]:hover {
+  text-decoration: underline;
+}
+
+a > img {
+  display: block;
+}
+
+th {
+  text-align: left;
+}
+
+.clear {
+  height: 0px;
+  width: 0px;
+  clear: both;
+}
+
+.dont-read-me {
+  display: none;
+}
+
+.draft, .draft h2 a {
+  color: #777;
+}
+
+.current {
+  font-weight: bolder;
+}
+
+

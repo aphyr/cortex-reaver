@@ -1,0 +1,29 @@
+/* Tags on models */
+ul.tags {
+  margin: 0px;
+  padding: 0px;
+  background: url(/images/tag.gif) no-repeat;
+  background-position: 0px 3px;
+  padding-left: 12px;
+}
+
+.tags li {
+  display: inline;
+}
+
+.tags li:before {
+  content: ', '
+}
+
+.tags li:first-child:before {
+  content: none;
+}
+
+/* Global tags display */
+.tags > table {
+  width: 100%;
+}
+
+.tags > table thead {
+  display: none;
+}
