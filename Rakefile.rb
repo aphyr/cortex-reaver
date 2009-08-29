@@ -41,6 +41,7 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.add_dependency('coderay', '~> 0.8.260')
   s.add_dependency('construct', '~> 0.1.2')
   s.add_dependency('rmagick', '~> 2.5.1')
+  s.add_dependency('cssmin', '~>1.0.2')
 end
  
 Rake::GemPackageTask.new(cortex_reaver_gemspec) do |p|
