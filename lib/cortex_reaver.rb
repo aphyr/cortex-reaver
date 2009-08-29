@@ -9,6 +9,7 @@ begin
   require 'sequel'
   require 'construct'
   require 'socket'
+  require 'cssmin'
 
   require 'sequel/extensions/migration'
   require 'sequel/extensions/inflector'
