@@ -58,6 +58,7 @@ module CortexReaver
 
   # Compiles CSS files and creates minified version.
   def self.compile_css
+    Ramaze::Log.info "Compiling CSS"
     stock_dir = File.join(LIB_DIR, 'public', 'css')
     custom_dir = File.join(config.public_root, 'css')
 
@@ -73,6 +74,7 @@ module CortexReaver
 
   # Compiles JS files and creates minified version.
   def self.compile_js
+    Ramaze::Log.info "Compiling JS"
     stock_dir = File.join(LIB_DIR, 'public', 'js')
     custom_dir = File.join(config.public_root, 'js')
 
@@ -143,6 +145,47 @@ module CortexReaver
     # Prepare CSS/JS
     self.compile_css
     self.compile_js
+
+    if config.mode == :development
+      # Recompile CSS/JS on changes.
+      @asset_compiler = Thread.new do
+        # Get files to watch
+        files = Dir.glob(File.join(LIB_DIR, 'public', 'css', '*.css'))
+        files |= Dir.glob(File.join(config.public_root, 'css', '*.css'))
+        files |= Dir.glob(File.join(LIB_DIR, 'public', 'js', '*.js'))
+        files |= Dir.glob(File.join(config.public_root, 'js', '*.js'))
+        files -= [
+          File.join(config.public_root, 'css', 'style.css'),
+          File.join(config.public_root, 'js', 'site.js')
+        ]
+        last = {}
+
+        # Get initial modification times.
+        files.each do |f|
+          last[f] = File.stat(f).mtime
+        end
+
+        loop do
+          # Check files
+          rebuild = false
+          files.each do |f|
+            mtime = File.stat(f).mtime
+            if last[f] < mtime
+              last[f] = mtime
+              rebuild = true
+            end
+          end
+
+          if rebuild
+            # Recompile
+            self.compile_css
+            self.compile_js
+          end
+        
+          sleep 2
+        end
+      end
+    end
 
     # Clear loggers
     Ramaze::Log.loggers.clear
