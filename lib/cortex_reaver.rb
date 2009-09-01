@@ -64,7 +64,7 @@ module CortexReaver
 
     # Get CSS files
     FileUtils.mkdir_p(custom_dir)
-    css = collect_files(stock_dir, custom_dir, /\.css$/)
+    css = collect_files(stock_dir, custom_dir, /^((?!style).)*\.css$/)
 
     # Write minified CSS
     File.open(File.join(custom_dir, 'style.css'), 'w') do |file|
@@ -80,7 +80,7 @@ module CortexReaver
 
     # Get JS files
     FileUtils.mkdir_p(custom_dir)
-    js = collect_files(stock_dir, custom_dir, /\.js$/)
+    js = collect_files(stock_dir, custom_dir, /^((?!site).)*\.js$/)
 
     # Write minified JS
     File.open(File.join(custom_dir, 'site.js'), 'w') do |file|
