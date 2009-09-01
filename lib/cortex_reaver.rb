@@ -10,6 +10,7 @@ begin
   require 'construct'
   require 'socket'
   require 'cssmin'
+  require 'jsmin'
 
   require 'sequel/extensions/migration'
   require 'sequel/extensions/inflector'
@@ -31,6 +32,59 @@ module CortexReaver
   # Some basic initial requirements
   require File.join(LIB_DIR, 'version')
   require File.join(LIB_DIR, 'config')
+
+  # Reads files from stock_dir and custom_dir matching pattern, and appends
+  # their contents. Returns a string.
+  def self.collect_files(stock_dir, custom_dir, pattern = /^[^\.].+/)
+    str = ""
+    # Get target files
+    files = Dir.entries(stock_dir) | Dir.entries(custom_dir)
+
+    # Read files
+    files.each do |file|
+      next unless file =~ pattern
+      custom_file = File.join(custom_dir, file)
+      stock_file = File.join(stock_dir, file)
+      if File.exists? custom_file
+        str << File.read(custom_file)
+      else
+        str << File.read(stock_file)
+      end
+      str << "\n"
+    end
+
+    str
+  end
+
+  # Compiles CSS files and creates minified version.
+  def self.compile_css
+    stock_dir = File.join(LIB_DIR, 'public', 'css')
+    custom_dir = File.join(config.public_root, 'css')
+
+    # Get CSS files
+    FileUtils.mkdir_p(custom_dir)
+    css = collect_files(stock_dir, custom_dir, /\.css$/)
+
+    # Write minified CSS
+    File.open(File.join(custom_dir, 'style.css'), 'w') do |file|
+      file.write CSSMin.minify(css)
+    end
+  end
+
+  # Compiles JS files and creates minified version.
+  def self.compile_js
+    stock_dir = File.join(LIB_DIR, 'public', 'js')
+    custom_dir = File.join(config.public_root, 'js')
+
+    # Get JS files
+    FileUtils.mkdir_p(custom_dir)
+    js = collect_files(stock_dir, custom_dir, /\.js$/)
+
+    # Write minified JS
+    File.open(File.join(custom_dir, 'site.js'), 'w') do |file|
+      file.write JSMin.minify(js)
+    end
+  end
 
   # Returns the site configuration
   def self.config
@@ -85,6 +139,10 @@ module CortexReaver
         config[:log_root] = nil
       end
     end
+
+    # Prepare CSS/JS
+    self.compile_css
+    self.compile_js
 
     # Clear loggers
     Ramaze::Log.loggers.clear
@@ -222,8 +280,8 @@ module CortexReaver
     init
   end
 
-  # Connect to DB. If check_schema is false, doesn't check to see that the schema
-  # version is up to date.
+  # Connect to DB. If check_schema is false, doesn't check to see that the
+  # schema version is up to date.
   def self.setup_db(check_schema = true)
     unless config
       raise RuntimeError.new("no configuration available!")
