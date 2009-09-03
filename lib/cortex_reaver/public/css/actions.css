@@ -1,0 +1,17 @@
+/* Actions */
+.actions li {
+  color: #000;
+}
+.actions li.elided {
+  color: #555;
+}
+.actions li a {
+  color: #000;
+}
+.actions li.current {
+  background: #fff;
+}
+.actions li.current a {
+  color: #000;
+}
+

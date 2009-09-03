@@ -1,8 +1,3 @@
-body {
-  background: #eee;
-  color: #000;
-}
-
 h1 a, h2 a, h3 a {
   color: #202020;
 }
@@ -11,39 +6,17 @@ h1 a, h2 a, h3 a {
   background: #fff;
 }
 
-/* Boxes */
-.box .top {
-  color: #fff;
-}
-.box > * > li {
-  background: #d4d4d4;
-}
-
-/* Actions */
-.actions li {
-  background: #aaa;
-  color: #000;
-}
-.actions li.elided {
-  color: #555;
-}
-.actions li.current {
-  background: #202020;
-  color: #fff;
-}
-.actions li a {
-  color: #000;
-}
-.actions li.current a {
-  color: #fff !important;
-}
-
 /* Colophon */
 #colophon {
   color: #555;
 }
 
 /* Text entries */
+.text-entry h2 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .text-entry .byline {
   color: #666;
   position: relative;
