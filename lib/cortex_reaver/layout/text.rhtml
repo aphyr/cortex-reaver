@@ -10,19 +10,16 @@
     <% end %>
     
     <%= CortexReaver::MainController.render_view('head') %>
-    <link rel="stylesheet" type="text/css" href="/css/text.css" />
   </head>
   <body class="text">
     <%= CortexReaver::MainController.render_view('js') %>
-    <script type="text/javascript" src="/js/photo.js"></script>
 
-            
     <div id="content">
       <div id="top">
         <% if @model %>
           <%= model_nav @model %>
         <% end %>
-        <h1><%=h (@title || CortexReaver.config.site.name) %></h1>
+        <h1><a href="/"><%=h CortexReaver.config.site.name %></a></h1>
       </div>
 
       <div id="boxes">

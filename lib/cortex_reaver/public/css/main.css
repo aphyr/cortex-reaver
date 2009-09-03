@@ -1,4 +1,45 @@
-/* Page Footer */
-.footer {
-  font-size: 75%;
+body {
+  background: url('/images/background_tile.png');
+  color: #000;
+}
+
+#content {
+  width: 970px;
+  position: relative;
+  margin: auto;
+  background: #fee;
+}
+
+#top {
+  padding: 20px 10px 10px 10px;
+  text-align: right;
+  position: absolute;
+  display: block;
+  height: 100px;
+  width: 760px;
+  left: 0px;
+  color: #fff;
+}
+
+#top a {
+  color: #fff;
+}
+
+#boxes {
+  position: absolute;
+  width: 170px;
+  top: 100px;
+  right: 0px;
+}
+
+#main-container {
+  position: absolute;
+  left: 0px;
+  top: 100px;
+  width: 780px;
+}
+
+#main {
+  min-height: 260px;
+  padding: 10px;
 }
