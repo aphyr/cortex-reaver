@@ -46,7 +46,7 @@ module CortexReaver
       end
 
       flash[:notice] = "Comment counts updated."
-      redirect Rs()
+      redirect rs()
     end
 
     # Recalculate tag counts and vacuum unused tags
@@ -57,5 +57,12 @@ module CortexReaver
         @deleted << tag.destroy
       end
     end
+  end
+
+  # Regenerates thumbnails on photographs
+  def regenerate_photo_sizes
+    Photograph.regenerate_sizes
+    flash[:notice] = "Photograph sizes regenerated."
+    redirect rs()
   end
 end
