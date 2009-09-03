@@ -111,16 +111,12 @@ module CortexReaver
     # Regenerates various photo sizes.
     def regenerate_sizes
       # Find existing attachments, in order of decreasing (roughly) size
-      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s))
-      known_files.sort! do |a, b|
-        SIZES[b.to_sym].split('x').last.to_i <=>
-          SIZES[a.to_sym].split('x').last.to_i
-      end
+      existing = attachments.sort_by {|a| File.stat(a.local_path).size}.reverse
       
       # Replace original.jpg with the largest available, if necessary.
       orig = attachment 'original.jpg'
-      unless orig.exists?
-        orig.file = attachment("#{known_files.first}.jpg")
+      unless orig.exists? and File.stat(orig.local_path).size > 0
+        orig.file = existing.first
       end
 
       # Delete everything but original.jpg
@@ -136,6 +132,9 @@ module CortexReaver
           image.scale(width, height).write(attachment.local_path)
         end
       end
+
+      # Free IM stubs
+      GC.start
 
       true
     end
