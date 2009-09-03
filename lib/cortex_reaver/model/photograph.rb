@@ -10,7 +10,7 @@ module CortexReaver
 
     # Target image sizes
     SIZES = {
-      :thumbnail => '150x',
+      :thumbnail => '160x',
       :grid => '150x150',
       :small => 'x512',
       :medium => 'x768',
@@ -32,6 +32,12 @@ module CortexReaver
 
     def self.recent
       reverse_order(:created_on).limit(16)
+    end
+
+    def self.regenerate_sizes
+      all.each do |p|
+        p.regenerate_sizes
+      end
     end
 
     def self.url
@@ -72,19 +78,10 @@ module CortexReaver
       end
 
       # Write file to disk
-      attachment = Attachment.new(self, 'original.jpg')
-      attachment.file = file
+      attachment = Attachment.new(self, 'original.jpg').file = file
 
-      # Read image through ImageMagick
-      image = Magick::Image.read(attachment.local_path).first
-
-      # Write appropriate sizes to disk
-      SIZES.each do |size, geometry|
-        image.change_geometry(geometry) do |width, height|
-          attachment = Attachment.new(self, size.to_s + '.jpg')
-          image.scale(width, height).write(attachment.local_path)
-        end
-      end
+      # Compute thumbnails
+      regenerate_sizes
 
       true
     end
@@ -109,6 +106,38 @@ module CortexReaver
     # The path to a photograph
     def path(type = :local, size = :full)
       attachment(size.to_s + '.jpg').path(type)
+    end
+
+    # Regenerates various photo sizes.
+    def regenerate_sizes
+      # Find existing attachments, in order of decreasing (roughly) size
+      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s))
+      known_files.sort! do |a, b|
+        SIZES[b.to_sym].split('x').last.to_i <=>
+          SIZES[a.to_sym].split('x').last.to_i
+      end
+      
+      # Replace original.jpg with the largest available, if necessary.
+      orig = attachment 'original.jpg'
+      unless orig.exists?
+        orig.file = attachment("#{known_files.first}.jpg")
+      end
+
+      # Delete everything but original.jpg
+      attachments.reject {|a| a.name == 'original.jpg'}.each{|a| a.delete}
+
+      # Read image through ImageMagick
+      image = Magick::Image.read(orig.local_path).first
+
+      # Write appropriate sizes to disk
+      SIZES.each do |size, geometry|
+        image.change_geometry(geometry) do |width, height|
+          attachment = attachment(size.to_s + '.jpg')
+          image.scale(width, height).write(attachment.local_path)
+        end
+      end
+
+      true
     end
 
     # Returns the system path to the thumbnail photograph
