@@ -177,13 +177,14 @@ You can also just provide a regex for the path, in which case it is matched dire
     def earliest_content
       return @earliest_content if @earliest_content
 
+      ej = CortexReaver::Journal.dataset.min(:created_on)
       @earliest_content = DateTime.parse(
         [
           CortexReaver::Journal.dataset.min(:created_on),
           CortexReaver::Page.dataset.min(:created_on),
           CortexReaver::Photograph.dataset.min(:created_on),
           CortexReaver::Project.dataset.min(:created_on)
-        ].min.to_s
+        ].compact.min.to_s
       )
     end
 
