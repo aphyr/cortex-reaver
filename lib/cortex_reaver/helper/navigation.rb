@@ -64,7 +64,7 @@ module Ramaze
         if model.next
           n << '  <li><a class="next" href="' + model.next.url + '">Next ' + model.class.to_s.demodulize + ' &raquo;</a></li>'
         end
-        n << '</li>'
+        n << '</ul>'
       end
 
       # Generate pagination links from a Sequenceable class and index.
