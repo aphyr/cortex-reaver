@@ -1,63 +1,16 @@
-#adminbox_inside {
-  background: #fff;
-  padding: 10px;
-  margin: 2px;
-}
-
-#adminbox {
-  display: none;
-  padding: 10px;
-  margin: 0 0 10px 0;
-  background: #fff;
-  font-size: 80%;
-}
-
-.blank #adminbox {
-  background: #111;
-  margin: 10px;
+.admin.box label {
   color: #fff;
-}
-.blank #adminbox_inside {
-  background: #111;
+  text-align: left;
 }
 
-#adminbox .actions-table {
-  width: 100%;
+.admin.box input, .admin.box submit {
+  padding: 2px;
+  margin: 4px;
+  color: black;  
 }
 
-#adminbox .actions li {
-  display: inline;
-  background: transparent;
-  color: #000;
-}
-#adminbox .actions li a {
-  display: inline;
-}
-
-#adminbox p {
-  margin: 0;
-  padding: 0;
-}
-
-#adminbox td.title {
-  font-weight: bold;
-}
-
-#adminbox input[type=text] {
+.admin.box input[type='text'], .admin.box input[type='password'] {
   width: 160px;
-}
-
-#admin_section_actions {
-  text-align: center;
-}
-
-#admin_page_actions {
-}
-
-#admin_new_actions {
-  float: left;
-}
-
-#admin_user_actions {
-  float: right;
+  background: white;
+  border: 0px solid #fff;
 }

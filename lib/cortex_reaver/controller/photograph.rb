@@ -7,12 +7,12 @@ module CortexReaver
     map '/photographs'
 
     layout do |name, wish|
-      if ['edit', 'new'].include? name
+      if ['show'].include? name
         :text
       elsif request.xhr? or name == 'atom'
         nil
       else
-        :blank
+        :text
       end
     end
 

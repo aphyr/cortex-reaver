@@ -153,6 +153,7 @@ You can also just provide a regex for the path, in which case it is matched dire
 ",
         :default => [
           ['**', 'sections'],
+          ['**', 'admin'],
           ['/', 'photographs']
         ]
 
