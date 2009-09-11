@@ -35,10 +35,17 @@ module CortexReaver
 
   # Reads files from stock_dir and custom_dir matching pattern, and appends
   # their contents. Returns a string.
-  def self.collect_files(stock_dir, custom_dir, pattern = /^[^\.].+/)
+  def self.collect_files(stock_dir, custom_dir, pattern = /^[^\.].+/, opts = {})
     str = ""
     # Get target files
     files = Dir.entries(stock_dir) | Dir.entries(custom_dir)
+
+    # Reorder files if necessary.
+    if order = opts[:order]
+      files = (order & files) + (files - order)
+    end
+
+    Ramaze::Log.debug "Collecting #{files.inspect}"
 
     # Read files
     files.each do |file|
@@ -64,7 +71,7 @@ module CortexReaver
 
     # Get CSS files
     FileUtils.mkdir_p(custom_dir)
-    css = collect_files(stock_dir, custom_dir, /^((?!style).)*\.css$/)
+    css = collect_files(stock_dir, custom_dir, /^((?!style).)*\.css$/, :order => config.css)
 
     # Write minified CSS
     File.open(File.join(custom_dir, 'style.css'), 'w') do |file|
@@ -80,11 +87,11 @@ module CortexReaver
 
     # Get JS files
     FileUtils.mkdir_p(custom_dir)
-    js = collect_files(stock_dir, custom_dir, /^((?!site).)*\.js$/)
+    js = collect_files(stock_dir, custom_dir, /^((?!site).)*\.js$/, :order => config.js)
 
     # Write minified JS
     File.open(File.join(custom_dir, 'site.js'), 'w') do |file|
-      file.write JSMin.minify(js)
+      file.write js #JSMin.minify(js)
     end
   end
 

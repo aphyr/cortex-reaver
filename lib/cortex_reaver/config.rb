@@ -155,6 +155,20 @@ You can also just provide a regex for the path, in which case it is matched dire
           ['**', 'sections'],
           ['/', 'photographs']
         ]
+
+      define :css,
+        :desc => "An array of CSS files to load first, in order.",
+        :default => []
+      define :js,
+        :desc => "An array of Javascript files to load first, in order.",
+        :default => [
+          'jquery.js',
+          'jquery.color.js',
+          'jquery.dimensions.js',
+          'jquery.corners.min.js',
+          'jquery.hotkeys-0.7.9.js',
+          'cookie.js'
+        ]
     end
 
     def compile_views
