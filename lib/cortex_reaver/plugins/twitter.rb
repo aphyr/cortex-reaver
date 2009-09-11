@@ -39,7 +39,7 @@ module CortexReaver; module Plugins
 
   # Twitter plugin for Cortex Reaver.
   module Twitter
-    Config = CortexReaver.config.plugins.twitter = Construct.new
+    Config = CortexReaver.config.plugins.twitter ||= Construct.new
 
     # The twitter username to look for
     Config.define :username, :default => 'aphyr_'
@@ -126,7 +126,17 @@ module CortexReaver; module Plugins
         tweets = []
 
         Timeout.timeout(Config.request_timeout, StandardError) do
-          tweets = JSON.parse(open(url).read)
+          failed = 0
+          begin
+            tweets = JSON.parse(open(url).read)
+          rescue JSON::ParseError => e
+            # Twitter likes to hand out weird HTML responses sometimes. :/
+            failed += 1
+            retry unless failed > 3
+
+            # Admit defeat
+            raise RuntimeError.new("Failed to parse Twitter response 4 times: #{e}")
+          end
         end
 
         # Weed out replies if necessary.
