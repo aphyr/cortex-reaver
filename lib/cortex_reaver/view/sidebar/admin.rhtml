@@ -1,0 +1,42 @@
+<div class="admin box">
+  <% if user.admin? or user.contributor? or user.editor? or user.moderator? %>
+    <div class="top">
+      <a href="/admin">Core</a>
+    </div>
+    <ul class="actions">
+      <li><a href="/pages">Pages</a></li>
+      <% if user.admin? %>
+        <li><a href="/users">Users</a></li>
+        <li><a href="/admin">Admin</a></li>
+      <% end %>
+    </ul>
+
+    <% if workflows %>
+      <div class="top">Actions</div>
+      <ul class="actions">
+        <% workflows.each do |name, href| %>
+          <li>
+            <a href="<%= href %>"
+              <%= name.to_s[/delete|destroy/i] ? "onclick = \"return confirm('Are you sure you want to delete #{@title.gsub(/'"/, '')}?');\"" : '' %>>
+              <%= name %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+
+  <% if session[:user] %>
+    <div class="top">User</div>
+    <ul class="actions">
+      <li><a href="/users/logout">Log out</a></li>
+    </ul>
+  <% else %>
+    <form id="login" action="/users/login" method="post">
+      <label for="admin_login">Login</label> <input type="text" name="login" id="admin_login" />
+      <label for="admin_password">Password</label> <input type="password" name="password" id="admin_password" />
+      <input type="hidden" id="target_uri" name="target_uri" value="<%= request.request_uri %>" />
+      <input type="submit" name="action" value="Log in" />
+    </form>
+  <% end %>
+</div>

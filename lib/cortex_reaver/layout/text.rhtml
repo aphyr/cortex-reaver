@@ -27,10 +27,7 @@
       </div>
 
       <div id="main-container">
-        <%= CortexReaver::MainController.render_view('adminbox') %>
-        
         <div id="main">
- 
           <%= flashbox %>
 
           <%= @content %>
@@ -53,16 +50,6 @@
     <script type="text/javascript">
     /* <![CDATA[ */
       $(document).ready(function() {
-        $('#top').corners("10px");
-        $('#top .actions li:first').corners("10px left");
-        $('#top .actions li:last').corners("10px right");
-        $('#main').corners("10px");
-
-        $('.box .top').corners("10px top");
-        $('.box > *').each(function() {
-          $(this).find('li:last').corners("10px bottom");
-        });
-
         $('.pagination').each(function() {
           $(this).find('li:first').corners("left");
           $(this).find('li:last').corners("right");

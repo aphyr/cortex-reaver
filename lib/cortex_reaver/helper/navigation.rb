@@ -62,6 +62,8 @@ module Ramaze
           n << '  <li><a class="edit" href="' + r(:edit, model.id).to_s + '">Edit</a></li>'
         end
         if model.next
+          n << model.id.to_s
+          n << model.next.id.to_s
           n << '  <li><a class="next" href="' + model.next.url + '">Next ' + model.class.to_s.demodulize + ' &raquo;</a></li>'
         end
         n << '</ul>'
