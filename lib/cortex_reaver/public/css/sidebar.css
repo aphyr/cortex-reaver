@@ -23,7 +23,7 @@
 
 .box .top {
   padding: 6px 12px 6px 6px;
-  font-size: 120%;
+  font-size: 130%;
 }
 
 .box .top a {
@@ -36,13 +36,21 @@
   padding: 6px;
   margin-bottom: 3px;
   font-weight: bolder;
+  font-size: 115%;
   margin-left: -20px;
 }
 
 .box .actions li a {
   color: #fff;
 }
+.box .actions li a:hover {
+  text-decoration: none;
+}
 
+.box .actions li:hover {
+  background-color: #888;
+  border-right-color: #1A401A;
+}
 .box .actions li.current {
   background: #fff;
   border-right-color: #168715;
@@ -54,7 +62,7 @@
 .box .text {
   text-align: left;
   background: #fff;
-  font-size: 75%;
+  font-size: 80%;
   padding: 6px;
 }
 .box .text a {
@@ -69,6 +77,6 @@
   background: #aaa;
   border: 3px solid #fff;
   padding: 0;
-  margin: 0px;
-  margin-bottom: 12px;
+  margin: 0 cor	px;
+  margin-bottom: 20px;
 }
