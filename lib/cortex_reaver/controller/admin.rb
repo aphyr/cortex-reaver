@@ -57,12 +57,12 @@ module CortexReaver
         @deleted << tag.destroy
       end
     end
-  end
 
-  # Regenerates thumbnails on photographs
-  def regenerate_photo_sizes
-    Photograph.regenerate_sizes
-    flash[:notice] = "Photograph sizes regenerated."
-    redirect rs()
+    # Regenerates thumbnails on photographs
+    def regenerate_photo_sizes
+      Photograph.regenerate_sizes
+      flash[:notice] = "Photograph sizes regenerated."
+      redirect rs()
+    end
   end
 end

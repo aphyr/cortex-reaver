@@ -10,7 +10,7 @@ module CortexReaver
 
     # Target image sizes
     SIZES = {
-      :thumbnail => '160x',
+      :thumbnail => '164x',
       :grid => '150x150',
       :small => 'x512',
       :medium => 'x768',
