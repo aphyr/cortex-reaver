@@ -74,7 +74,7 @@ module Ramaze
       # of the class (in which case the page which would contain that instance
       # is highlighted, or a page number. Limit determines how many numeric links
       # to include--use :all to include all pages.
-      def page_nav(klass, index = nil, limit = 15)
+      def page_nav(klass, index = nil, limit = 14)
         # Translate :first, :last into corresponding windows.
         case index
         when :first
@@ -126,7 +126,7 @@ module Ramaze
 
         if page > 0
           # Add "previous page" link.
-          links << "<li><a href=\"#{klass.url}/page/#{page - 1}\">&laquo; Previous</a></li>"
+          links << "<li><a class=\"previous\" href=\"#{klass.url}/page/#{page - 1}\">&laquo; Previous</a></li>"
         end
 
         # Convert pages to links
@@ -134,12 +134,12 @@ module Ramaze
           pages.inject(pages.first - 1) do |previous, i|
             if (i - previous) > 1
               # These pages are not side-by-side.
-              links << '<li class="elided">&hellip;</li>'
+              links << '<li class="elided"><span>&hellip;</span></li>'
             end
 
             if i == page
               # This is a link to the current page.
-              links << "<li class=\"current\">#{i + 1}</li>"
+              links << "<li class=\"current\"><span>#{i + 1}</span></li>"
             else
               # This is a link to a different page.
               links << "<li><a href=\"#{klass.url}/page/#{i}\">#{i + 1}</a></li>"
@@ -152,7 +152,7 @@ module Ramaze
 
         if page < klass.window_count - 1
           # Add "next page" link.
-          links << "<li><a href=\"#{klass.url}/page/#{page + 1}\">Next &raquo;</a></li>"
+          links << "<li><a class=\"next\" href=\"#{klass.url}/page/#{page + 1}\">Next &raquo;</a></li>"
         end
 
         links << '</ol>'

@@ -54,7 +54,7 @@
           $(this).find('li:first').corners("left");
           $(this).find('li:last').corners("right");
         });
-        $('.pagination li').not('.elided').add('.actions > li').each(function(i) {
+        $('.pagination li').not('.elided').add('.actions > li').not('.current').each(function(i) {
           $(this).fadeTo(0,0.5);
           $(this).hover(
             function() { $(this).fadeTo(0,1) },

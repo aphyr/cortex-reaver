@@ -1,0 +1,39 @@
+.pagination.actions {
+  margin: 0;
+  padding: 0;
+}
+
+.pagination.actions li {
+  padding: 0;
+  margin: 1px;
+  background: #444;
+  display: inline-block;
+  color: white;
+}
+
+.pagination.actions li > * {
+  display: block;
+  text-align: center;
+  padding: 5px;
+  width: 28px;
+  height: 20px;
+  margin: 0;
+  text-decoration: none !important;
+  color: white !important;
+  overflow: hidden;
+}
+
+.pagination.actions li > a.previous, .pagination.actions li > a.next {
+  line-height: 60px;
+}
+.pagination.actions li > a.previous {
+  background: url('/images/prev_11.png') no-repeat scroll center center;
+}
+.pagination.actions li > a.next {
+  background: url('/images/next_11.png') no-repeat scroll center center;
+}
+
+
+.pagination.actions li > span {
+  cursor: default;
+}
