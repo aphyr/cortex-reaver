@@ -1,6 +1,5 @@
 module CortexReaver
-  class AdminController < Controller
-    
+  class AdminController < Controller    
     map '/admin'
 
     layout(:text) do
@@ -11,6 +10,10 @@ module CortexReaver
     
     before_all do
       require_roles :admin
+    end
+
+    def self.jobs
+      @jobs ||= {}
     end
 
     def index
@@ -58,11 +61,24 @@ module CortexReaver
       end
     end
 
+    def regenerate_photo_sizes_status
+      if job = self.class.jobs[:regenerate_photo_sizes]
+        respond "#{job[:photo].id}: #{job[:photo].title}"
+      else
+        respond 'Not processing.'
+      end
+    end
+
     # Regenerates thumbnails on photographs
     def regenerate_photo_sizes
-      Photograph.regenerate_sizes
-      flash[:notice] = "Photograph sizes regenerated."
-      redirect rs()
+      unless self.class.jobs[:regenerate_photo_sizes]
+        self.class.jobs[:regenerate_photo_sizes] = Thread.new do
+          while photo = (photo ? photo.next : Photograph.first)
+            Thread.current[:photo] = photo
+            sleep 0.1
+          end
+        end
+      end
     end
   end
 end

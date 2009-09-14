@@ -1,0 +1,13 @@
+<div id="status"></div>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+
+$.PeriodicalUpdater({url: '<%= rs('regenerate_photo_sizes_status')%>'},
+    function(response) {
+    $('#status').append(response);
+    $('#status').append('<br />');
+    }
+  }); 
+/* ]]> */
+</script>
