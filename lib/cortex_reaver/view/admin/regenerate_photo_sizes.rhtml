@@ -1,13 +1,16 @@
-<div id="status"></div>
+<h2>Regenerating Photographs</h2>
+<div class="progress"><div class="bar"></div></div>
 
 <script type="text/javascript">
 /* <![CDATA[ */
 
-$.PeriodicalUpdater({url: '<%= rs('regenerate_photo_sizes_status')%>'},
-    function(response) {
-    $('#status').append(response);
-    $('#status').append('<br />');
-    }
-  }); 
+$.PeriodicalUpdater('<%= rs('regenerate_photo_sizes_status')%>', 
+  {type: 'json'},
+  function(response) {
+    response.total
+    $('.progress').html('<div class="percent-bar" style="width:' + (response.i/response.total * ($('.progress').width() - 4)) + 'px">' + response.i + '</div>' + response.total);
+  }
+);
+
 /* ]]> */
 </script>

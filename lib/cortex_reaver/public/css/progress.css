@@ -1,0 +1,31 @@
+.progress {
+  width: 99%;
+  padding: 1px;
+  border: 1px solid #ddd;
+  text-align: right;
+  position: static;
+  font-size: 10px;
+  color: #ccc;
+  height: 16px;
+  padding-right: 4px;
+}
+
+.percent-bar {
+  position: absolute;
+  text-align: right;
+  display: inline-block;
+  background-color: #555;
+  color: #fff;
+  padding: 2px 4px 2px 0;
+  height: 12px;
+}
+
+.text-entry .actions li, .tag .actions li {
+  display: inline;
+  background: transparent;
+  color: #000;
+}
+.text-entry .actions li a, .tag .actions li a {
+  display: inline;
+}
+

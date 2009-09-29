@@ -111,7 +111,8 @@ module CortexReaver
     # Regenerates various photo sizes.
     def regenerate_sizes
       # Find existing attachments, in order of decreasing (roughly) size
-      existing = attachments.sort_by {|a| File.stat(a.local_path).size}.reverse
+      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s))
+      known_files = known_files.sort_by { |f| File.stat(attachment("#{f}.jpg").path).size }.reverse
       
       # Replace original.jpg with the largest available, if necessary.
       orig = attachment 'original.jpg'
@@ -123,7 +124,12 @@ module CortexReaver
       attachments.reject {|a| a.name == 'original.jpg'}.each{|a| a.delete}
 
       # Read image through ImageMagick
-      image = Magick::Image.read(orig.local_path).first
+      begin
+        image = Magick::Image.read(orig.local_path).first
+      rescue => e
+        Ramaze::Log.error "Invalid image #{orig.local_path}; not processing."
+        return false
+      end
 
       # Write appropriate sizes to disk
       SIZES.each do |size, geometry|
@@ -131,7 +137,11 @@ module CortexReaver
           attachment = attachment(size.to_s + '.jpg')
           image.scale(width, height).write(attachment.local_path)
         end
+
       end
+        
+      # Yep, GC time. Gotta clear out those imagemagick stubs.
+      GC.start
 
       # Free IM stubs
       GC.start
