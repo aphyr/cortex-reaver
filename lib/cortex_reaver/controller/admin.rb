@@ -63,9 +63,9 @@ module CortexReaver
 
     def regenerate_photo_sizes_status
       if job = self.class.jobs[:regenerate_photo_sizes]
-        respond "#{job[:photo].id}: #{job[:photo].title}"
+        respond "{'i':#{job[:i]},'total':#{job[:total]}}"
       else
-        respond 'Not processing.'
+        respond '{}'
       end
     end
 
@@ -73,10 +73,17 @@ module CortexReaver
     def regenerate_photo_sizes
       unless self.class.jobs[:regenerate_photo_sizes]
         self.class.jobs[:regenerate_photo_sizes] = Thread.new do
+          Thread.current[:total] = Photograph.count
           while photo = (photo ? photo.next : Photograph.first)
             Thread.current[:photo] = photo
-            sleep 0.1
+            Thread.current[:i] = photo.position
+            photo.regenerate_sizes
+#            sleep 0.1
           end
+
+          # Done
+          self.class.jobs[:regenerate_photo_sizes] = nil
+          Thread.exit
         end
       end
     end
