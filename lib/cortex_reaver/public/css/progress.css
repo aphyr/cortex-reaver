@@ -11,13 +11,17 @@
 }
 
 .percent-bar {
-  position: absolute;
+  font-size: 10px;
   text-align: right;
-  display: inline-block;
   background-color: #555;
   color: #fff;
   padding: 2px 4px 2px 0;
   height: 12px;
+}
+
+.progress .percent_bar {
+  display: inline-block;
+  position: absolute;
 }
 
 .text-entry .actions li, .tag .actions li {
