@@ -78,7 +78,6 @@ module CortexReaver
             Thread.current[:photo] = photo
             Thread.current[:i] = photo.position
             photo.regenerate_sizes
-#            sleep 0.1
           end
 
           # Done

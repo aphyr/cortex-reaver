@@ -110,14 +110,20 @@ module CortexReaver
 
     # Regenerates various photo sizes.
     def regenerate_sizes
+      Ramaze::Log.info "Regenerating photo sizes for #{self}"
+
       # Find existing attachments, in order of decreasing (roughly) size
-      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s))
-      known_files = known_files.sort_by { |f| File.stat(attachment("#{f}.jpg").path).size }.reverse
-      
+      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s) + ['original'])
+      largest = attachment(
+        known_files.sort_by { |f| 
+          File.stat(attachment("#{f}.jpg").path).size
+        }.last + '.jpg'
+      )
+
       # Replace original.jpg with the largest available, if necessary.
       orig = attachment 'original.jpg'
-      unless orig.exists? and File.stat(orig.local_path).size > 0
-        orig.file = existing.first
+      unless orig.exists? and orig.local_path != largest
+        orig.file = largest
       end
 
       # Delete everything but original.jpg
