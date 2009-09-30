@@ -62,8 +62,6 @@ module Ramaze
           n << '  <li><a class="edit" href="' + r(:edit, model.id).to_s + '">Edit</a></li>'
         end
         if model.next
-          n << model.id.to_s
-          n << model.next.id.to_s
           n << '  <li><a class="next" href="' + model.next.url + '">Next ' + model.class.to_s.demodulize + ' &raquo;</a></li>'
         end
         n << '</ul>'
@@ -74,7 +72,7 @@ module Ramaze
       # of the class (in which case the page which would contain that instance
       # is highlighted, or a page number. Limit determines how many numeric links
       # to include--use :all to include all pages.
-      def page_nav(klass, index = nil, limit = 14)
+      def page_nav(klass, index = nil, limit = 15)
         # Translate :first, :last into corresponding windows.
         case index
         when :first
@@ -121,12 +119,14 @@ module Ramaze
           pages = [0] + (first_page..last_page).to_a + [window_count - 1]
         else
           # The window encompasses the entire set of pages
-          pages = (0 .. window_count - 1).to_a
+          pages = (0 ... window_count).to_a
         end
 
         if page > 0
           # Add "previous page" link.
           links << "<li><a class=\"previous\" href=\"#{klass.url}/page/#{page - 1}\">&laquo; Previous</a></li>"
+        else
+          links << "<li class=\"placeholder\"><span class=\"previous\"></span></li>"
         end
 
         # Convert pages to links
@@ -153,6 +153,8 @@ module Ramaze
         if page < klass.window_count - 1
           # Add "next page" link.
           links << "<li><a class=\"next\" href=\"#{klass.url}/page/#{page + 1}\">Next &raquo;</a></li>"
+        else
+          links << "<li class=\"placeholder\"><span class=\"next\"></span></li>"
         end
 
         links << '</ol>'

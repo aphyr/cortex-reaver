@@ -33,6 +33,9 @@
   background: url('/images/next_11.png') no-repeat scroll center center;
 }
 
+.pagination.actions li.placeholder {
+  background-color: transparent;
+}
 
 .pagination.actions li > span {
   cursor: default;
