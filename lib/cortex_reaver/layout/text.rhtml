@@ -48,17 +48,17 @@
     <%= CortexReaver::MainController.render_view('tracker') %>
 
     <script type="text/javascript">
-    /* <![CDATA[ */
+    /* <![CDATA[ */ 
       $(document).ready(function() {
         $('.pagination').each(function() {
-          $(this).find('li:first').corners("left");
-          $(this).find('li:last').corners("right");
+          $(this).find('li:not(.placeholder):first').corners("left");
+          $(this).find('li:not(.placeholder):last').corners("right");
         });
-        $('.pagination li').not('.elided').add('.actions > li').not('.current').each(function(i) {
-          $(this).fadeTo(0,0.5);
+        $('.pagination li').not('.elided').add('.actions > li').not('.current').not('.placeholder').each(function(i) {
+          $(this).fadeTo(0,0.8);
           $(this).hover(
             function() { $(this).fadeTo(0,1) },
-            function() { $(this).fadeTo(200,0.5) }
+            function() { $(this).fadeTo(200,0.8) }
           );
         });
       });
