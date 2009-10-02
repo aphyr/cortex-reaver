@@ -1,16 +1,69 @@
-.admin.box label {
-  color: #fff;
-  text-align: left;
+.admin.bar {
+  background: #fffaea;
+  border-bottom: 1px solid #382700;
+  margin: -0;
+  padding: 4px 4px;
+  font-size: 80%;
+  text-align: center;
 }
 
-.admin.box input, .admin.box submit {
-  padding: 2px;
-  margin: 4px;
-  color: black;  
+.admin.bar p {
+  margin: 0;
+  padding: 0;
 }
 
-.admin.box input[type='text'], .admin.box input[type='password'] {
-  width: 160px;
-  background: white;
-  border: 0px solid #fff;
+.admin.bar ul {
+  margin: 0;
+  padding: 0;
+  display: inline;
 }
+
+.admin.bar li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.admin.bar .button {
+  line-height: 200px;
+  background-image: url('/images/admin/icons.png');
+  background-repeat: no-repeat;
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0px;
+  display: block;
+}
+
+.admin.bar .workflow.actions {
+  float: left;
+}
+.admin.bar .navigation.actions {
+}
+.admin.bar .user.actions {
+  float: right;
+}
+
+.admin.bar a.journals { background-position: 0px 0px }
+.admin.bar a.photographs { background-position: -32px 0px }
+.admin.bar a.pages { background-position: -64px 0px }
+.admin.bar a.projects { background-position: -96px 0px }
+.admin.bar a.tags { background-position: -128px 0px }
+.admin.bar a.comments { background-position: -160px 0px }
+.admin.bar a.users { background-position: -192px 0px }
+.admin.bar a.admin { background-position: -224px 0px }
+.admin.bar a.new { background-position: -256px 0px }
+.admin.bar a.edit { background-position: -288px 0px }
+.admin.bar a.delete { background-position: -320px 0px }
+
+.admin.bar a.new.journal { background-position: 0px -32px }
+.admin.bar a.new.photograph { background-position: -32px -32px }
+.admin.bar a.new.page { background-position: -64px -32px }
+.admin.bar a.new.project { background-position: -96px -32px }
+
+
+.admin.bar a.new.user { background-position: -192px -32px }
+
+.admin.bar a.docs { background-position: -288px -32px }
+.admin.bar a.exit { background-position: -320px -32px }
