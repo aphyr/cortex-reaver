@@ -46,10 +46,10 @@ module CortexReaver
         @title = @page.title
        
         if user.can_edit? Page.new
-          workflow "Edit this page", PageController.r(:edit, @page.id)
+          workflow "Edit this page", PageController.r(:edit, @page.id), :edit, :page
         end
         if user.can_delete? Page.new
-          workflow "Delete this page", PageController.r(:delete, @page.id)
+          workflow "Delete this page", PageController.r(:delete, @page.id), :delete, :page
         end
 
         PageController.render_view('show')
@@ -62,13 +62,13 @@ module CortexReaver
 
         # Workflows
         if user.can_create? Journal.new
-          workflow "New Journal", JournalController.r(:new)
+          workflow "New Journal", JournalController.r(:new), :new, :journal
         end
         if user.can_create? Page.new
-          workflow "New Page", PageController.r(:new)
+          workflow "New Page", PageController.r(:new), :new, :page
         end
         if user.can_create? Photograph.new
-          workflow "New Photograph", PhotographController.r(:new)
+          workflow "New Photograph", PhotographController.r(:new), :new, :photograph
         end
 #        if user.can_create? Project.new
 #          workflow "New Project", ProjectController.r(:new)

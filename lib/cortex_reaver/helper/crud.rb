@@ -315,7 +315,7 @@ module Ramaze
         set_plural_model_var @models
 
         if user.can_create? model_class.new
-          workflow "New #{model_class.to_s.demodulize}", rs(:new)
+          workflow "New #{model_class.to_s.demodulize}", rs(:new), :new, model_class.to_s.demodulize.downcase
         end
 
         render_view(:list)
@@ -351,13 +351,13 @@ module Ramaze
           end
           
           if user.can_create? model_class.new
-            workflow "New #{model_class.to_s.demodulize}", rs(:new)
+            workflow "New #{model_class.to_s.demodulize}", rs(:new), :new, model_class.to_s.demodulize.downcase
           end
           if user.can_edit? @model
-            workflow "Edit this #{model_class.to_s.demodulize}", rs(:edit, @model.id)
+            workflow "Edit this #{model_class.to_s.demodulize}", rs(:edit, @model.id), :edit, model_class.to_s.demodulize.downcase
           end
           if user.can_delete? @model
-            workflow "Delete this #{model_class.to_s.demodulize}", rs(:delete, @model.id)
+            workflow "Delete this #{model_class.to_s.demodulize}", rs(:delete, @model.id), :delete, model_class.to_s.demodulize.downcase
           end
         elsif id
           # Didn't find that model

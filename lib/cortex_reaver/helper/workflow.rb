@@ -6,21 +6,9 @@ module Ramaze
         @workflows
       end
 
-      def workflow(name, href)
+      def workflow(name, href, *classes)
         @workflows ||= []
-        @workflows << [name, href]
-      end
-
-      def workflowbox
-        if @workflows
-          b = '<div class="workflows">'
-          b << '  <ul>'
-          @workflows.each do |name, href|
-            b << "    <li><a href=\"#{href}\">#{name}</a></li>"
-          end
-          b << '  </ul>'
-          b << '</div>'
-        end
+        @workflows << [name, href, classes]
       end
     end
   end

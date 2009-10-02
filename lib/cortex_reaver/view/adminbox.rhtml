@@ -1,49 +1,40 @@
-<div id="adminbox">
+<div class="admin bar">
   <% if user.admin? or user.contributor? or user.editor? or user.moderator? %>
-    <table class="actions-table">
-      <tr>
-        <td class="title">Sections</td>
-        <td>
-          <ul class="actions">
-            <li><a href="/pages">Pages</a></li>
-            <li><a href="/projects">Projects</a></li>
-            <li><a href="/journals">Journals</a></li>
-            <li><a href="/photographs">Photographs</a></li>
-            <li><a href="/comments">Comments</a></li>
-            <li><a href="/tags">Tags</a></li>
-            <% if user.admin? %>
-              <li><a href="/users">Users</a></li>
-              <li><a href="/admin">Admin</a></li>
-            <% end %>
-          </ul>
-        </td>
-      </tr>
-      <% if workflows %>
-        <tr>
-          <td class="title">Actions</td>
-          <td>
-            <ul class="actions">
-              <% workflows.each do |name, href| %>
-                <li>
-                  <a href="<%= href %>"
-                    <%= name.to_s[/delete|destroy/i] ? "onclick = \"return confirm('Are you sure you want to delete #{@title.gsub(/'"/, '')}?');\"" : '' %>>
-                    <%= name %>
-                  </a>
-                </li>
-              <% end %>
-            </ul>
-          </td>
-        </tr>
-      <% end %>
-    </table>
 
-    <div id="admin_user_actions">
-      <a href="/users/logout">Log out</a>
-    </div>
+    <ul class="user actions">
+      <li><a class="button exit" href="/users/logout">Log out</a></li>
+    </ul>
+
+    <% if workflows %>
+      <ul class="workflow actions">
+        <% workflows.each do |name, href, classes| %>
+          <li>
+            <a class="button <%=classes.join(' ')%>" title="<%= attr_h name %>" href="<%= href %>"
+              <%= name.to_s[/delete|destroy/i] ? "onclick = \"return confirm('Are you sure you want to delete #{@title.gsub(/'"/, '')}?');\"" : '' %>>
+              <%= name %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <ul class="navigation actions">
+      <li><a class="button pages" href="/pages" title="Pages">Pages</a></li>
+      <li><a class="button projects" href="/projects" title="Projects">Projects</a></li>
+      <li><a class="button journals" href="/journals" title="Journals">Journals</a></li>
+      <li><a class="button photographs" href="/photographs" title="Photographs">Photographs</a></li>
+      <li><a class="button comments" href="/comments" title="Comments">Comments</a></li>
+      <li><a class="button tags" href="/tags" title="Tags">Tags</a></li>
+      <% if user.admin? %>
+        <li><a class="button users" href="/users" title="Users">Users</a></li>
+        <li><a class="button admin" href="/admin" title="Admin">Admin</a></li>
+      <% end %>
+    </ul>
+  
   <% elsif session[:user] %>
-    <div id="admin_user_actions">
-      <a href="/users/logout">Log out</a>
-    </div>
+    <ul class="user actions">
+      <li><a class="button exit" href="/users/logout">Log out</a></li>
+    </ul>
   <% else %>
     <form id="login" action="/users/login" method="post">
       <p>

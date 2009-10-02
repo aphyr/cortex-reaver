@@ -1,6 +1,7 @@
 body {
   background: url('/images/background_tile.png');
   color: #000;
+  margin: 0;
 }
 
 #content {
