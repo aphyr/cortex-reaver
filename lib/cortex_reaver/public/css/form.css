@@ -111,7 +111,9 @@ textarea {
 	cursor: default;
 	display: block;
 	width: 100%;
-	font: bold menu 12px;
+	font: menu;
+  font-weight: bolder;
+  font-size: 12px;
 	overflow: hidden;
 	-moz-user-select: none;
 	-khtml-user-select: none;
@@ -128,7 +130,7 @@ textarea {
 	padding: 1px 5px 2px; 
 	background: transparent;
   margin: 0 5px 4px 0; 
-	font: 11px "Lucida Grande", "Verdana";
+	font: 11px;
 }
 
 * html ul.acfb-holder,*:first-child+html ul.acfb-holder { 
