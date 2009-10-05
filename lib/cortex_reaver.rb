@@ -19,7 +19,7 @@ rescue LoadError => e
   puts e
   puts "You probably need to install some packages Cortex Reaver needs. Try: 
 apt-get install libmagick9-dev libmysql-ruby;
-gem install thin mongrel ramaze sequel yaml erubis BlueCloth rmagick exifr hpricot builder coderay;"
+gem install thin mongrel ramaze sequel yaml erubis BlueCloth rmagick exifr hpricot;"
   exit 255
 end
 
