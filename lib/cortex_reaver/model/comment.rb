@@ -98,7 +98,7 @@ module CortexReaver
 
       # Ensure comments with an email specified do *not* conflict with another
       # user.
-      if (not email.blank?) and User.filter(:email => value).count > 0
+      if (not email.blank?) and User.filter(:email => email).count > 0
         self.errors[:email] << 'conflicts with a registered user'
       end
 

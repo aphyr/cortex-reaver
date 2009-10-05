@@ -61,6 +61,13 @@ module CortexReaver
       end
     end
 
+    def regenerate_caches
+      [Journal, Project, Page, Comment].each do |klass|
+        klass.refresh_render_caches
+      end
+      redirect rs()
+    end
+
     def regenerate_photo_sizes_status
       if job = self.class.jobs[:regenerate_photo_sizes]
         respond "{'i':#{job[:i]},'total':#{job[:total]}}"
