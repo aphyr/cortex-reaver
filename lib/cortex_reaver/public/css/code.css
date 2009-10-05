@@ -1,11 +1,19 @@
-code {
+code.block {
   display: block;
   margin: 1em 0;
   padding: 4pt;
   color: #fff;
-  background: #202020;
-/*  white-space: pre */
+  background: #000;
+  white-space: pre-wrap;
 }
+
+.Identifier { color: #00ffff; font-weight: bold; }
+.Special { color: #ff6060; font-weight: bold; }
+.Constant { color: #ff40ff; font-weight: bold; }
+.Comment { color: #00ffff; font-weight: bold; }
+.Type { color: #00ff00; font-weight: bold; }
+.PreProc { color: #8080ff; font-weight: bold; }
+.Statement { color: #ffff00; font-weight: bold; }
 
 code .r { color: #FCE94F; font-weight: bolder; }
 code .cl { color: #8AE234; font-weight: bolder;}

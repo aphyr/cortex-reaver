@@ -38,7 +38,6 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.add_dependency('sequel_notnaughty', '~> 0.6.2')
   s.add_dependency('thin', '~> 1.0.0')
   s.add_dependency('exifr', '~> 0.10.7')
-  s.add_dependency('coderay', '~> 0.8.260')
   s.add_dependency('construct', '~> 0.1.2')
   s.add_dependency('rmagick', '~> 2.5.1')
   s.add_dependency('cssmin', '~>1.0.2')

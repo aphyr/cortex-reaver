@@ -9,8 +9,6 @@ module CortexReaver
     module Renderer
 
       require 'bluecloth'
-      require 'hpricot'
-      require 'coderay'
       require 'sanitize'
 
       # Renders plain text and html to html. If parse_code isn't true, only
@@ -28,7 +26,7 @@ module CortexReaver
         until text.empty? do
           if level < 1
             # Find start of code block
-            j = text.index('<code>') || text.length
+            j = text.index(/<code.*?>/) || text.length
             j -= 1 if j != 0
             level += 1
            
@@ -131,28 +129,28 @@ module CortexReaver
       def syntax_highlight(text)
         return text if text.nil?
 
-        text = text.gsub(/<cr:code([^>]+lang="(.*?)".*?)?>(.*?)<\/cr:code>/m) do |match|
-          lang = $2
+        text = text.gsub(/<cr:code([^>]+lang="([a-z0-9]+)".*?)?>(.*?)<\/cr:code>/m) do |match|
+          lang = $2 || 'text'
           code = $3
 
-          # Replace entities
-          code.gsub!('&', '&quot;')
+          # Tempfile...
+          Tempfile.open('cortex-reaver') do |f|
+            f.write code.strip
+            f.close
 
-          if lang.blank?
-            # Insert stripped code into code tags.
-            code = '<div class="code"><code>' + code.strip + '</code></div>'
-          else
-            # Parse with CodeRay and insert.
-            code = '<div class="code"><code>' + CodeRay.scan(code, lang.to_sym).html.strip + '</code></div>'
+            system('vim -f +"set filetype=' + lang + '" +"syn on" +"let html_use_css = 1" +"let html_use_encoding = \"UTF-8\"" +"let use_xhtml = 1" +"run! syntax/2html.vim" +"wq" +"q" ' + f.path)
+
+            code = File.read(f.path + '.html')
+            File.delete(f.path + '.html')
+            f.unlink
           end
 
-          # Using white-space: pre is a nice option, but I haven't figured out
-          # how to make it work with fluid layouts. So, I'm going with line
-          # wrapping and explicit HTML entities; since we're already marking
-          # up the code for syntax, might as well go all the way. Plus, 
-          # this still pastes cleanly, but displays like a terminal.
-          code.gsub!("\n", '<br />')
-          code.gsub!(/( {2})/) { |match| '&nbsp;' * $1.length }
+          # Slice out preamble
+          code.sub!(/^.*?<pre>/m, '')
+          code.sub!(/<\/pre>.*$/m, '')
+
+          # Wrap
+          code = '<code class="block">' + code.strip + '</code>' 
           code
         end
         text
