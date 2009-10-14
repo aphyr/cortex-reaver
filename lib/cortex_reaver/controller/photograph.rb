@@ -32,6 +32,10 @@ module CortexReaver
       user.id.to_i.to_s + flash.inspect
     end
 
+    before_all do
+      @body_class = "photographs"
+    end
+    
     on_save do |photograph, request|
       photograph.title = request[:title]
       photograph.name = Photograph.canonicalize request[:name], :id => photograph.id
@@ -59,5 +63,6 @@ module CortexReaver
       entry << render_view(:atom_fragment, :photograph => photograph)
       entry['type'] = 'html'
     end
+
   end
 end

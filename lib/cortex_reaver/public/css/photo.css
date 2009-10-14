@@ -1,1 +1,44 @@
+/* Adjust the sidebar colors some */
+body.photographs .box .actions li {
+  background: #444;
+}
+body.photographs .box .actions li.current {
+  background: #666;
+}
+body.photographs .box .actions li.current a {
+  color: #fff;
+}
 
+/* Dark main section */
+body.photographs #main-container {
+  background: transparent;
+}
+body.photographs #main {
+  background: #000;
+}
+
+/* Grid */
+.photographs.grid {
+  width: 764px;
+  padding: 0;
+  margin: 2px -2px 8px -2px;
+}
+
+.photographs.grid .thumb {
+  display: block;
+  float: left;
+  margin: 4px;
+}
+
+.photographs.grid .thumb > a {
+  width: 183px;
+  height: 183px;
+  background-color: #111;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.photographs.grid .thumb > a > img {
+  display: block;
+  margin: auto;
+}

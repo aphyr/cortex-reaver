@@ -1,27 +1,9 @@
-<div id="top">
-  <h1><%=h @title %></h1>
-</div>
+<% if @page %>
+  <%= page_nav CortexReaver::Photograph, @page %>
+<% end %>
 
-<div id="boxes">
-  <%= sidebar %>
-</div>
+<%= CortexReaver::PhotographController.render_view('grid', :photographs => @photographs) %>
 
-<div id="main-container">
-  <div id="main">
-    <%= CortexReaver::PhotographController.render_view('grid', :photographs => @photographs) %>
-
-    <% if @page %>
-      <%= page_nav CortexReaver::Photograph, @page %>
-    <% end %>
-  </div>
-
-  <div id="colophon">
-    Copyright &copy; <% if @model %>
-      <%= @model.updated_on.year %>
-      <%= user_link @model %> 
-    <% else %>
-      <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>
-      <%=h CortexReaver.config.site.author %>
-    <% end %>
-  </div>
-</div>
+<% if @page %>
+  <%= page_nav CortexReaver::Photograph, @page %>
+<% end %>

@@ -11,7 +11,7 @@
     
     <%= CortexReaver::MainController.render_view('head') %>
   </head>
-  <body class="text">
+  <body class="<%= @body_class %>">
     <%= CortexReaver::MainController.render_view('js') %>
 
     <%= CortexReaver::MainController.render_view('adminbox') %>
@@ -52,6 +52,8 @@
     <script type="text/javascript">
     /* <![CDATA[ */ 
       $(document).ready(function() {
+        $('#main').corners('10px');
+
         $('.pagination').each(function() {
           $(this).find('li:not(.placeholder):first').corners("left");
           $(this).find('li:not(.placeholder):last').corners("right");
