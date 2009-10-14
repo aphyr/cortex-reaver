@@ -122,7 +122,7 @@ module CortexReaver
 
       # Replace original.jpg with the largest available, if necessary.
       orig = attachment 'original.jpg'
-      unless orig.exists? and orig.local_path != largest
+      unless orig.exists? and orig == largest
         orig.file = largest
       end
 

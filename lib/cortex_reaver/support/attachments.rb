@@ -130,6 +130,10 @@ module Sequel
           @name = name
         end
 
+        def ==(other)
+          self.class == other.class and self.path == other.path rescue false
+        end
+
         # Deletes the file on disk, which effectively deletes the attachment.
         def delete
           FileUtils.remove_file local_path
@@ -209,6 +213,10 @@ module Sequel
           end
         end
 
+        def inspect
+          "#<CortexReaver::Attachment #{local_path}"
+        end
+
         # Returns the local path to this file.
         def local_path
           path :local
@@ -234,6 +242,10 @@ module Sequel
         # Resets permissions to default
         def reset_permissions
           FileUtils.chmod(DEFAULT_MODE, path(:local))
+        end
+
+        def to_s
+          local_path
         end
       end
     end
