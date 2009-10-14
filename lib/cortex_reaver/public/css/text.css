@@ -42,11 +42,3 @@ h1 a, h2 a, h3 a {
 .text-entry .byline {
   margin-bottom: 2em;
 }
-
-/* Embedded photo grids */
-.photographs.grid {
-}
-
-.grid .photo {
-  background: #eee;
-}

@@ -1,49 +1,27 @@
-<% columns = 4 %>
-<% i = 0 %>
-<table class="photographs grid" cellspacing="10">
-  <tr>
-    <% @photographs.all.each do |photograph| %>
-      <td id="photograph_<%= photograph.name %>" class="photo thumb">
-        <a href="<%= photograph.url %>">
-          <img src="<%= photograph.path(:public, 'grid') %>" alt="<%=h photograph.title %>" />
-        </a>
-      </td>
-      <% if (i += 1) == 4 %>
-    </tr>
-    <tr>
-      <% i = 0 %>
-      <% end %>
-    <% end %>
-  </tr>
-</table>
+<ol class="photographs grid">
+  <% @photographs.all.each do |photograph| %>
+    <li id="photograph_<%= photograph.name %>" class="photograph thumb">
+      <a href="<%= photograph.url %>">
+        <img src="<%= photograph.path(:public, 'grid') %>" alt="<%=h photograph.title %>" />
+      </a>
+    </li>
+  <% end %>
+</ol>
+
+<div class="clear" style="height: 4px;"></div>
 
 <script type="text/javascript">
   /* <![CDATA[ */
   $(document).ready(function() {
-    $('.grid').corners('10px');
-
-    $('.blank .grid .photo').each(function(i) {
+      $('.grid .photograph > *').each(function(i) {
       var elem = $(this);
       elem.corners("6px");
       elem.hover(
         function() {
-          elem.animate( {backgroundColor: "#444"}, 1);
+          elem.animate( {backgroundColor: "#222"}, 1)
         },
         function() {
-          elem.animate( {backgroundColor: "#111"}, 200 );
-        }
-      );
-    });
-
-    $('.text .grid .photo').each(function(i) {
-      var elem = $(this);
-      elem.corners("6px");
-      elem.hover(
-        function() {
-          elem.animate( {backgroundColor: "#ccc"}, 1);
-        },
-        function() {
-          elem.animate( {backgroundColor: "#eee"}, 200 );
+          elem.animate( {backgroundColor: "#111"}, 200);
         }
       );
     });
