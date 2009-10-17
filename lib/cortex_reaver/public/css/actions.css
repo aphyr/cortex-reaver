@@ -23,6 +23,9 @@ ul.actions {
 .footer .actions {
   font-size: 80%;
 }
-.footer .actions li:after {
+.footer .actions li:before {
   content: '|';
+}
+.footer .actions li:first-child:before {
+  content: none;
 }

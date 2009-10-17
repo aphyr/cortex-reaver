@@ -4,11 +4,13 @@ body {
 }
 
 h1 {
+  margin-top: 0;
   font-size: 180%
 }
 
 h2 {
   font-size: 150%;
+  margin-top: 0;
 }
 
 h3 {

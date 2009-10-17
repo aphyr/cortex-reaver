@@ -12,7 +12,7 @@ ul.tags {
 }
 
 .tags li:before {
-  content: ', '
+  content: ',  '
 }
 
 .tags li:first-child:before {

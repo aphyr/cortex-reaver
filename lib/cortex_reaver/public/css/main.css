@@ -22,6 +22,10 @@ body {
   color: #fff;
 }
 
+#top h1 {
+  margin-top: 16px;
+}
+
 #top a {
   color: #fff;
 }
@@ -38,6 +42,10 @@ body {
   left: 0px;
   top: 100px;
   width: 780px;
+}
+
+body.blank #main-container {
+  width: 900px;
 }
 
 #main {

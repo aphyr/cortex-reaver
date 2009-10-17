@@ -8,7 +8,7 @@ module CortexReaver
 
     layout do |name, wish|
       if ['show'].include? name
-        :text
+        :blank
       elsif request.xhr? or name == 'atom'
         nil
       else

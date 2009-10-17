@@ -11,41 +11,29 @@
     
     <%= CortexReaver::MainController.render_view('head') %>
   </head>
-  <body class="blank">
+  <body class="blank <%= @body_class %>">
     <%= CortexReaver::MainController.render_view('js') %>
+
     <%= CortexReaver::MainController.render_view('adminbox') %>
 
-    <%= flashbox %>
-            
-    <div id="content">
-      <%= @content %>
-    </div>
+    <%= @content %>
 
     <%= CortexReaver::MainController.render_view('tracker') %>
 
     <script type="text/javascript">
-    /* <![CDATA[ */
+    /* <![CDATA[ */ 
       $(document).ready(function() {
-        $('#top').corners("10px");
-        $('#top .actions li:first').corners("10px left");
-        $('#top .actions li:last').corners("10px right");
-        $('#main').corners("10px");
-        $('.comments .comment').corners("10px");
+        $('#main').corners('10px');
 
-        $('.box .top').corners("10px top");
-        $('.box > *').each(function() {
-          $(this).find('li:last').corners("10px bottom");
-        });
-        
         $('.pagination').each(function() {
-          $(this).find('li:first').corners("left");
-          $(this).find('li:last').corners("right");
+          $(this).find('li:not(.placeholder):first').corners("left");
+          $(this).find('li:not(.placeholder):last').corners("right");
         });
-        $('.pagination li').not('.elided').add('.actions > li').each(function(i) {
-          $(this).fadeTo(0,0.5);
+        $('.pagination li').not('.elided').add('.actions > li').not('.current').not('.placeholder').each(function(i) {
+          $(this).fadeTo(0,0.8);
           $(this).hover(
             function() { $(this).fadeTo(0,1) },
-            function() { $(this).fadeTo(200,0.5) }
+            function() { $(this).fadeTo(200,0.8) }
           );
         });
       });
