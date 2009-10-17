@@ -32,7 +32,7 @@ module CortexReaver
       user.id.to_i.to_s + flash.inspect
     end
 
-    before_all do
+    before :index, :show, :page, :list, :tagged do
       @body_class = "photographs"
     end
     
