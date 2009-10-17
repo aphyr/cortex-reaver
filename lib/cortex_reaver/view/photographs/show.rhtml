@@ -18,6 +18,7 @@
   
   <h2 class="title"><%=h @photograph.title %></h2>
 
+
   <% unless @photograph.comments.empty? %>
   <div class="comments frame">
     <a id="comments"></a>
@@ -29,6 +30,16 @@
 
   <div class="comments frame">
     <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
+  </div>
+
+  <div id="colophon">
+    Copyright &copy; <% if @model %>
+      <%= @model.updated_on.year %>
+      <%= user_link @model %>
+    <% else %>
+      <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>
+      <%=h CortexReaver.config.site.author %>
+    <% end %>
   </div>
 
   <script type="text/javascript">
