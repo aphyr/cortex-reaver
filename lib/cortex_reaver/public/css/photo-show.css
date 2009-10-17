@@ -1,0 +1,87 @@
+#top.photograph {
+  width: 600px;
+  height: 60px;
+  position: static;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.photograph.full {
+  text-align: center;
+  margin: 0 auto;
+  color: #fff;
+}
+
+.frame {
+  text-align: left;
+  position: static;
+  top: 0;
+  color: #999;
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  background: #000;
+  display: block;
+}
+
+.frame a {
+  color: #fff;
+}
+
+.photograph.frame {
+  display: inline-block;
+}
+
+.photograph.frame .byline .tags {
+  float: left;
+  color: #999;
+}
+.photograph.frame .byline .tags a {
+  color: #999;
+}
+.photograph.frame h2 {
+  display: block;
+  text-align: center;
+  font-size: 100%;
+}
+
+.photograph.frame .byline .description {
+  float: right;
+}
+
+.frame h2 a {
+  color: #ccc;
+}
+
+.comments.frame {
+  width: 500px;
+  background: #000;
+  color: #ccc;
+}
+
+.frame .comment {
+  background: #141414;
+  padding: 6px;
+}
+
+.frame .comment .footer {
+  background: transparent;
+  color: #fff;
+  border-bottom: none;
+}
+.frame .comment .footer .actions li {
+  color: #aaa;
+}
+.frame .comment .footer .actions li a {
+  color: #aaa;
+}
+
+.frame textarea, .frame input {
+  padding: 2px;
+  border: 1px solid #555;
+  background: #111;
+  color: #fff;
+}
+.frame input[type=submit]:hover {
+  background: #333;
+  color: #fff;
+}

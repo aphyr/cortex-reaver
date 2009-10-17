@@ -1,26 +1,13 @@
-<style type="text/css">
-  #content {
-    margin: 30px;
-  }
-</style>
-
-<div id="top" class="photo">
-  <%= model_nav @photograph %>
-
-  <h1><%=h @photograph.title %></h1>
-
-  <div id="copyright">
-    Copyright &copy;
-    <%= @photograph.updated_on.year %>
-    <%= user_link @photograph %>
-  </div>
+<div id="top" class="photograph">
+  <% if @model %>
+    <%= model_nav @model %>
+  <% end %>
+  <h1><a href="/"><%=h CortexReaver.config.site.name %></a></h1>
 </div>
 
-<div id="photograph_<%= @photograph.name %>" class="photo full">
-  <div class="frame">
-    
-    <img src="<%= @photograph.full_public_path %>" id="photo" alt="<%= attr_h @photograph.title %>" title="<%= attr_h @photograph.title %>" />
-
+<div id="photograph_<%= @photograph.name %>" class="photograph full">
+  <div class="photograph frame">
+    <img src="<%= @photograph.full_public_path %>" alt="<%= attr_h @photograph.title %>" title="<%= attr_h @photograph.title %>" />
     <div class="byline">
       <div class="description"><%= description_of @photograph %></div>
       <% unless @photograph.tags.empty? %>
@@ -28,9 +15,11 @@
       <% end %>
     </div>
   </div>
+  
+  <h2 class="title"><%=h @photograph.title %></h2>
 
   <% unless @photograph.comments.empty? %>
-  <div class="comments">
+  <div class="comments frame">
     <a id="comments"></a>
     <% @photograph.comments_dataset.order(:created_on).all.each do |comment| %>
       <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
@@ -38,13 +27,15 @@
   </div>
   <% end %>
 
-  <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
-</div>
+  <div class="comments frame">
+    <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
+  </div>
 
-<script type="text/javascript">
-  /* <![CDATA[ */
-  $(document).ready(function() {
-    $('.photo.full .frame').corners("10px");
-  });
-  /* ]]> */
-</script>
+  <script type="text/javascript">
+    /* <![CDATA[ */
+    $(document).ready(function() {
+      $('.photo.full .frame').corners("10px");
+    });
+    /* ]]> */
+  </script>
+</div>
