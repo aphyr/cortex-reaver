@@ -80,6 +80,7 @@ module CortexReaver
     def regenerate_photo_sizes
       unless self.class.jobs[:regenerate_photo_sizes]
         self.class.jobs[:regenerate_photo_sizes] = Thread.new do
+          Thread.current.priority = -2
           Thread.current[:total] = Photograph.count
           while photo = (photo ? photo.next : Photograph.first)
             Thread.current[:photo] = photo
