@@ -6,20 +6,26 @@
 
 .pagination.actions li {
   padding: 0;
+  width: 38px;
   margin: 1px;
   background: #444;
   display: inline-block;
   color: white;
 }
 
+.pagination.actions li.elided {
+  background: transparent url('/images/elided.png') center;
+  background-repeat: repeat-y;
+}
+
 .pagination.actions li > * {
   display: block;
   text-align: center;
+  margin: 0;
   padding: 5px;
   width: 28px;
   height: 20px;
   line-height: 18px;
-  margin: 0;
   text-decoration: none !important;
   color: white !important;
   overflow: hidden;
