@@ -45,7 +45,7 @@ module CortexReaver
       if q.empty?
         respond ''
       else
-        respond Tag.filter(:title.like(/^#{q}/i)).limit(8).map(:title).join("\n")
+        respond Tag.filter(:title.like(/^#{q}/i)).limit(8).select(:name, :title).map(:title).join("\n")
       end
     end
     

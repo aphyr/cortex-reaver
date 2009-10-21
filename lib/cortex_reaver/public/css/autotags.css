@@ -1,0 +1,38 @@
+.tag-editor {
+  float: left;
+  width: 600px;
+  display: block;
+}
+
+.tag-editor ul {
+  font-size: 75%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-editor ul li {
+  display: block;
+  float: left;
+  background: #EAF8EC;
+  border: 1px solid #37B757;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 2px;
+  margin: 2px;
+}
+
+.tag-editor li a {
+  color: #000 !important;
+  padding: 2px;
+  font-weight: bolder;
+  text-decoration: none !important;
+  margin-left: 2px;
+}
+
+.tag-editor input {
+  margin: 1px;
+  font-size: 75%;
+  width: 10em;
+  float: left;
+}
