@@ -24,6 +24,7 @@ module CortexReaver
     end
 
     on_second_save do |page, request|
+      Ramaze::Log.info request[:tags]
       page.tags = request[:tags]
       add_attachments(page, request[:attachments])
     end

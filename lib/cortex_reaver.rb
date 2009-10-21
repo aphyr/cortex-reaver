@@ -11,6 +11,7 @@ begin
   require 'socket'
   require 'cssmin'
   require 'jsmin'
+  require 'json'
 
   require 'sequel/extensions/migration'
   require 'sequel/extensions/inflector'

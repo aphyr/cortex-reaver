@@ -27,17 +27,15 @@ module Ramaze
         title = opts[:title] || name.to_s.titleize
         
         s = "<p><label for=\"#{name}\">#{title}</label>\n"
-        s << "<ul id=\"#{name}-holder\" class=\"acfb-holder\">\n"
-        s << "<input name=\"#{name}\" id=\"#{name}\" type=\"text\" class=\"acfb-input\" value=\"#{attr_h(tags_on(model, false))}\" />"
-        s << "</ul></p>"
+        s << "<input name=\"#{name}\" id=\"#{name}\" type=\"text\" value=\"#{attr_h(tags_on(model, false))}\" />"
+        s << "</p>"
 
         s << <<EOF
 <script type="text/javascript">
     /* <![CDATA[ */
     $(document).ready(function() {
-      $("##{name}-holder").autoCompletefb({
-        urlLookup:'/tags/autocomplete',
-        acOptions:{extraParams:{id:'title'}}
+      $("##{name}").autotags({
+        url: "#{CortexReaver::TagController.r(:autocomplete)}"
       });
     });
     /* ]]> */
@@ -45,16 +43,21 @@ module Ramaze
 EOF
       end
 
-      # Returns an html list of tags on a model that supports #tags.
-      def tags_on(model, html=true)
+      # Returns a list of tags on a model that supports #tags.
+      def tags_on(model, format = :html)
         begin
-          if html
+          case format
+          when :html
             #t = '<img src="/images/tag.gif" alt="Tags" />'
             t = '<ul class="tags">'
             model.tags.each do |tag|
               t << "<li><a href=\"#{tag.url}\">#{tag.title}</a></li>"
             end
             t << '</ul>'
+          when :json
+            model.tags.map { |t|
+              {:id => t.name, :name => t.title}
+            }.to_json
           else
             t = model.tags.map{ |t| t.title }.join(', ')
           end

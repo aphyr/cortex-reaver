@@ -3,6 +3,10 @@ textarea {
   height: 400px;
 }
 
+form p {
+  clear: both;
+}
+
 .comment-form label {
   width: 4em;
   margin-top: 2px;
