@@ -129,7 +129,7 @@ module CortexReaver; module Plugins
           failed = 0
           begin
             tweets = JSON.parse(open(url).read)
-          rescue JSON::ParseError => e
+          rescue JSON::ParserError => e
             # Twitter likes to hand out weird HTML responses sometimes. :/
             failed += 1
             retry unless failed > 3
