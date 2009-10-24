@@ -46,8 +46,6 @@ module CortexReaver
       files = (order & files) + (files - order)
     end
 
-    Ramaze::Log.debug "Collecting #{files.inspect}"
-
     # Read files
     files.each do |file|
       next unless file =~ pattern
