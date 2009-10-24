@@ -40,7 +40,7 @@
             <%= @model.updated_on.year %>
             <%= user_link @model %> 
           <% else %>
-            <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>    
+            <%= CortexReaver.config.content_range.begin.year %>&mdash;<%= CortexReaver.config.content_range.end.year %>    
             <%=h CortexReaver.config.site.author %>
           <% end %>
         </div>
