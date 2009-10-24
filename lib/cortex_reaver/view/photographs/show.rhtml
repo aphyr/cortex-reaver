@@ -33,13 +33,9 @@
   </div>
 
   <div id="colophon">
-    Copyright &copy; <% if @model %>
-      <%= @model.updated_on.year %>
-      <%= user_link @model %>
-    <% else %>
-      <%= CortexReaver.config.earliest_content.year %>&mdash;<%= DateTime.now.year %>
-      <%=h CortexReaver.config.site.author %>
-    <% end %>
+    Copyright &copy;
+    <%= @model.updated_on.year %>
+    <%= user_link @model %>
   </div>
 
   <script type="text/javascript">

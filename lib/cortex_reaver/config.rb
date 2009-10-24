@@ -188,19 +188,13 @@ You can also just provide a regex for the path, in which case it is matched dire
       end
     end
 
-    # Returns the earliest thing in the CortexReaver DB, for copyright.
-    def earliest_content
-      return @earliest_content if @earliest_content
-
-      ej = CortexReaver::Journal.dataset.min(:created_on)
-      @earliest_content = DateTime.parse(
-        [
-          CortexReaver::Journal.dataset.min(:created_on),
-          CortexReaver::Page.dataset.min(:created_on),
-          CortexReaver::Photograph.dataset.min(:created_on),
-          CortexReaver::Project.dataset.min(:created_on)
-        ].compact.min.to_s
-      )
+    # The total span of items in the CR DB, for copyright notices and such.
+    def content_range
+      @content_range ||=
+        CortexReaver::Journal.range(:created_on) |
+        CortexReaver::Page.range(:created_on) |
+        CortexReaver::Photograph.range(:created_on) |
+        CortexReaver::Project.range(:created_on)
     end
 
     # Saves self to disk
