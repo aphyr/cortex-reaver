@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'optparse'
-gem 'ramaze', '=2009.06'
 require 'ramaze'
 require __DIR__ + '/../lib/cortex_reaver'
 
