@@ -1,6 +1,7 @@
 module CortexReaver
   class Controller < Ramaze::Controller
-    trait :app => :cortex_reaver
+    # TODO: This breaks now. Why?
+    # trait :app => :cortex_reaver
     engine :Erubis
     layout :text
     helper :form, :auth, :navigation, :workflow, :error, :sidebar, :aspect

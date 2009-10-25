@@ -4,7 +4,6 @@ begin
   require 'forwardable' # Patch for broken Thin...
   require 'find'
   require 'rubygems'
-  gem 'ramaze', "=2009.06"
   require 'ramaze'
   require 'sequel'
   require 'construct'
@@ -94,60 +93,7 @@ module CortexReaver
     end
   end
 
-  # Returns the site configuration
-  def self.config
-    @config
-  end
-
-  def self.config_file
-    @config_file || File.join(Dir.pwd, 'cortex_reaver.yaml')
-  end
-
-  def self.config_file=(file)
-    @config_file = file
-  end
-
-  def self.db
-    @db
-  end
-
-  # Prepare Ramaze, create directories, etc.
-  def self.init
-    # App
-    Ramaze.options.app.name = :cortex_reaver
-    
-    # Root directory
-    Ramaze::App[:cortex_reaver].options.roots = [LIB_DIR]
-    if config[:root]
-      Ramaze::App[:cortex_reaver].options.roots.unshift(config[:root])
-    end
-
-    # Server options
-    Ramaze.options.adapter.handler = config[:adapter]
-    Ramaze.options.adapter.host = config[:host]
-    Ramaze.options.adapter.port = config[:port]
-
-    # Check directories
-    if config[:root] and not File.directory? config.public_root
-      # Try to create a public directory
-      begin
-        FileUtils.mkdir_p config.public_root
-      rescue => e
-        Ramaze::Log.warn "Unable to create a public directory at #{config.public_root}: #{e}."
-      end
-    end
-    if config[:log_root] and not File.directory? config[:log_root]
-      # Try to create a log directory
-      begin
-        FileUtils.mkdir_p config[:log_root]
-        File.chmod 0750, config[:log_root]
-      rescue => e
-        Ramaze::Log.warn "Unable to create a log directory at #{config[:log_root]}: #{e}. File logging disabled."
-        # Disable logging
-        config[:log_root] = nil
-      end
-    end
-
+  def self.compile_resources
     # Prepare CSS/JS
     self.compile_css
     self.compile_js
@@ -192,59 +138,33 @@ module CortexReaver
         end
       end
     end
+  end
 
-    # Clear loggers
-    Ramaze::Log.loggers.clear
+  # Returns the site configuration
+  def self.config
+    @config
+  end
 
-    unless config[:daemon]
-      # Log to console
-      Ramaze::Log.loggers << Logger.new(STDOUT)
-    end 
+  def self.config_file
+    @config_file || File.join(Dir.pwd, 'cortex_reaver.yaml')
+  end
 
-    case config[:mode]
-    when :production
-      Ramaze.options.mode = :live
-     
-      # Set up cache
-      case config[:cache]
-        when :memcache
-          Ramaze::Cache::MemCache::OPTIONS[:servers] = config.memcache.servers
-          Ramaze::Cache.options.default = Ramaze::Cache::MemCache
-      end
+  def self.config_file=(file)
+    @config_file = file
+  end
 
-      # Cache templates
-      Innate::View.options.read_cache = true
+  # The total span of items in the CR DB, for copyright notices and such.
+  def self.content_range
+    @content_range ||=
+      CortexReaver::Journal.range(:created_on) |
+      CortexReaver::Page.range(:created_on) |
+      CortexReaver::Photograph.range(:created_on) |
+      CortexReaver::Project.range(:created_on)
+  end
 
-      if config[:log_root]
-        # Log to file
-        Ramaze::Log.loggers << Logger.new(
-          File.join(config[:log_root], 'production.log')
-        )
-        Ramaze::Log.level = Logger::Severity::INFO
-      end
-    when :development
-      Ramaze.options.mode = :dev
-
-      if config.log_root
-        # Log to file
-        Ramaze::Log.loggers << Logger.new(
-          File.join(config[:log_root], 'development.log')
-        )
-        Ramaze::Log.level = Logger::Severity::DEBUG
-
-        # Also use SQL log
-        db.logger = Logger.new(
-          File.join(config.log_root, 'sql.log')
-        )
-      end
-    else
-      raise ArgumentError.new("unknown Cortex Reaver mode #{config[:mode].inspect}. Expected one of [:production, :development].")
-    end
-
-    # Create plugin cache
-    Ramaze::Cache.add(:plugin)
-
-    # Prepare view directory
+  # Creates the app directories if they don't exist.
+  def self.create_directories
+    # view
     if config.view_root
       if not File.directory? config.view_root
         # Try to create a view directory
@@ -256,6 +176,84 @@ module CortexReaver
       end
     end
 
+    # public
+    if config.public_root and not File.directory? config.public_root
+      # Try to create a public directory
+      begin
+        FileUtils.mkdir_p config.public_root
+      rescue => e
+        Ramaze::Log.warn "Unable to create a public directory at #{config.public_root}: #{e}."
+      end
+    end
+
+    # log
+    if config[:log_root] and not File.directory? config[:log_root]
+      # Try to create a log directory
+      begin
+        FileUtils.mkdir_p config[:log_root]
+        File.chmod 0750, config[:log_root]
+      rescue => e
+        Ramaze::Log.warn "Unable to create a log directory at #{config[:log_root]}: #{e}. File logging disabled."
+        # Disable logging
+        config[:log_root] = nil
+      end
+    end
+  end
+
+  def self.db
+    @db
+  end
+
+  # Prepare Ramaze, create directories, etc.
+  def self.init
+    # App
+    Ramaze.options.app.name = :cortex_reaver
+    
+    # Helper load path
+    Ramaze.options.helpers_helper.paths.unshift LIB_DIR
+   
+    # Load controllers 
+    require File.join(LIB_DIR, 'controller', 'controller')
+
+    # Server options
+    Ramaze.options.adapter.handler = config[:adapter]
+    Ramaze.options.adapter.host = config[:host]
+    Ramaze.options.adapter.port = config[:port]
+
+    # App mode
+    case config[:mode]
+    when :production
+      Ramaze.options.mode = :live
+    when :development
+      Ramaze.options.mode = :dev
+    else
+      raise ArgumentError.new("unknown Cortex Reaver mode #{config.mode.inspect}. Expected one of [:production, :development].")
+    end
+    
+    create_directories
+    setup_logging
+    setup_cache
+    compile_resources
+    load_plugins
+  end
+
+  # Load libraries
+  def self.load
+    # Load controllers and models
+    require File.join(LIB_DIR, 'version')
+    require File.join(LIB_DIR, 'config')
+    require File.join(LIB_DIR, 'plugin')
+    Ramaze::acquire File.join(LIB_DIR, 'snippets', '**', '*')
+    Ramaze::acquire File.join(LIB_DIR, 'support', '*')
+    require File.join(LIB_DIR, 'cache')
+    require File.join(LIB_DIR, 'model', 'model')
+  end
+
+  # Load plugins
+  def self.load_plugins
+    # Create plugin cache
+    Ramaze::Cache.add(:plugin)
+
     # Load plugins
     config.plugins.enabled.each do |plugin|
       Ramaze::Log.info "Loading plugin #{plugin}"
@@ -265,19 +263,6 @@ module CortexReaver
         require File.join(LIB_DIR, 'plugins', plugin)
       end
     end
-  end
-
-  # Load libraries
-  def self.load
-    # Load controllers and models
-    require File.join(LIB_DIR, 'config')
-    require File.join(LIB_DIR, 'plugin')
-    require File.join(LIB_DIR, 'version')
-    Ramaze::acquire File.join(LIB_DIR, 'snippets', '**', '*')
-    Ramaze::acquire File.join(LIB_DIR, 'support', '*')
-    require File.join(LIB_DIR, 'model', 'model')
-    Ramaze::acquire File.join(LIB_DIR, 'helper', '*')
-    require File.join(LIB_DIR, 'controller', 'controller')
   end
 
   # Reloads the site configuration
@@ -311,8 +296,9 @@ module CortexReaver
     Ramaze::Log.info "Cortex Reaver #{Process.pid} stalking victims."
 
     # Run Ramaze
-#    Ramaze.start :root => [config[:root], LIB_DIR]
-    Ramaze.start :root => LIB_DIR
+    roots = [LIB_DIR]
+    roots.unshift config.root if config.root
+    Ramaze.start :root => roots
 
     puts "Cortex Reaver finished."
   end
@@ -350,6 +336,55 @@ module CortexReaver
        Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
 
       raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
+    end
+  end
+
+  def self.setup_cache
+    # Set up cache
+    case config.cache
+    when :memcache
+      Ramaze::Cache::MemCache::OPTIONS[:servers] = config.memcache.servers
+      Ramaze::Cache.options.default = Ramaze::Cache::MemCache
+
+      # Cache templates
+      Innate::View.options.read_cache = true
+    else
+      # Cache stub
+      Ramaze::Log.warn "Caching disabled."
+      Ramaze::Cache.options.default = CortexReaver::Cache::Noop
+    end
+  end
+
+  def self.setup_logging
+    # Clear loggers
+    Ramaze::Log.loggers.clear
+
+    unless config.daemon
+      # Log to console
+      Ramaze::Log.loggers << Logger.new(STDOUT)
+    end
+
+    if config.log_root
+      # Log to files
+      case config.mode
+      when :production
+        logfile = 'production.log'
+        level = Logger::Severity::INFO
+      when :development
+        logfile = 'development.log'
+        level = Logger::Severity::DEBUG
+
+        # Also use SQL log
+        db.logger = Logger.new(
+          File.join(config.log_root, 'sql.log')
+        )
+      end
+
+      # Create file logger      
+      Ramaze::Log.loggers << Logger.new(
+        File.join(config.log_root, logfile)
+      )
+      Ramaze::Log.level = level
     end
   end
 
