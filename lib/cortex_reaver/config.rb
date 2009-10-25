@@ -188,15 +188,6 @@ You can also just provide a regex for the path, in which case it is matched dire
       end
     end
 
-    # The total span of items in the CR DB, for copyright notices and such.
-    def content_range
-      @content_range ||=
-        CortexReaver::Journal.range(:created_on) |
-        CortexReaver::Page.range(:created_on) |
-        CortexReaver::Photograph.range(:created_on) |
-        CortexReaver::Project.range(:created_on)
-    end
-
     # Saves self to disk
     def save
       Ramaze::Log.info "Saving config #{to_yaml}"
