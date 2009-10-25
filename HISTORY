@@ -1,17 +1,19 @@
 Version 0.2.0
   - General
-    - Runs on Ramaze 2009.06
+    - Runs on Ramaze 2009.07
     - Takes advantage of Construct for configuration
   - Plugins
     - New twitter plugin, thanks to Ryan Grove
   - Controller
     - New sidebar system
   - View
-    - Redesigned retro-scifi stylesheet.
-    - Things are a bit of a mess internally; more cleanup will happen.
+    - Vim provides awesome syntax highlighting
+    - Totally revamped stylesheets
+    - CSS/JS compilation and minification!
     - More JQuery polish
     - Automatic copyright dates
-    - Fixed bug where nested comments wouldn't render.
+    - Fixed bug where nested comments wouldn't render
+    - New autocompleting tag editor
 Version 0.1.1
   - View
     - New head template for common js, css, etc.
