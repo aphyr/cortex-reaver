@@ -155,11 +155,21 @@ module CortexReaver
 
   # The total span of items in the CR DB, for copyright notices and such.
   def self.content_range
-    @content_range ||=
-      CortexReaver::Journal.range(:created_on) |
-      CortexReaver::Page.range(:created_on) |
-      CortexReaver::Photograph.range(:created_on) |
-      CortexReaver::Project.range(:created_on)
+    @content_range ||= [Journal, Page, Photograph, Project].inject(nil) do |total, ds|
+      begin
+        if total
+          total | ds.range(:created_on)
+        else
+          ds.range(:created_on)
+        end
+      rescue
+        # Some range was invalid
+        total
+      end
+    end
+
+    # If there's no content, default to today!
+    @content_range ||= Time.now .. Time.now
   end
 
   # Creates the app directories if they don't exist.
