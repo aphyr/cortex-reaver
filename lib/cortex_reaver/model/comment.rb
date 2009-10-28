@@ -10,7 +10,6 @@ module CortexReaver
     many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
     many_to_one :journal, :class => 'CortexReaver::Journal'
-    many_to_one :project, :class => 'CortexReaver::Project'
     many_to_one :photograph, :class => 'CortexReaver::Photograph'
     many_to_one :page, :class => 'CortexReaver::Page'
     many_to_one :comment, :class => 'CortexReaver::Comment'
@@ -104,7 +103,7 @@ module CortexReaver
 
       # Ensures comments belong to exactly one parent.
       count = 0
-      [:page_id, :project_id, :journal_id, :comment_id, :photograph_id].each do |field|
+      [:page_id, :journal_id, :comment_id, :photograph_id].each do |field|
         unless self[field].blank?
           count += 1
           if count > 1

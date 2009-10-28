@@ -9,12 +9,10 @@ module CortexReaver
     one_to_many :created_journals, :key => 'created_by', :class => 'CortexReaver::Journal'
     one_to_many :created_pages, :key => 'created_by', :class => 'CortexReaver::Page'
     one_to_many :created_photographs, :key => 'created_by', :class => 'CortexReaver::Photograph'
-    one_to_many :created_projects, :key => 'created_by', :class => 'CortexReaver::Project'
     one_to_many :updated_comments, :key => 'updated_by', :class => 'CortexReaver::Comment'
     one_to_many :updated_journals, :key => 'updated_by', :class => 'CortexReaver::Journal'
    one_to_many :updated_pages, :key => 'updated_by', :class => 'CortexReaver::Page'
     one_to_many :updated_photographs, :key => 'updated_by', :class => 'CortexReaver::Photograph'
-    one_to_many :updated_projects, :key => 'updated_by', :class => 'CortexReaver::Project'
 
 
     self.window_size = 64

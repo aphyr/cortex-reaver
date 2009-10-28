@@ -29,7 +29,6 @@ module CortexReaver
       comment.comment_id = request[:comment_id]
       comment.journal_id = request[:journal_id]
       comment.photograph_id = request[:photograph_id]
-      comment.project_id = request[:project_id]
     end
 
     on_create do |comment, request|
@@ -86,7 +85,6 @@ module CortexReaver
           @comment.comment_id = request[:comment_id]
           @comment.journal_id = request[:journal_id]
           @comment.photograph_id = request[:photograph_id]
-          @comment.project_id = request[:project_id]
 
           if session[:user]
             # A user is logged in. Use their account.

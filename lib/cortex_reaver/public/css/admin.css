@@ -49,7 +49,6 @@
 .admin.bar a.journals { background-position: 0px 0px }
 .admin.bar a.photographs { background-position: -32px 0px }
 .admin.bar a.pages { background-position: -64px 0px }
-.admin.bar a.projects { background-position: -96px 0px }
 .admin.bar a.tags { background-position: -128px 0px }
 .admin.bar a.comments { background-position: -160px 0px }
 .admin.bar a.users { background-position: -192px 0px }
@@ -61,7 +60,6 @@
 .admin.bar a.new.journal { background-position: 0px -32px }
 .admin.bar a.new.photograph { background-position: -32px -32px }
 .admin.bar a.new.page { background-position: -64px -32px }
-.admin.bar a.new.project { background-position: -96px -32px }
 
 
 .admin.bar a.new.user { background-position: -192px -32px }
