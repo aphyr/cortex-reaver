@@ -14,9 +14,7 @@ module Sequel
       module InstanceMethods
         # When we delete a model that has comments, remove the comments too.
         def before_destroy
-          Ramaze::Log.debug 'remove_comments'
           return false if super == false
-          Ramaze::Log.debug 'removing comments'
 
           comments = self.comments
           remove_all_comments
