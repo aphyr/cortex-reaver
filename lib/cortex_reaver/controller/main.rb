@@ -64,11 +64,11 @@ module CortexReaver
         if user.can_create? Journal.new
           workflow "New Journal", JournalController.r(:new), :new, :journal
         end
-        if user.can_create? Page.new
-          workflow "New Page", PageController.r(:new), :new, :page
-        end
         if user.can_create? Photograph.new
           workflow "New Photograph", PhotographController.r(:new), :new, :photograph
+        end
+        if user.can_create? Page.new
+          workflow "New Page", PageController.r(:new), :new, :page
         end
 
         # Feeds
