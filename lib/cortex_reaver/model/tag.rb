@@ -4,7 +4,6 @@ module CortexReaver
 
     many_to_many :photographs, :class => 'CortexReaver::Photograph'
     many_to_many :journals, :class => 'CortexReaver::Journal'
-    many_to_many :projects, :class => 'CortexReaver::Project'
     many_to_many :pages, :class => 'CortexReaver::Page'
 
     subset :unused, :count => 0
@@ -23,7 +22,6 @@ module CortexReaver
       
       remove_all_photographs
       remove_all_journals
-      remove_all_projects
       remove_all_pages
 
       true
@@ -62,8 +60,7 @@ module CortexReaver
       old_count = self[:count]
       self[:count] = photographs_dataset.count + 
         journals_dataset.count +
-        pages_dataset.count + 
-        projects_dataset.count
+        pages_dataset.count
       
       # Save and return
       changed = changed_columns.include? :count

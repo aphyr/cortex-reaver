@@ -44,7 +44,7 @@ module CortexReaver
 
     # Recalculate comment counts
     def update_comments
-      [Journal, Page, Project, Photograph].each do |klass|
+      [Journal, Page, Photograph].each do |klass|
         klass.refresh_comment_counts
       end
 
@@ -62,7 +62,7 @@ module CortexReaver
     end
 
     def regenerate_caches
-      [Journal, Project, Page, Comment].each do |klass|
+      [Journal, Page, Comment].each do |klass|
         klass.refresh_render_caches
       end
       redirect rs()

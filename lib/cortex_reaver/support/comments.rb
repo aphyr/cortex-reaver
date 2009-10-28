@@ -45,7 +45,7 @@ module Sequel
         # Returns the parent of a given comment. Caches, pass true to refresh.
         def parent(refresh = false)
           if refresh or @parent_cache.nil?
-            [:comment, :journal, :photograph, :project, :page].each do |p|
+            [:comment, :journal, :photograph, :page].each do |p|
               if self.respond_to?(p) and parent = self.send(p)
                 # We found an applicable parent.
                 @parent_cache = parent

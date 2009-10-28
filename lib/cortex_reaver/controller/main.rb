@@ -70,14 +70,10 @@ module CortexReaver
         if user.can_create? Photograph.new
           workflow "New Photograph", PhotographController.r(:new), :new, :photograph
         end
-#        if user.can_create? Project.new
-#          workflow "New Project", ProjectController.r(:new)
-#        end
 
         # Feeds
         feed 'Photographs', PhotographController.r(:atom)
         feed 'Journals', JournalController.r(:atom)
-#        feed 'Projects', ProjectController.r(:atom)
         feed 'Comments', CommentController.r(:atom)
 
         JournalController.render_view('list', :journals => @journals)
@@ -109,7 +105,7 @@ module CortexReaver
           priority << '1.0'
 
       # Indexes
-      [JournalController, PhotographController, ProjectController].each do |c|
+      [JournalController, PhotographController].each do |c|
         root << (url = LibXML::XML::Node.new('url'))
         url << (loc = LibXML::XML::Node.new('loc'))
         url << (lastmod = LibXML::XML::Node.new('lastmod'))
@@ -168,18 +164,6 @@ module CortexReaver
           
         loc << full_url(photograph.url)
         lastmod << photograph.updated_on.xmlschema
-        changefreq << 'weekly'
-        priority << '0.8'
-      end
-      Project.all.each do |project|
-        root << (url = LibXML::XML::Node.new('url'))
-        url << (loc = LibXML::XML::Node.new('loc'))
-        url << (lastmod = LibXML::XML::Node.new('lastmod'))
-        url << (changefreq = LibXML::XML::Node.new('changefreq'))
-        url << (priority = LibXML::XML::Node.new('priority'))
-
-        loc << full_url(project.url)
-        lastmod << project.updated_on.xmlschema
         changefreq << 'weekly'
         priority << '0.8'
       end

@@ -155,7 +155,7 @@ module CortexReaver
 
   # The total span of items in the CR DB, for copyright notices and such.
   def self.content_range
-    @content_range ||= [Journal, Page, Photograph, Project].inject(nil) do |total, ds|
+    @content_range ||= [Journal, Page, Photograph].inject(nil) do |total, ds|
       begin
         if total
           total | ds.range(:created_on)

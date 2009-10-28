@@ -11,16 +11,6 @@
         </ul>
       </div>
     <% end %>
-    <% unless (projects = CortexReaver::Project.tagged_with(@tags)).empty? %>
-      <div class="projects">
-        <h3>Projects</h3>
-        <ul>
-          <% projects.each do |project| %>
-            <li><a href="<%= project.url%>"><%= h project.title %></a></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
     <% unless (journals = CortexReaver::Journal.tagged_with(@tags)).empty? %>
       <div class="journals">
         <h3>Journals</h3>

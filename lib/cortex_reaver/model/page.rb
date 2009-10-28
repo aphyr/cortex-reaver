@@ -116,7 +116,7 @@ module CortexReaver
         :name => 'about',
         :title => 'About Cortex Reaver',
         :body => <<EOF
-<p>Cortex Reaver is a blog engine designed for managing photographs, projects,
+<p>Cortex Reaver is a blog engine designed for managing photographs, pages,
 journal entries, and more, with support for tags and comments. Cortex
 Reaver is written in <a href="http://ruby-lang.org">Ruby</a> using <a
 href="http://ramaze.net">Ramaze</a>, uses the <a

@@ -130,7 +130,6 @@ module CortexReaver
         :default => [
           ['Journals', '/journals'],
           ['Photographs', '/photographs'],
-          ['Projects', '/projects'],
           ['Tags', '/tags'],
           ['Comments', '/comments'],
           ['About', '/about']
