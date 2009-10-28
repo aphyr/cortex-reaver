@@ -2,6 +2,8 @@ Version 0.2.0
   - General
     - Runs on Ramaze 2009.07
     - Takes advantage of Construct for configuration
+    - Fixed several photo size generation bugs
+    - AJAX-y progressbar for photo resizing
   - Plugins
     - New twitter plugin, thanks to Ryan Grove
   - Controller
