@@ -365,8 +365,9 @@ module CortexReaver
       Innate::View.options.read_cache = true
     else
       # Cache stub
-      Ramaze::Log.warn "Caching disabled."
-      Ramaze::Cache.options.default = CortexReaver::Cache::Noop
+      # Hmm, this breaks session management.
+#      Ramaze::Log.warn "Caching disabled."
+#      Ramaze::Cache.options.default = CortexReaver::Cache::Noop
     end
   end
 
