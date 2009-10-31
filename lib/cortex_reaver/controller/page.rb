@@ -47,6 +47,7 @@ module CortexReaver
     
     def index
       @models = @pages = Page.select(:id, :name, :title)
+      workflow 'New Page', rs(:new), :new, :page
       render_view :list
     end
   end
