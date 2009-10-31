@@ -10,10 +10,10 @@ module CortexReaver
     plugin :viewable
     include CortexReaver::Model::Renderer
 
-    self.sequence_order = :id
+    self.sequence_order = :name
 
     many_to_one :page, :class => 'CortexReaver::Page'
-    one_to_many   :pages, :class => 'CortexReaver::Page'
+    one_to_many   :pages, :class => 'CortexReaver::Page', :order => :name
     many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by' 
     one_to_many   :comments, :class => 'CortexReaver::Comment'
