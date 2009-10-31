@@ -155,7 +155,9 @@ module CortexReaver
 
   # The total span of items in the CR DB, for copyright notices and such.
   def self.content_range
-    @content_range ||= [Journal, Page, Photograph].inject(nil) do |total, ds|
+    return @content_range if @content_range
+
+    @content_range = [Journal, Page, Photograph].inject(nil) do |total, ds|
       begin
         if total
           total | ds.range(:created_on)
@@ -166,6 +168,9 @@ module CortexReaver
         # Some range was invalid
         total
       end
+    end
+    if @content_range.first.kind_of? String 
+      @content_range = DateTime.parse(@content_range.begin) .. DateTime.parse(@content_range.end)
     end
 
     # If there's no content, default to today!
