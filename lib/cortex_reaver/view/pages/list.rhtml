@@ -1,29 +1,9 @@
 <div class="pages">
+  <h1>All Pages</h1>
   <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Title</th>
-        <% if user.can_edit? CortexReaver::Page.new %>
-          <th></th>
-        <% end %>
-        <% if user.can_delete? CortexReaver::Page.new %>
-          <th></th>
-        <% end %>
-      </tr>
-    </thead>
     <tbody>
-      <% @pages.all.each do |page| %>
-        <tr>
-          <td><%= CortexReaver::MainController.a(page.name, page.url) %></td>
-          <td><%= page.title %></td>
-          <% if user.can_edit? page %>
-            <td><a href="/pages/edit/<%= page.id %>">Edit</a></td>
-          <% end %>
-          <% if user.can_delete? page %>
-            <td><%= a 'Delete', CortexReaver::PageController.r(:delete, :id => page.id), :onclick => "return confirm('Are you sure you want to delete this page?');" %></td>
-          <% end %>
-        </tr>
+      <% @pages.top.order(:name).each do |page| %>
+        <%= CortexReaver::MainController.render_view 'pages/row', :page => page %>
       <% end %>
     </tbody>
   </table>
