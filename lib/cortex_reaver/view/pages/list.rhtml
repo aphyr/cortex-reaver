@@ -15,7 +15,7 @@
     <tbody>
       <% @pages.all.each do |page| %>
         <tr>
-          <td><%= a(page.name, page.url) %></td>
+          <td><%= CortexReaver::MainController.a(page.name, page.url) %></td>
           <td><%= page.title %></td>
           <% if user.can_edit? page %>
             <td><a href="/pages/edit/<%= page.id %>">Edit</a></td>
