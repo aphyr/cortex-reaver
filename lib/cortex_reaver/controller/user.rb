@@ -41,6 +41,11 @@ module CortexReaver
       end
     end
 
+    def index
+      @models = @users = User.select(:name, :id, :login)
+      render_view :list
+    end
+
     def login
       @title = "Login"
 
