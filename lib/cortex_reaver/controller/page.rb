@@ -44,5 +44,10 @@ module CortexReaver
     on_update do |page, request|
       page.updater = session[:user]
     end
+    
+    def index
+      @models = @pages = Page.select(:id, :name, :title)
+      render_view :list
+    end
   end
 end
