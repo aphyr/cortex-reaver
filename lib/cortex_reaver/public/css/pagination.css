@@ -31,6 +31,10 @@
   overflow: hidden;
 }
 
+.pagination.actions li.current {
+  background-color: #168715;
+}
+
 .pagination.actions li > a.previous, .pagination.actions li > a.next {
   line-height: 60px;
 }
