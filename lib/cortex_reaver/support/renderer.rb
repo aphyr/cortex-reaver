@@ -10,6 +10,14 @@ module CortexReaver
 
       require 'bluecloth'
       require 'sanitize'
+      require "#{CortexReaver::LIB_DIR}/helper/pages"
+      require "#{CortexReaver::LIB_DIR}/helper/attachments"
+      require "#{CortexReaver::LIB_DIR}/helper/form"
+
+      include Innate::Helper::CGI
+      include Ramaze::Helper::Pages
+      include Ramaze::Helper::Attachments
+      include Ramaze::Helper::Form
 
       # Renders plain text and html to html. If parse_code isn't true, only
       # runs bluecloth on text *outside* any <code>...</code> blocks.
@@ -76,6 +84,8 @@ module CortexReaver
       # url: returns the URL to an attachment
       # image: returns an image tag
       # link: returns a link to an attachment
+      # page_nav: A list of sub-pages
+      # attachments: A list of attachments
       #
       # The default action is a link, so
       #
@@ -88,38 +98,42 @@ module CortexReaver
         # Links
         # 
         # Example                         [[image:foo.png][name]]
-        # 1. the link type prefix         image:
-        # 2. the link type, sans-colon    image
+        # 1. the prefix                   image
+        # 2. the link, with colon         :foo.png
         # 3. the link itself              foo.png
         # 4. the second half of the link  [name]
         # 5. the name                     name 
-       copy.gsub!(/\[\[(([^\]]+):)?([^\]]+)(\]\[([^\]]+))?\]\]/) do |match|
-          prefix = $2
+      #copy.gsub!(/\[\[(([^\]]+):)?([^\]]+)(\]\[([^\]]+))?\]\]/) do |match|
+       copy.gsub!(/\[\[([^\]]+?)(:([^\]]+))?(\]\[([^\]]+))?\]\]/) do |match|
+          prefix = $1
           path = $3
           name = $5
 
-          # Find the link target
-          target = attachment(path)
+          # Name of the link
+          name ||= path
 
-          if target.exists?
-            # Name of the link
-            name ||= path
+          Ramaze::Log.debug prefix
 
-            # Create link to this target
-            case prefix
-            when 'image'
-              # Create an inline image
-              "<img class=\"attachment\" src=\"#{target.public_path}\" alt=\"#{name.gsub('"', '&quot;')}\" title=\"#{name.gsub('"', '&quot')}\" />"
-            when 'url'
-              # Create a URL
-              target.public_path
-            else
-              # Create a full link
-              "<a href=\"#{target.public_path}\">#{Rack::Utils.escape_html(name).gsub(/#([{@$]@?)/, '&#35;\1')}</a>"
-            end
+          # Create link to this target
+          case prefix
+          when 'attachments'
+            # A list of attachments
+            attachment_list self
+          when 'image'
+            # Create an inline image
+            target = attachment(path)
+            "<img class=\"attachment\" src=\"#{target.public_path}\" alt=\"#{name.gsub('"', '&quot;')}\" title=\"#{name.gsub('"', '&quot')}\" />"
+          when 'page_nav'
+            # Create a page table of contents
+            subpage_navigation self
+          when 'url'
+            # Create a URL
+            target = attachment(path)
+            target.public_path
           else
-            # Don't create a link
-            match
+            # Create a full link
+            target = attachment(path)
+            "<a href=\"#{target.public_path}\">#{Rack::Utils.escape_html(name).gsub(/#([{@$]@?)/, '&#35;\1')}</a>"
           end
         end
        
