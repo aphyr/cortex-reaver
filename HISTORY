@@ -1,3 +1,7 @@
+Version 0.2.1
+  - General
+    - Checks cache to ensure functionality on startup; falls back to 
+      MemoryCache.
 Version 0.2.0
   - General
     - Runs on Ramaze 2009.07

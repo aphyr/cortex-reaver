@@ -267,7 +267,7 @@ module CortexReaver
   # Load plugins
   def self.load_plugins
     # Create plugin cache
-    Ramaze::Cache.add(:plugin)
+    Ramaze::Cache.add :plugin
 
     # Load plugins
     config.plugins.enabled.each do |plugin|
@@ -368,6 +368,17 @@ module CortexReaver
       # Hmm, this breaks session management.
 #      Ramaze::Log.warn "Caching disabled."
 #      Ramaze::Cache.options.default = CortexReaver::Cache::Noop
+    end
+
+    # Test caching
+    Ramaze::Cache.add(:cortex_reaver)
+
+    begin
+      Ramaze::Cache.cortex_reaver.store :test, true
+    rescue => e
+      Ramaze::Log.warn "Cache is broken: #{e}"
+      Ramaze::Log.warn "Falling back to memory cache."
+      Ramaze::Cache.options.default = Ramaze::Cache::Memory
     end
   end
 
