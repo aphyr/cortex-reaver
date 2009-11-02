@@ -4,22 +4,31 @@ module Ramaze
       # Gives a list of lists showing page heirarchy navigation. Expands to show
       # the current page if given.
       def page_navigation(current=nil)
-        l = "<ol>\n"
+        l = "<ul>\n"
         CortexReaver::Page.top.all.each do |page|
           l << page_navigation_helper(page, current)
         end
-        l << '</ol>'
+        l << '</ul>'
+      end
+
+      # A list of pages belonging to the given page.
+      def subpage_navigation(page)
+        l = "<ul>\n"
+        page.pages.each do |page|
+          l << page_navigation_helper(page)
+        end
+        l << "</ul>"
       end
 
       def page_navigation_helper(page, current=nil)
         l = '<li' + (page == current ? ' class="selected"' : '') + '>'
         l << "<a href=\"#{page.url}\">#{h page.title}</a>"
-        if page.pages and current.within? page
-          l << "\n<ol>"
+        if page.pages and current and current.within? page
+          l << "\n<ul>"
           page.pages.each do |page| 
             l << page_navigation_helper(page, current)
           end
-          l << "</ol>\n"
+          l << "</ul>\n"
         end
         l << "</li>\n"
       end
