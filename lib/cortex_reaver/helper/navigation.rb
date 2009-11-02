@@ -204,6 +204,9 @@ module Ramaze
         else
           if x.respond_to? who
             user_link x.send(who)
+          elsif x.nil?
+            # Hmm.
+            ''
           else
             raise ArgumentError.new("don't know how to make a user link to #{x.inspect}")
           end
