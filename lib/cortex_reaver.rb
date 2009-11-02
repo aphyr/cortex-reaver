@@ -241,6 +241,20 @@ module CortexReaver
       Ramaze.options.mode = :live
     when :development
       Ramaze.options.mode = :dev
+      Ramaze.middleware! :dev do |m|
+        # Rack::Lint is broken on 1.9.1, it looks like.
+#       m.use Rack::Lint
+        m.use Rack::RouteExceptions
+        m.use Rack::ShowExceptions
+        m.use Rack::CommonLogger, Ramaze::Log
+        m.use Ramaze::Reloader
+        m.use Rack::ShowStatus
+        m.use Rack::Head
+        m.use Rack::ETag
+        m.use Rack::ConditionalGet
+        m.use Rack::ContentLength
+        m.run Ramaze::AppMap
+      end
     else
       raise ArgumentError.new("unknown Cortex Reaver mode #{config.mode.inspect}. Expected one of [:production, :development].")
     end
