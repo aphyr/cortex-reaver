@@ -1,3 +1,7 @@
+code {
+  display: inline;
+}
+
 code.block {
   display: block;
   margin: 1em 0;
