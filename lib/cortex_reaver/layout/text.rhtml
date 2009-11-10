@@ -52,12 +52,6 @@
     <script type="text/javascript">
     /* <![CDATA[ */ 
       $(document).ready(function() {
-        $('#main').corners('10px');
-
-        $('.pagination').each(function() {
-          $(this).find('li:not(.placeholder):first').corners("left");
-          $(this).find('li:not(.placeholder):last').corners("right");
-        });
         $('.pagination li').add('.actions > li').not('.elided').not('.current').not('.placeholder').each(function(i) {
           $(this).fadeTo(0,0.8);
           $(this).hover(

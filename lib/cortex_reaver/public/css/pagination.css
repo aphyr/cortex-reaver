@@ -5,12 +5,26 @@
 }
 
 .pagination.actions li {
+  margin: 1px;
   padding: 0;
   width: 38px;
-  margin: 1px;
   background: #444;
   display: inline-block;
   color: white;
+}
+
+.pagination.actions li:first-child {
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-bottomleft: 4px;
+}
+
+.pagination.actions li:last-child {
+  -webkit-border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 4px;
 }
 
 .pagination.actions li.elided {
@@ -24,7 +38,6 @@
   margin: 0;
   padding: 5px;
   width: 28px;
-  height: 20px;
   line-height: 18px;
   text-decoration: none !important;
   color: white !important;
@@ -36,7 +49,7 @@
 }
 
 .pagination.actions li > a.previous, .pagination.actions li > a.next {
-  line-height: 60px;
+  text-indent: -100px;
 }
 .pagination.actions li > a.previous {
   background: url('/images/prev_11.png') no-repeat scroll center center;

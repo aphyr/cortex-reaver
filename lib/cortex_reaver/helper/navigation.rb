@@ -124,7 +124,7 @@ module Ramaze
 
         if page > 0
           # Add "previous page" link.
-          links << "<li><a class=\"previous\" href=\"#{klass.url}/page/#{page - 1}\">&laquo; Previous</a></li>"
+          links << "<li><a class=\"previous\" href=\"#{klass.url}/page/#{page - 1}\">&laquo;</a></li>"
         else
           links << "<li class=\"placeholder\"><span class=\"previous\"></span></li>"
         end
@@ -152,7 +152,7 @@ module Ramaze
 
         if page < klass.window_count - 1
           # Add "next page" link.
-          links << "<li><a class=\"next\" href=\"#{klass.url}/page/#{page + 1}\">Next &raquo;</a></li>"
+          links << "<li><a class=\"next\" href=\"#{klass.url}/page/#{page + 1}\">&raquo;</a></li>"
         else
           links << "<li class=\"placeholder\"><span class=\"next\"></span></li>"
         end

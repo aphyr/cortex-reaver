@@ -36,6 +36,8 @@ body.photographs #main {
   background-color: #111;
   display: table-cell;
   vertical-align: middle;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
 }
 
 .photographs.grid .thumb > a > img {

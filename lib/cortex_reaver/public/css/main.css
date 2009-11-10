@@ -51,4 +51,6 @@ body.blank #main-container {
 #main {
   min-height: 260px;
   padding: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
 }
