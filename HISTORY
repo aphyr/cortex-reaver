@@ -1,3 +1,7 @@
+Version 0.2.2
+  - View
+    - Replaced jquery.corners with standard -moz-border-radius and -webkit-border-radius
+    - Fixed pagination links being offset vertically in webkit (chromium)
 Version 0.2.1
   - General
     - Checks cache to ensure functionality on startup; falls back to 
