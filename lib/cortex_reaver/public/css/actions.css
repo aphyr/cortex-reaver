@@ -23,9 +23,10 @@ ul.actions {
 .footer .actions {
   font-size: 80%;
 }
-.footer .actions li:before {
-  content: '|';
+
+.footer .actions li {
+  margin-right: 0.5em;
 }
-.footer .actions li:first-child:before {
-  content: none;
+.footer .actions li:last-child {
+  margin-right: 0;
 }

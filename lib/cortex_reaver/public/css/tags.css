@@ -4,19 +4,15 @@ ul.tags {
   padding: 0px;
   background: url(/images/tag.gif) no-repeat;
   background-position: 0px 3px;
-  padding-left: 12px;
+  padding-left: 14px;
 }
 
 .tags li {
   display: inline;
+  margin-right: 0.5em;
 }
-
-.tags li:before {
-  content: ',  '
-}
-
-.tags li:first-child:before {
-  content: none;
+.tags li:last-child {
+  margin-right: 0;
 }
 
 /* Global tags display */
