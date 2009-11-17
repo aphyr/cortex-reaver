@@ -43,6 +43,7 @@ module CortexReaver
 
     def index
       @models = @users = User.select(:name, :id, :login)
+      workflow "New User", rs(:new), :new, :user
       render_view :list
     end
 
