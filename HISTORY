@@ -1,16 +1,23 @@
+Version 0.2.3
+  - General
+    - Photograph sizes are now configurable.
+  - View
+    - Nicer styles for notices and errors.
+    - Cleaned up display of tags and actions on blog posts, photos, etc.
+    - Fixed obnoxious bug where titles on photo/show were covered by the adminbar.
 Version 0.2.2
   - General
-    - Added additional configuration options in /admin/configuration
+    - Added additional configuration options in /admin/configuration.
     - Restored new user workflow on users page.
   - View
-    - Replaced jquery.corners with standard -moz-border-radius and -webkit-border-radius
-    - Fixed pagination links being offset vertically in webkit (chromium)
+    - Replaced jquery.corners with standard -moz-border-radius and -webkit-border-radius.
+    - Fixed pagination links being offset vertically in webkit (chromium).
 Version 0.2.1
   - General
     - Checks cache to ensure functionality on startup; falls back to 
       MemoryCache.
   - View
-    - Added two new macros: [[attachments]] and [[page_nav]]
+    - Added two new macros: [[attachments]] and [[page_nav]].
 Version 0.2.0
   - General
     - Runs on Ramaze 2009.07

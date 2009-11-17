@@ -16,7 +16,9 @@
 
     <%= CortexReaver::MainController.render_view('adminbox') %>
 
-    <%= @content %>
+    <div class="container" style="position: relative">
+      <%= @content %>
+    </div>
 
     <%= CortexReaver::MainController.render_view('tracker') %>
 
