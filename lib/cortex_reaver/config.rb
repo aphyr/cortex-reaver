@@ -164,7 +164,6 @@ You can also just provide a regex for the path, in which case it is matched dire
           'jquery.js',
           'jquery.color.js',
           'jquery.dimensions.js',
-          'jquery.corners.min.js',
           'jquery.hotkeys-0.7.9.js',
           'cookie.js'
         ]

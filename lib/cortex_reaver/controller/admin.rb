@@ -23,22 +23,48 @@ module CortexReaver
       if request.post?
         begin
           # Update config
+          c = CortexReaver.config
+          errors = {}
+          
+          # Site
+          c.site.url = request['site.url']
+          c.site.name = request['site.name']
+          c.site.description = request['site.description']
+          c.site.keywords = request['site.keywords']
+          c.site.author = request['site.author']
+          
+          errors['site.url'] = "isn't a URL" unless c.site.url =~ /^http:\/\/.+/
+          errors['site.name'] = "is blank" if c.site.name.blank?
+          errors['site.author'] = "is blank" if c.site.author.blank?
+
           # View sections
-          CortexReaver.config.view.sections = []
           request['view.sections'].split("\n").each do |line|
             parts = line.strip.split(' ')
             if parts.size > 1
-              CortexReaver.config.view.sections << [parts[0..-2].join(' '), parts[-1]]
+              c.view.sections << [parts[0..-2].join(' '), parts[-1]]
             end
           end
 
-          # Save
-          CortexReaver.config.save
-          flash[:notice] = "Configuration saved."
+          if errors.empty?
+            # Save
+            CortexReaver.instance_variable_set '@config', c
+            CortexReaver.config.save
+            flash[:notice] = "Configuration saved."
+            redirect rs
+          else
+            flash[:error] = "Configuration errors."
+            @config = c
+            @errors = errors
+          end
         rescue => e
           Ramaze::Log.error e.inspect + e.backtrace.join("\n")
           flash[:error] = "Unable to update configuration: #{h e}"
+          @config = c
+          @errors = {}
         end
+      else
+        @config = CortexReaver.config
+        @errors = {}
       end
     end
 

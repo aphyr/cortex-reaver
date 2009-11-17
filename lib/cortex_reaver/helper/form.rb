@@ -5,9 +5,14 @@ module Ramaze
 
       # Displays errors on a record.
       def errors_on(model)
-        unless model.errors.empty?
+        errors_list(model.errors)
+      end
+
+      # Displays a list of errors.
+      def errors_list(errors)
+        unless errors.empty?
           s = "<div class=\"form-errors\">\n<h3>Errors</h3>\n<ul>\n"
-          model.errors.each do |attribute, error|
+          errors.each do |attribute, error|
             if error.kind_of? Array
               error = error.join(', ')
             end
@@ -63,6 +68,15 @@ module Ramaze
         if model and not default and model.respond_to? id
           default = model.send(id)
         end
+        errors = params[:errors]
+        if !errors and model.respond_to? :errors
+          errors = model.errors
+        else
+          errors = {}
+        end
+        error = errors[id]
+        
+        p_class = "#{p_class} error" if error
 
         unless type
           case default

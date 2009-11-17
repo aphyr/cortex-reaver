@@ -1,7 +1,17 @@
 <h2>Configuration</h2>
 
 <form class="edit-form" action="<%= CortexReaver::AdminController.r :configuration %>" method="post">
-  <% config = CortexReaver.config %>
-  <%= form_p 'view.sections', :type => :textarea, :description => config.view.schema[:sections][:desc], :default => CortexReaver.config.view.sections.map{ |p| p.join(' ') }.join("\n") %>
+  <%= errors_list @errors %>
+
+  <h3>Site</h3>
+  <%= form_p 'site.url', :type => :text, :description => "URL", :default => @config.site.url %>
+  <%= form_p 'site.name', :type => :text, :description => "Name", :default => @config.site.name %>
+  <%= form_p 'site.keywords', :type => :text, :description => 'Keywords', :default => @config.site.keywords %>
+  <%= form_p 'site.author', :type => :text, :description => 'Author', :default => @config.site.author %>
+  <%= form_p 'site.description', :type => :textarea, :description => 'Description', :default => @config.site.description, :p_class => 'small' %>
+
+  <h3>Navigation</h3>
+  <%= form_p 'view.sections', :type => :textarea, :description => @config.view.schema[:sections][:desc], :default => @config.view.sections.map{ |p| p.join(' ') }.join("\n") %>
+
   <input type="submit" value="Update Configuration" />
 </form>
