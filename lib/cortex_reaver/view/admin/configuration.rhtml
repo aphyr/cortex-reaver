@@ -11,7 +11,10 @@
   <%= form_p 'site.description', :type => :textarea, :description => 'Description', :default => @config.site.description, :p_class => 'small' %>
 
   <h3>Navigation</h3>
-  <%= form_p 'view.sections', :type => :textarea, :description => @config.view.schema[:sections][:desc], :default => @config.view.sections.map{ |p| p.join(' ') }.join("\n") %>
+  <%= form_p 'view.sections', :type => :textarea, :description => @config.view.schema[:sections][:desc], :default => @config.view.sections.map{ |p| p.join(' ') }.join("\n"), :p_class => 'medium' %>
+
+  <h3>Photographs</h3>
+  <%= form_p 'photographs.sizes', :type => :textarea, :description => @config.photographs.schema[:sizes][:desc], :default => @config.photographs.sizes.map { |p| p.join(' ') }.join("\n"), :p_class => 'medium' %>
 
   <input type="submit" value="Update Configuration" />
 </form>

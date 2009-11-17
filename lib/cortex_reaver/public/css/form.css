@@ -3,9 +3,14 @@ textarea {
   height: 36em;
 }
 
-p.small textarea {
+.small textarea {
   width: 99%;
   height: 3em;
+}
+
+.medium textarea {
+  width: 99%;
+  height: 10em;
 }
 
 form p {

@@ -46,6 +46,15 @@ module CortexReaver
             end
           end
 
+          # Photographs
+          c.photographs.sizes = Construct.new
+          request['photographs.sizes'].split("\n").each do |line|
+            parts = line.strip.split(' ', 2)
+            if parts.size > 1
+              c.photographs.sizes[parts.first] = parts.last
+            end
+          end
+
           if errors.empty?
             # Save
             CortexReaver.instance_variable_set '@config', c

@@ -8,15 +8,6 @@ module CortexReaver
     plugin :sequenceable
     plugin :viewable
 
-    # Target image sizes
-    SIZES = {
-      :thumbnail => '166x',
-      :grid => '150x150',
-      :small => 'x512',
-      :medium => 'x768',
-      :large => 'x1024',
-    }
-
     many_to_many :tags, :class => 'CortexReaver::Tag'
     many_to_one :creator, :class => 'CortexReaver::User', :key => 'created_by'
     many_to_one :updater, :class => 'CortexReaver::User', :key => 'updated_by'
@@ -110,10 +101,11 @@ module CortexReaver
 
     # Regenerates various photo sizes.
     def regenerate_sizes
+      sizes = CortexReaver.config.photographs.sizes
       Ramaze::Log.info "Regenerating photo sizes for #{self}"
 
       # Find existing attachments, in order of decreasing (roughly) size
-      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (SIZES.keys.map(&:to_s) + ['original'])
+      known_files = attachments.map{|a| a.name.sub(/\.jpg$/,'')} & (sizes.keys.map(&:to_s) + ['original'])
       largest = attachment(
         known_files.sort_by { |f| 
           File.stat(attachment("#{f}.jpg").path).size
@@ -138,12 +130,11 @@ module CortexReaver
       end
 
       # Write appropriate sizes to disk
-      SIZES.each do |size, geometry|
+      sizes.each do |size, geometry|
         image.change_geometry(geometry) do |width, height|
           attachment = attachment(size.to_s + '.jpg')
           image.scale(width, height).write(attachment.local_path)
         end
-
       end
         
       # Yep, GC time. Gotta clear out those imagemagick stubs.

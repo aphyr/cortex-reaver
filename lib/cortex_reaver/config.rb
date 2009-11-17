@@ -167,6 +167,19 @@ You can also just provide a regex for the path, in which case it is matched dire
           'jquery.hotkeys-0.7.9.js',
           'cookie.js'
         ]
+
+      define :photographs,
+        :desc => "Photograph configuration options.",
+        :default => Construct.new
+      photographs.define :sizes,
+        :desc => "What sizes of each photograph to maintain.",
+        :default => {
+          :thumbnail => '166x',
+          :grid => '150x150',
+          :small => 'x512',
+          :medium => 'x768',
+          :large => 'x1024'
+        }
     end
 
     def compile_views
