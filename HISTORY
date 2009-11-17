@@ -5,6 +5,7 @@ Version 0.2.3
     - Nicer styles for notices and errors.
     - Cleaned up display of tags and actions on blog posts, photos, etc.
     - Fixed obnoxious bug where titles on photo/show were covered by the adminbar.
+    - A few rounded corners/dropshadows here and there.
 Version 0.2.2
   - General
     - Added additional configuration options in /admin/configuration.
