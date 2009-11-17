@@ -6,6 +6,8 @@
   font-size: 80%;
   text-align: center;
   display: none;
+  -webkit-box-shadow: 0 0px 10px #000;
+  -moz-box-shadow: 0 0px 10px #000;
 }
 
 .admin.bar p {
