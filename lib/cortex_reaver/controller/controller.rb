@@ -4,7 +4,7 @@ module CortexReaver
     # trait :app => :cortex_reaver
     engine :Erubis
     layout :text
-    helper :form, :auth, :navigation, :workflow, :error, :sidebar, :aspect
+    helper :form, :auth, :navigation, :workflow, :error, :sidebar, :aspect, :common
   end
 end
 

@@ -1,17 +1,49 @@
 .flash {
-  width: 700px;
-  padding: 0.5em;
-  margin: 10px;
+  padding: 0;
+  font-size: 14px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-#flash_notice {
-  border: 1px solid #00b;
-  color: #00b;
+.flash .icon {
+  float: left;
+  background-image: url('/images/admin/icons.png');
+  background-repeat: no-repeat;
+  height: 32px;
+  width: 32px;
+  margin: 6px;
+}
+
+.flash .body {
+  margin: 6px;
+  float: left;
+}
+
+.flash.notice {
+  color: #003;
   background: #e6e6ff;
+  -webkit-box-shadow: 0 1px 2px #88a;
+}
+body.photographs .flash.notice {
+  background: #3C3C54;
+  -webkit-box-shadow: none;
+  color: #fff;
+}
+.flash.notice .icon {
+  background-position: -224px -32px;
 }
 
-#flash_error {
-  border: 1px solid #b00;
-  color: #b00;
+.flash.error {
+  color: #300;
   background: #ffe6e6;
+  -webkit-box-shadow: 0 1px 2px #a88;
+}
+body.photographs .flash.error {
+  background: #541C1C;
+  color: #fff;
+  -webkit-box-shadow: none;
+}
+.flash.error .icon {
+  background-position: -256px -32px;
 }
