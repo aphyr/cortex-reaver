@@ -1,4 +1,7 @@
 Version 0.2.2
+  - General
+    - Added additional configuration options in /admin/configuration
+    - Restored new user workflow on users page.
   - View
     - Replaced jquery.corners with standard -moz-border-radius and -webkit-border-radius
     - Fixed pagination links being offset vertically in webkit (chromium)
