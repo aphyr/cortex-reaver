@@ -9,6 +9,7 @@
   <%= live_tags_field @page %>
   <%= form_p :body, :model => @page, :type => 'textarea' %>
   <%= attachment_form @page %>
+  <%= form_p :comments_enabled, :model => @page, :type => 'checkbox', :description => 'Allow comments' %>
   <%= form_p :draft, :model => @page, :type => 'checkbox', :description => 'This is a draft' %>
   <input type="submit" name="submit" />
 </form>

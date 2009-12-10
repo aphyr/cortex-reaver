@@ -45,11 +45,20 @@ module CortexReaver
         # Render that page.
         @title = @page.title
        
+        # Workflows
         if user.can_edit? Page.new
           workflow "Edit this page", PageController.r(:edit, @page.id), :edit, :page
         end
         if user.can_delete? Page.new
           workflow "Delete this page", PageController.r(:delete, @page.id), :delete, :page
+        end
+
+        # Set up comments
+        if comment = session[:pending_comment] and comment.parent == @page
+          @new_comment = session.delete :pending_comment
+        else
+          # Create a comment to be posted
+          @new_comment = CortexReaver::Comment.new :page => @page
         end
 
         PageController.render_view('show')

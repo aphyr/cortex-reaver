@@ -3,4 +3,15 @@
     <%= @page.body_cache %>
     <div class="clear"></div>
   </div>
+
+  <% if @page.comments_enabled %>
+    <div class="comments">
+    <a id="comments">
+    <% @page.comments_dataset.order(:created_on).all.each do |comment| %>
+      <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
+    <% end %>
+    </div>
+    
+    <%= CortexReaver::CommentController.render_view :post_form, 'comment' => @new_comment %>
+  <% end %>
 </div>

@@ -107,14 +107,14 @@ module CortexReaver
         unless self[field].blank?
           count += 1
           if count > 1
-            self.errors[attribute] << 'has too many kinds of parents'
+            self.errors[:comment] << 'has too many kinds of parents'
             break
           end
         end
       end
 
       if count == 0
-        self.errors[attribute] << "doesn't have a parent"
+        self.errors[:comment] << "doesn't have a parent"
       end
     end
   end
