@@ -15,19 +15,6 @@ module CortexReaver
     many_to_one :comment, :class => 'CortexReaver::Comment'
     one_to_many :comments, :class => 'CortexReaver::Comment'
 
-    # Infer blank titles
-    def before_save
-      return false unless super
-
-      if title.blank?
-        title = 'Re: ' + parent.title.to_s
-        title.gsub!(/^(Re: )+/, 'Re: ')
-        self.title = title
-      end
-
-      true
-    end
-
     # Update parent comment counts
     def before_destroy
       return false unless super
@@ -68,19 +55,8 @@ module CortexReaver
       '/comments'
     end
 
-    def self.infer_blank_titles
-      self.all.each do |comment|
-        if comment.title.blank?
-          comment.title = 'Re: ' + comment.parent.title.to_s
-          comment.title.gsub!(/^(Re: )+/, 'Re: ')
-          comment.skip_timestamp_update = true
-          comment.save
-        end
-      end
-    end
-
     def to_s
-      title || 'comment ' + id.to_s
+      'comment ' + id.to_s
     end
 
     def url
@@ -89,7 +65,6 @@ module CortexReaver
 
     def validate
       validates_presence :body
-      validates_max_length 255, :title, :allow_blank => true
       validates_max_length 255, :name, :allow_blank => true 
       validates_max_length 255, :http, :allow_blank => true
       validates_max_length 255, :email, :allow_blank => true

@@ -24,7 +24,6 @@ module CortexReaver
     end
 
     on_save do |comment, request|
-      comment.title = request[:title]
       comment.body = request[:body]
       comment.comment_id = request[:comment_id]
       comment.journal_id = request[:journal_id]
@@ -80,7 +79,6 @@ module CortexReaver
         CortexReaver.db.transaction do
           @comment = Comment.new
 
-          @comment.title = request[:title]
           @comment.body = request[:body]
           @comment.comment_id = request[:comment_id]
           @comment.journal_id = request[:journal_id]
@@ -113,7 +111,7 @@ module CortexReaver
           # Clear action cache
           Ramaze::Cache.action.clear
 
-          flash[:notice] = "Your comment (<a href=\"##{@comment.url.gsub(/.*#/, '')}\">#{h @comment.title}</a>) has been posted."
+          flash[:notice] = "<a href=\"##{@comment.url.gsub(/.*#/, '')}\">Your comment</a> has been posted."
           redirect @comment.parent.url
         end
       rescue => e

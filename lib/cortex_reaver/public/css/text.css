@@ -20,6 +20,7 @@ h1 a, h2 a, h3 a {
 .text-entry .byline {
   color: #666;
   position: relative;
+  height: 4px;
 }
 
 .text-entry .footer {

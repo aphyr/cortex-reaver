@@ -1,31 +1,27 @@
 <div class="comment text-entry">
-  <h2><a id="comment_<%= @comment.id %>" href="<%= @comment.url %>"><%=h @comment.title %></a></h2>
-  <div class="byline">
-    <%= author_info @comment %>
-  </div>
+  <a id="comment_<%= @comment.id %>"></a>
   <div class="body">
     <%= @comment.body_cache %>
   </div>
-  <div class="footer">
-    <ul class="actions">
-      <li><a href="<%=@comment.url %>_comments">
-        <img src="/images/comment.gif" class="icon" alt="comment" />
-        <%= @comment.comment_count %> <%= @comment.comment_count == 1 ? 'comment' : 'comments' %>
-      </a></li>
-      <% if user.can_edit? @comment %>
-        <li><a href="/comments/edit/<%= @comment.id %>">
-          <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
-        </a></li>
-      <% end %>
-      <% if user.can_delete? @comment %>
-        <li>
-          <a href="<%= CortexReaver::CommentController.r(:delete, @comment.id) %>" onclick="return confirm('Are you sure you want to delete this comment?');">
-            <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
-          </a>
-        </li>
-      <% end %>
-    </ul>
+  
+  <% if user.can_edit? @comment %>
+    <li><a href="/comments/edit/<%= @comment.id %>">
+      <img src="/images/edit.gif" class="icon" alt="edit" /> Edit
+    </a></li>
+  <% end %>
+  <% if user.can_delete? @comment %>
+    <li>
+      <a href="<%= CortexReaver::CommentController.r(:delete, @comment.id) %>" onclick="return confirm('Are you sure you want to delete this comment?');">
+        <img src="/images/delete.gif" class="icon" alt="delete" /> Delete
+      </a>
+    </li>
+  <% end %>
+  
+  <div class="byline">
+    <%= author_info @comment %>
+    <span class="link"><a href="<%= @comment.url %>">Link</a>
   </div>
+  
   <% unless @hide_comments %>
     <a id="comment_<%= @comment.id %>_comments" ></a>
     <div class="comments">

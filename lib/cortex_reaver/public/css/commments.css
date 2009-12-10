@@ -1,7 +1,25 @@
-.journal > .comments {
+.journal > .comments, .page > .comments {
   margin-top: 2em;
 }
 
 .comment {
+  background: #eaeaea;
   margin-bottom: 10px;
+  padding: 6px;
+/*  -webkit-box-shadow: 0 0px 4px #aaa;
+  -moz-box-shadow: 0 0px 2px #ccc; */
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+.comment p:first-child {
+  margin-top: 0;
+}
+
+.comment .byline {
+  margin-bottom: 1em;
+}
+
+.comment .link {
+  float: right;
 }

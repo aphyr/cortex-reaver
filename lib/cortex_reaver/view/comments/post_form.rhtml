@@ -5,7 +5,6 @@
   <%= errors_on @new_comment %>
 
   <form class="comment-form" action="<%= CortexReaver::CommentController.r :post %>" method="post">
-    <%= form_p :title, :model => @new_comment %>
     <p class="dont-read-me">
       Please avoid writing anything here unless you are a computer:
       <label for="captcha">Captcha</label>

@@ -1,4 +1,5 @@
 <div class="comments">
+  <h2>Recent Comments</h2>
   <% @comments.all.each do |comment| %>
     <%= CortexReaver::CommentController.render_view 'comment', 'comment' => comment, 'hide_comments' => true %>
   <% end %>
