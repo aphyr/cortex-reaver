@@ -11,10 +11,9 @@ h1 a, h2 a, h3 a {
   color: #555;
 }
 
-/* Text entries */
-.text-entry h2 {
+.text-entry > *:first-child {
+  margin-top: 0;
   margin-bottom: 0;
-  padding-bottom: 0;
 }
 
 .text-entry .byline {

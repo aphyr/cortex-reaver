@@ -31,7 +31,7 @@
 
   <% unless @hide_comments %>
     <div class="comments">
-      <a id="comments" />
+      <a id="comments" /><h2>Comments</h2>
       <% @journal.comments_dataset.order(:created_on).all.each do |comment| %>
         <%= CortexReaver::CommentController.render_view :comment, 'comment' => comment %>
       <% end %>
