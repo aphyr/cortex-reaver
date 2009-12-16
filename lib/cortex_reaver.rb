@@ -41,9 +41,9 @@ module CortexReaver
     files = Dir.entries(stock_dir) | Dir.entries(custom_dir)
 
     # Reorder files if necessary.
-    if order = opts[:order]
-      files = (order & files) + (files - order)
-    end
+    first = (opts[:first] || []) & files
+    last = (opts[:last] || []) & files
+    files = first + (files - first - last) + last
 
     # Read files
     files.each do |file|
@@ -69,7 +69,13 @@ module CortexReaver
 
     # Get CSS files
     FileUtils.mkdir_p(custom_dir)
-    css = collect_files(stock_dir, custom_dir, /^((?!style).)*\.css$/, :order => config.css)
+    css = collect_files(
+      stock_dir, 
+      custom_dir, 
+      /^((?!style).)*\.css$/, 
+      :first => config.css.first,
+      :last => config.css.last
+    )
 
     # Write minified CSS
     File.open(File.join(custom_dir, 'style.css'), 'w') do |file|
@@ -85,7 +91,13 @@ module CortexReaver
 
     # Get JS files
     FileUtils.mkdir_p(custom_dir)
-    js = collect_files(stock_dir, custom_dir, /^((?!site).)*\.js$/, :order => config.js)
+    js = collect_files(
+      stock_dir, 
+      custom_dir, 
+      /^((?!site).)*\.js$/, 
+      :first => config.js.first,
+      :last => config.js.last
+    )
 
     # Write minified JS
     File.open(File.join(custom_dir, 'site.js'), 'w') do |file|

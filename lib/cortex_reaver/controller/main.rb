@@ -3,7 +3,7 @@ require 'libxml'
 module CortexReaver
   class MainController < Controller
     map '/'
-    
+   
     layout(:text) do |name, wish|
       if request.xhr? or name == 'atom' or name == 'sitemap'
         false
@@ -14,7 +14,6 @@ module CortexReaver
 
     # We provide an XML sitemap.
     provide(:xml, :type => 'text/xml') do |action, value|
-      Ramaze::Log.info action
       if action.method == 'sitemap'
         value
       else
@@ -29,14 +28,10 @@ module CortexReaver
       :pages
 
     cache_action(:method => :index, :ttl => 120) do
-      user.id.to_i.to_s + flash.inspect
+      user.id.to_i.to_s + flash.inspect + request.path_info
     end
     cache_action(:method => :sitemap, :ttl => 300) do
       request.path_info
-    end
-
-    def cache
-      respond Ramaze::Cache.action.stats
     end
 
     # the index action is called automatically when no other action is specified

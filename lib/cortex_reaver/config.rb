@@ -155,10 +155,16 @@ You can also just provide a regex for the path, in which case it is matched dire
           ['/', 'photographs']
         ]
 
-      define :css,
+      define :css, :default => Construct.new
+      css.define :first,
         :desc => "An array of CSS files to load first, in order.",
         :default => []
-      define :js,
+      css.define :last,
+        :desc => "An array of CSS files to load last, in order.",
+        :default => ['custom.css']
+      
+      define :js, :default => Construct.new
+      js.define :first,
         :desc => "An array of Javascript files to load first, in order.",
         :default => [
           'jquery.js',
@@ -167,6 +173,10 @@ You can also just provide a regex for the path, in which case it is matched dire
           'jquery.hotkeys-0.7.9.js',
           'cookie.js'
         ]
+      js.define :last,
+        :desc => "An Array of Javascript files to load last, in order.",
+        :default => []
+
 
       define :photographs,
         :desc => "Photograph configuration options.",

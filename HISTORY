@@ -1,3 +1,9 @@
+Version 0.2.5
+  - General
+    - Interactive console loads inside the CortexReaver module, which should save qualifying everything fully.
+  - View
+    - CSS and JS compilers take :first AND :last options.
+    - This means custom.css overrides other styles properly.
 Version 0.2.4
   - General
     - You can enable comments on pages on an individual basis.
