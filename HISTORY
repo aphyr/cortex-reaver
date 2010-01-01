@@ -1,3 +1,8 @@
+Version 0.2.6
+  - General
+    - Fixed config options js.first, css.first, ... not being loaded correctly.
+  - View
+    - Adjusted adminbar dropshadow.
 Version 0.2.5
   - General
     - Interactive console loads inside the CortexReaver module, which should save qualifying everything fully.
