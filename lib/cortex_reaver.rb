@@ -73,8 +73,8 @@ module CortexReaver
       stock_dir, 
       custom_dir, 
       /^((?!style).)*\.css$/, 
-      :first => config.css.first,
-      :last => config.css.last
+      :first => config.css[:first],
+      :last => config.css[:last]
     )
 
     # Write minified CSS
@@ -95,8 +95,8 @@ module CortexReaver
       stock_dir, 
       custom_dir, 
       /^((?!site).)*\.js$/, 
-      :first => config.js.first,
-      :last => config.js.last
+      :first => config.js[:first],
+      :last => config.js[:last]
     )
 
     # Write minified JS
