@@ -1,3 +1,6 @@
+Version 0.2.7
+  - General
+    - Fixed a configuration page crash on ruby 1.9.1.
 Version 0.2.6
   - General
     - Fixed config options js.first, css.first, ... not being loaded correctly.
