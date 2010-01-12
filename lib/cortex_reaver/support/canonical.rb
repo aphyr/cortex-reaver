@@ -45,7 +45,7 @@ module Sequel
           # Extract numeric suffices
           suffices = {}
           similar.each do |name|
-            suffices[name[/\d$/].to_i] = true
+            suffices[name[/\d+$/].to_i] = true
           end
 
           # Compute suffix
