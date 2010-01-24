@@ -29,8 +29,8 @@ module Ramaze
 // Updates the "name" field as the watched field changes.
 $('##{watch}').change(function () {
     $.get('#{rs('canonicalize')}', {
-      new: $('##{watch}').val(),
-      id: '#{model.id}'
+      "new": $('##{watch}').val(),
+      "id": '#{model.id}'
     }, function(response) {
       $('##{name}').val(response);
     })
@@ -39,8 +39,8 @@ $('##{watch}').change(function () {
 // Canonicalizes the name when we're done, just to make sure.
 $('##{name}').blur(function() {
   $.get('#{rs('canonicalize')}', {
-    new: $('##{name}').val(),
-    id: '#{model.id}'
+    "new": $('##{name}').val(),
+    "id": '#{model.id}'
   }, function(response) {
     $('##{name}').val(response);
   })
