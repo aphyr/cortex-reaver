@@ -1,5 +1,6 @@
 Version 0.2.8
   - General
+    - Fixed a bug where canonical names weren't generated when titles were entered/changed in Chrome.
     - Fixed a configuration bug where sections weren't saved.
     - Fixed a bug in canonical name generation--multi-digit suffices work now.
   - View
