@@ -38,7 +38,7 @@ module CortexReaver
           errors['site.author'] = "is blank" if c.site.author.blank?
 
           # View sections
-          c.view.sections.clear
+          c.view.sections = []
           request['view.sections'].split("\n").each do |line|
             parts = line.strip.split(' ')
             if parts.size > 1
