@@ -28,7 +28,7 @@ module CortexReaver
       :pages
 
     cache_action(:method => :index, :ttl => 120) do
-      user.id.to_i.to_s + flash.inspect + request.path_info
+      user.id.to_i.to_s + flash.inspect
     end
     cache_action(:method => :sitemap, :ttl => 300) do
       request.path_info
