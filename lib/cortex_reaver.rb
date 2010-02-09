@@ -33,6 +33,11 @@ module CortexReaver
   require File.join(LIB_DIR, 'version')
   require File.join(LIB_DIR, 'config')
 
+  # Reload on sighup
+  trap 'HUP' do
+    reload
+  end
+
   # Reads files from stock_dir and custom_dir matching pattern, and appends
   # their contents. Returns a string.
   def self.collect_files(stock_dir, custom_dir, pattern = /^[^\.].+/, opts = {})
@@ -304,6 +309,15 @@ module CortexReaver
         require File.join(LIB_DIR, 'plugins', plugin)
       end
     end
+  end
+
+  # Reloads the app without restarting.
+  def self.reload
+    self.reload_config
+    self.load
+    self.init
+    self.compile_css
+    self.compile_js
   end
 
   # Reloads the site configuration
