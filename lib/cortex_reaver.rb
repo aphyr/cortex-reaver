@@ -35,7 +35,7 @@ module CortexReaver
 
   # Reload on sighup
   trap 'HUP' do
-    reload
+    reload_app
   end
 
   # Reads files from stock_dir and custom_dir matching pattern, and appends
@@ -311,8 +311,41 @@ module CortexReaver
     end
   end
 
-  # Reloads the app without restarting.
+  # Tells the running CortexReaver to reload.
   def self.reload
+    reload_config
+
+    unless config.pidfile
+      abort "No pidfile to reload."
+    end
+
+    unless File.file? config.pidfile
+      abort "Cortex Reaver not running? (check #{config.pidfile})"
+    end
+
+    # Get PID
+    pid = File.read(config.pidfile, 20).strip
+    unless (pid = pid.to_i) != 0
+      abort "Invalid process ID in pidfile (#{pid})."
+    end
+
+    puts "Reloading Cortex Reaver #{pid}..."
+    
+    begin
+      # Try to shut down Ramaze nicely.
+      Process.kill('HUP', pid)
+      puts "Done."
+    rescue Errno::ESRCH
+      # The process doesn't exist.
+      puts "No Cortex Reaver with pid #{pid}."
+    rescue => e
+      # That failed, too.
+      puts "Unable to reload Cortex Reaver: #{e}."
+    end
+  end
+
+  # Reloads the app without restarting.
+  def self.reload_app
     self.reload_config
     self.load
     self.init
@@ -497,6 +530,11 @@ module CortexReaver
         run
       end
     else
+      # Write pidfile
+      File.open(config.pidfile, 'w') do |file|
+        file << Process.pid
+      end
+      
       # Run in foreground.
       run
     end

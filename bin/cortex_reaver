@@ -1,14 +1,27 @@
 #!/usr/bin/ruby
 
 require 'rubygems'
-require 'optparse'
+require 'trollop'
 require 'ramaze'
 require __DIR__ + '/../lib/cortex_reaver'
+require 'irb'
 
-module CortexReaver
+# IRB monkeypatch to let us load a custom context object
+class IRB::Irb
+  alias initialize_orig initialize
+  def initialize(workspace = nil, *args)
+    default = IRB.conf[:DEFAULT_OBJECT]
+    workspace ||= IRB::WorkSpace.new default if default
+    initialize_orig(workspace, *args)
+  end
+end
+
+class CortexReaver::Runner
+  COMMANDS = ['blank', 'start', 'status', 'reload', 'restart', 'stop', 'console', 'dump', 'load']
+
   # Asks a question and returns a true_false answer
-  def self.confirm(question)
-    return true if @values[:force]
+  def confirm(question)
+    return true if @global_opts[:force]
 
     puts question + " (yes/no)"
     print '> '
@@ -21,86 +34,95 @@ module CortexReaver
     end
   end
 
-  # Parse options
-  @values = {}
-  parser = OptionParser.new do |o|
-    o.on '-b', '--blank',
-      'Wipes the database and sets up a clean copy of the latest version.' do
-      @action = :blank
+  def initialize
+    # Parse options
+    @global_opts = Trollop::options do
+      banner "#{CortexReaver::APP_NAME} #{CortexReaver::APP_VERSION}"
+      version CortexReaver::APP_VERSION
+      banner <<EOF
+Syntax: cortex_reaver [opts] command [command_opts]
+
+blank               Wipes the database and sets up a clean copy of the
+                    latest version
+console             Starts an IRB session
+dump <to_file>      Dump database to file
+load <from_file>    Load a database dump
+migrate [version]   Migrate the database to the given schema version, or to 
+                    the latest schema
+reload              Reload CSS, JS, configuration, etc.
+restart             Restart Cortex Reaver
+start               Start Cortex Reaver
+status              Check the status of the local CortexReaver via HTTP.
+stop                Stop Cortex Reaver
+
+Options:
+
+EOF
+
+      opt :force, "Just do it", :default => false
+      opt :config, "Configuration file"
+      stop_on COMMANDS
     end
 
-    o.on '-c', '--config file', 'Configuration file' do |file|
-      self.config_file = file
+    if file = @global_opts[:config]
+      CortexReaver.config_file = file
     end
 
-    o.on '-d', '--dump file', 'Dump database' do |file|
-      @action = :dump
-      @values[:dump_file] = file
-    end
-
-    o.on '-f', '--force', 'Just do it' do
-      @values[:force] = true
-    end
-
-    o.on '-h', '--help', 'Show help' do
-      @action = :help
-    end
-
-    o.on '-i', '--irb', 'Start an IRB session' do
-      @action = :irb
-    end
-
-    o.on '-k', '--stop', 'Stop Cortex Reaver' do
-      @action = :stop
-    end
-
-    o.on '-l', '--load file', 'Load database' do |file|
-      @action = :load
-      @values[:load_file] = file
-    end
-
-    o.on '-m', '--migrate [version]',
-      'Migrate the database to schema version, or to the latest version' do |version|
-      @action = :migrate
-      @values[:schema_version] = version ? version.to_i : nil
-    end
-
-    o.on '-r', '--restart', 'Restart Cortex Reaver' do
-      @action = :restart
-    end
-
-    o.on '-s', '--start',
-      'Start the Cortex Reaver server' do
-      @action = :start
-    end
-
-    o.on '-t', '--test',
-      'Run tests' do
-      @action = :test
-    end
-
-    o.on '--status', 'Check Cortex Reaver status' do
-      @action = :status
+    @command = ARGV.shift
+    @opts = case @command
+      when "blank"
+        blank
+      when 'console'
+        console 
+      when "dump"
+        if file = ARGV.shift
+          dump file
+        else
+          abort "No dump file given"
+        end
+      when "load"
+        if file = ARGV.shift
+          self.load file
+        else
+          abort "No load file given"
+        end
+      when "migrate"
+        if version = ARGV.shift
+          migrate version.to_i
+        else
+          migrate
+        end
+      when 'restart'
+        restart
+      when 'reload'
+        reload
+      when 'start'
+        start
+        @opts = Trollop::options do
+          opt :daemon, :type => :boolean, :default => nil
+        end
+      when 'status'
+        status
+      when 'stop'
+        stop
+      when 'test'
+      else
+        Trollop::die "unknown subcommand #{@command.inspect}"
     end
   end
 
-  parser.parse! ARGV
-
-  # Main
-  case @action
-  when :dump
-    # Dump the database to disk
+  # Dump the database to disk
+  def dump(file)
+    require 'sequel/extensions/migration'
     
     # Connect to current DB
-    reload_config
-    setup_db false
-    require 'sequel/extensions/migration'
-    current_version = Sequel::Migrator.get_current_migration_version(db)
+    CortexReaver.reload_config
+    CortexReaver.setup_db false
+    current_version = Sequel::Migrator.get_current_migration_version(CortexReaver.db)
 
-    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
+    puts "Using database #{CortexReaver.config[:database][:host]}/#{CortexReaver.config[:database][:database]}."
 
     # Prepare dump file
-    file = @values[:dump_file]
     if File.file? file
       exit unless confirm("Overwrite #{File.expand_path(file)} with current Cortex Reaver database?")
       FileUtils.rm file
@@ -108,10 +130,10 @@ module CortexReaver
 
     # Connect to dump DB
     dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
-    Sequel::Migrator.apply dump, File.join(LIB_DIR, 'migrations'), current_version
+    Sequel::Migrator.apply dump, File.join(CortexReaver::LIB_DIR, 'migrations'), current_version
 
     # Copy tables
-    db.tables.each do |table|
+    CortexReaver.db.tables.each do |table|
       puts "Table #{table} (#{db[table].count} rows)..."
       dump_table = dump[table]
       db[table].each do |row|
@@ -120,61 +142,62 @@ module CortexReaver
     end   
         
     puts "Dumped database to #{file}."
+  end
 
-  when :load
-    # Load an SQLite database from disk.
-
-    # Connect to dump DB
-    file = @values[:load_file]
-    dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
+  # Load an SQLite database from disk.
+  def load(file)
     require 'sequel/extensions/migration'
+    
+    # Connect to dump DB
+    dump = Sequel.connect "sqlite:////#{File.expand_path(file)}"
     current_version = Sequel::Migrator.get_current_migration_version(dump)
 
     # Connect to current DB
-    reload_config
-    setup_db false
-    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
+    CortexReaver.reload_config
+    CortexReaver.setup_db false
+    puts "Using database #{CortexReaver.config[:database][:host]}/#{CortexReaver.config[:database][:database]}."
 
     unless confirm("Overwrite current database with #{File.expand_path(file)}?")
       exit
     end
      
     # Drop current migrations and move to the dump's version
-    system($0, '-f', '-m', '0')
-    Sequel::Migrator.apply db, File.join(LIB_DIR, 'migrations'), current_version
+    system($0, '-f', 'migrate', '0')
+    Sequel::Migrator.apply CortexReaver.db, File.join(CortexReaver::LIB_DIR, 'migrations'), current_version
 
     # Copy tables
     dump.tables.each do |table|
       puts "Table #{table} (#{dump[table].count} rows)..."
-      db_table = db[table]
+      db_table = CortexReaver.db[table]
       dump[table].each do |row|
         db_table << row
       end
     end   
         
     puts "Database #{file} loaded."
+  end
 
-  when :status
-    # Make a quick HTTP request to see how we're doing.
+  # Make a quick HTTP request to see how we're doing.
+  def status
     require 'open-uri'
-    reload_config
-    response = open("http://#{config[:host] || 'localhost'}:#{config[:port]}/")
+    CortexReaver.reload_config
+    response = open("http://#{CortexReaver.config[:host] || 'localhost'}:#{CortexReaver.config[:port]}/")
     puts response.status.join(' ');
+  end
 
-  when :migrate
-    version = @values[:schema_version]
-
-    # Get ready
-    reload_config
-    setup_db false
-    self.load
-    init
-
-    puts "Using database #{config[:database][:host]}/#{config[:database][:database]}."
-
+  def migrate(version = nil)
     require 'sequel/extensions/migration'
-    current_version = Sequel::Migrator.get_current_migration_version(db)
-    latest_version = Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
+    
+    # Get ready
+    CortexReaver.reload_config
+    CortexReaver.setup_db false
+    CortexReaver.load
+    CortexReaver.init
+
+    puts "Using database #{CortexReaver.config[:database][:host]}/#{CortexReaver.config[:database][:database]}."
+
+    current_version = Sequel::Migrator.get_current_migration_version(CortexReaver.db)
+    latest_version = Sequel::Migrator.latest_migration_version(File.join(CortexReaver::LIB_DIR, 'migrations'))
 
     if version == current_version and current_version == latest_version
       puts "The database is already at the latest version (#{latest_version})."
@@ -194,61 +217,56 @@ module CortexReaver
 
     if confirm message
       puts "Migrating database from version #{current_version} to version #{version}..."
-      Sequel::Migrator.apply(db, File.join(LIB_DIR, 'migrations'), version)
+      Sequel::Migrator.apply(CortexReaver.db, File.join(CortexReaver::LIB_DIR, 'migrations'), version)
       puts "Done."
     else
       exit
     end
+  end
 
-  when :blank
+  def blank
     if confirm "Are you sure you wish to wipe the database?"
       # Strangely, calling Migrator.apply to go down and then up doesn't seem
       # to work. :-/
-      system($0, '-f', '-m', '0')
-      system($0, '-f', '-m')
+      system($0, '-f', 'migrate', '0')
+      system($0, '-f', 'migrate')
     end
+  end
 
-  when :help
-    puts "Cortex Reaver #{APP_VERSION}: A dangerous Ruby blog engine, with a photographic memory."
-    puts parser.help
-
-  when :irb
+  def console
+    require 'irb'
+    require 'irb/completion'
+    
     # Start an IRB session
-    reload_config
-    setup
+    CortexReaver.reload_config
+    CortexReaver.setup
 
     # Don't let IRB try to interpret our command line
     ARGV.clear
 
-    require 'irb'
-    require 'irb/completion'
-
-    # IRB monkeypatch to let us load a custom context object
-    class IRB::Irb
-      alias initialize_orig initialize
-      def initialize(workspace = nil, *args)
-        default = IRB.conf[:DEFAULT_OBJECT]
-        workspace ||= IRB::WorkSpace.new default if default
-        initialize_orig(workspace, *args)
-      end
-    end
-
     IRB.conf[:DEFAULT_OBJECT] = CortexReaver
     IRB.start
+  end
 
-  when :restart
-    restart
+  def reload
+    CortexReaver.reload
+  end
 
-  when :start
-    start
+  def restart
+    CortexReaver.restart
+  end
 
-  when :stop
-    stop
+  def start
+    CortexReaver.start
+  end
 
-  when :test
-    require File.join(LIB_DIR, '..', '..', 'spec', 'spec')
+  def stop
+    CortexReaver.stop
+  end
 
-  else
-    abort("Unknown action: #{@action}")
+  def test
+    require File.join(CortexReaver::LIB_DIR, '..', '..', 'spec', 'spec')
   end
 end
+
+CortexReaver::Runner.new
