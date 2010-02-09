@@ -42,6 +42,7 @@ cortex_reaver_gemspec = Gem::Specification.new do |s|
   s.add_dependency('cssmin', '~>1.0.2')
   s.add_dependency('jsmin', '~>1.0.1')
   s.add_dependency('json', '~>1.1.9')
+  s.add_dependency('trollop', '~>1.15')
 end
  
 Rake::GemPackageTask.new(cortex_reaver_gemspec) do |p|
