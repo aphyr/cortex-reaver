@@ -5,7 +5,7 @@ Cortex Reaver is a terrifying machine which stalks the corridors of Citadel
 Station, searching for humans to assimilate into Shodan's perfection.
 
 Cortex Reaver is also a blog engine for textual journals, photographs, and
-projects; written using Ramaze and Sequel. It supports tags, comments, and
+pages, written using Ramaze and Sequel. It supports tags, comments, and
 simple attachments. Features include canonically named URLs
 (/journals/show/a-post-title) with conflict resolution, useful formatting
 modules for content (HTML sanitizing, attachment references, BlueCloth, etc),
@@ -17,29 +17,29 @@ Why Cortex Reaver
 - Adaptible. Runs on every web server and database Ramaze and Sequel support.
 - Visual. Large, beautiful photographs, with concise EXIF support.
 - Comprehensive. Comments, file attachments, and tags on everything.
-- Devastating. The main page of Aphyr.com scales to ~400 requests/second.
+- Devastating. The main page of aphyr.com scales to ~400 requests/second.
 
 Getting Started
 ---------------
 
 mkdir cortex_reaver     # Create an empty directory for Cortex Reaver to lurk in.
 cd cortex_reaver
-cortex_reaver --migrate # Initialize an SQLite database.
-cortex_reaver --start   # Start the daemon.
+cortex_reaver migrate # Initialize an SQLite database.
+cortex_reaver start   # Start the daemon.
 
 Then point your web browser at localhost:7000, hit control-x, and log in with
 username "shodan", password "citadelstation".
 
-You can check Cortex Reaver's status with --status, and when you're done, shut
-it down with --stop.
+You can check Cortex Reaver's status with status, and when you're done, shut
+it down with cortex_reaver stop.
 
 Configuration
 -------------
 
-You'll need a YAML configuration file to define Cortex Reaver's configuration.
+You can use a YAML configuration file to define Cortex Reaver's configuration.
 See proto/cortex_reaver.yaml. If no config file is specified on the command
 line with --config, Cortex Reaver assumes you mean cortex_reaver.yaml in the
-working directory. Copy lib/proto/cortex_reaver.yaml to get started.
+working directory.
 
 Databases
 ---------
@@ -55,25 +55,38 @@ create database cortex_reaver;
 grant all privileges on cortex_reaver.* to 'cortex_reaver'@'localhost' 
   identified by 'some-password' with grant option;
 
-When you've set up a new database, run cortex_reaver --migrate to update it to
+When you've set up a new database, run cortex_reaver migrate to update it to
 the latest version. If you need to wipe your database and start over, use
-cortex_reaver --blank to drop the schema and rebuild it.
+cortex_reaver blank to drop the schema and rebuild it.
+
+You can export your database to an SQLite file with cortex_reaver dump, and restore it with cortex_reaver load. This can help with migrating between database systems.
 
 Customization
 -------------
 
 You may find development mode useful: it reloads source files when they're
 changed, displays traces for errors instead of 404 and 500 responses, logs
-more, and runs in the console instead of detaching by default. Just set :mode
-=> :development in your configuration.
+more, and runs in the console instead of detaching by default. Just set mode =>
+:development in your configuration.
+
+Cortex Reaver includes Erubis layouts and templates, static resources, CSS, and
+javascript files in lib/cortex_reaver/layout, lib/cortex_reaver/view, and
+lib/cortex_reaver/public. CR will override these resources with your local
+directory: if you request /images/foo.png, it will check
+<local_dir>/public/images/foo.png first, then
+<cortex_reaver_dir>/public/images/foo.png. CSS and JS files are compiled into
+single cached files from several smaller files. If you want, you can
+selectively replace parts of the default theme by creating css files with the
+same names in <local_dir>/public/css/. The same applies to views and layouts.
+You can also create new resources; they will be merged for you.
+
+You can control the paths and search patterns in the configuration: see
+lib/cortex_reaver/config.rb.
 
 Requests for static objects (images, css, javascript, etc.) is pulled from
 public/, which can be specified in your configuration or defaults to
 `cwd`/public. If a request for a file can't be found there, it's retrieved from
 Cortex Reaver's own public directory in lib/public.
-
-You can also set up your own view templates: copy lib/view to some other
-directory, and specify :view_root in your configuration.
 
 Credits
 -------

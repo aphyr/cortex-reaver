@@ -1,3 +1,11 @@
+Version 0.2.9
+  - General
+    - bin/cortex_reaver now uses subcommands: cortex_reaver start, stop, etc.
+    - You can rebuild CSS/JS and reload config with cortex_reaver reload, or
+      by sending sighup.
+  - Controller
+    - Fixed an awful caching bug where pretty much all error responses took 
+      forever, and returned 200 OK.    
 Version 0.2.8
   - General
     - Fixed a bug where canonical names weren't generated when titles were entered/changed in Chrome.
