@@ -12,6 +12,10 @@ h2 {
   font-size: 150%;
 }
 
+h2:first-child {
+  margin-top: 0;
+}
+
 h3 {
   font-size: 120%;
 }
