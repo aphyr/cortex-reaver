@@ -96,7 +96,7 @@ module CortexReaver
               
               # Save comment and go back to the parent.
               session[:pending_comment] = @comment
-              redirect comment.parent.url
+              redirect @comment.parent.url
             else
               # Okay, set anonymous info
               @comment.name = request[:name] unless request[:name].blank?
