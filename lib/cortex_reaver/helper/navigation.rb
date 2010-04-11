@@ -46,7 +46,7 @@ module Ramaze
 
       # Returns a list with next/up/previous links for the record.
       def model_nav(model)
-        if not model.respond_to? :next
+        if not (model.respond_to? :next and model.respond_to? :absolute_window_url)
           # Not applicable
           return
         elsif CortexReaver::User === model or CortexReaver::Page === model

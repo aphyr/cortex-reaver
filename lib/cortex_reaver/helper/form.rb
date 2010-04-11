@@ -19,6 +19,8 @@ module Ramaze
             s << "<li>#{attribute.to_s.titleize} #{error}.</li>\n"
           end
           s << "</ul></div>"
+        else
+          ''
         end
       end
 

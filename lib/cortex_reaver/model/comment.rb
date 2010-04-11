@@ -3,7 +3,6 @@ module CortexReaver
     plugin :timestamps
     plugin :cached_rendering
     plugin :comments
-    plugin :sequenceable
     
     include CortexReaver::Model::Renderer
     
