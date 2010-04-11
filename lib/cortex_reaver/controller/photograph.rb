@@ -45,7 +45,7 @@ module CortexReaver
     on_second_save do |photograph, request|
       photograph.tags = request[:tags]
       photograph.image = request[:image][:tempfile] if request[:image]
-      photograph.infer_date_from_exif! if request[:infer_date]
+      photograph.infer_date_from_exif! if request[:infer_date] == "1"
 
       Ramaze::Cache.action.clear
     end
