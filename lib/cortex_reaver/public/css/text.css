@@ -24,7 +24,7 @@ h1 a, h2 a, h3 a {
 
 .text-entry .footer {
   background: #eee;
-  margin-bottom: 1em;
+  margin-bottom: 0;
   border-bottom: 1px dashed #aaa;
   padding: 2px;
 }
