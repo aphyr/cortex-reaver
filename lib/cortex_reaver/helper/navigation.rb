@@ -72,7 +72,7 @@ module Ramaze
       # of the class (in which case the page which would contain that instance
       # is highlighted, or a page number. Limit determines how many numeric links
       # to include--use :all to include all pages.
-      def page_nav(klass, index = nil, limit = 15)
+      def page_nav(klass, index = nil, limit = 17)
         # Translate :first, :last into corresponding windows.
         case index
         when :first
@@ -95,28 +95,33 @@ module Ramaze
         if limit.kind_of? Integer and window_count > limit
           # There are more pages than we can display.
 
-          # Default first and last pages are the size of the collection
-          first_page = 1
-          last_page = window_count - 2
-
           # The desired number of previous or next pages
-          previous_pages = (Float(limit - 3) / 2).floor
-          next_pages = (Float(limit - 3) / 2).floor
+          previous_pages = (Float(limit - 1) / 2).floor
+          next_pages = (Float(limit - 1) / 2).ceil
 
-          if (offset = first_page - (page - previous_pages)) > 0
-            # Window extends before the start of the pages
-            last_page = first_page + (limit - 2)
-          elsif (offset = (page + next_pages) - last_page) > 0
-            # Window extends beyond the end of the pages
-            first_page = last_page - (limit - 2)
-          else
-            # Window is somewhere in the middle
-            first_page = page - previous_pages
-            last_page = page + next_pages
+          # Shift window near edges
+          first = page - previous_pages
+          last = page + next_pages
+          if first < 0
+            last -= first
+            first = 0
+          elsif last > (window_count - 1)
+            first -= last - (window_count - 1)
+            last = window_count - 1
           end
 
-          # Generate list of pages
-          pages = [0] + (first_page..last_page).to_a + [window_count - 1]
+          # Build pages
+          pages = (first .. last).to_a
+
+          # Check for elided segments
+          if pages[0] != 0
+            pages[0] = 0
+            pages[1] = :elided
+          end
+          if pages[-1] != window_count - 1
+            pages[-1] = window_count - 1
+            pages[-2] = :elided
+          end
         else
           # The window encompasses the entire set of pages
           pages = (0 ... window_count).to_a
@@ -132,12 +137,10 @@ module Ramaze
         # Convert pages to links
         unless pages.empty?
           pages.inject(pages.first - 1) do |previous, i|
-            if (i - previous) > 1
+            if i == :elided
               # These pages are not side-by-side.
               links << '<li class="elided"><span>&hellip;</span></li>'
-            end
-
-            if i == page
+            elsif i == page
               # This is a link to the current page.
               links << "<li class=\"current\"><span>#{i + 1}</span></li>"
             else
@@ -162,7 +165,7 @@ module Ramaze
 
       # Produces a section navigation list from an array of titles to urls.
       def section_nav(sections)
-        s = "<ul class=\"actions\">\n"
+        s = "<ul class=\"sections actions\">\n"
         sections.each do |section|
           title = section.first
           url = section.last.to_s
