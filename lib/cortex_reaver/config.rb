@@ -151,7 +151,7 @@ You can also just provide a regex for the path, in which case it is matched dire
   [/^\/journals(\/(page|tagged))?/, 'explore_journals']
 ",
         :default => [
-          ['**', 'sections'],
+          ['*', 'context_navigation'],
           ['/', 'photographs']
         ]
 
@@ -184,7 +184,7 @@ You can also just provide a regex for the path, in which case it is matched dire
       photographs.define :sizes,
         :desc => "What sizes of each photograph to maintain.",
         :default => {
-          :thumbnail => '166x',
+          :thumbnail => '160x',
           :grid => '150x150',
           :small => 'x512',
           :medium => 'x768',

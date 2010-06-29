@@ -1,47 +1,58 @@
 body {
-  background: url('/images/background_tile.png');
+  background: #fff;
   color: #000;
   margin: 0;
 }
 
 #content {
-  width: 970px;
+  width: 900px;
   position: relative;
   margin: auto;
-  background: #fee;
 }
 
 #top {
-  padding: 20px 10px 10px 10px;
-  text-align: right;
   position: absolute;
-  display: block;
-  height: 100px;
-  width: 760px;
+  height: 80px;
+  width: 900px;
   left: 0px;
-  color: #fff;
+  border-bottom: 1px solid #aaa;
 }
 
 #top h1 {
-  margin-top: 16px;
+  padding: 0;
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+#top .sections {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 #top a {
-  color: #fff;
+  color: #000;
+}
+#top a:hover {
+  text-decoration: none;
 }
 
 #boxes {
   position: absolute;
   width: 170px;
   top: 100px;
-  right: 0px;
+  right: 0;
 }
 
 #main-container {
   position: absolute;
   left: 0px;
   top: 100px;
-  width: 780px;
+  right: 180px;
 }
 
 body.blank #main-container {
@@ -49,8 +60,6 @@ body.blank #main-container {
 }
 
 #main {
+  background: #fff;
   min-height: 260px;
-  padding: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }

@@ -49,7 +49,7 @@
     <script type="text/javascript">
     /* <![CDATA[ */ 
       $(document).ready(function() {
-        $('.pagination li').add('.actions > li').not('.elided').not('.current').not('.placeholder').each(function(i) {
+        $('.pagination li').not('.elided').not('.current').not('.placeholder').each(function(i) {
           $(this).fadeTo(0,0.8);
           $(this).hover(
             function() { $(this).fadeTo(0,1) },

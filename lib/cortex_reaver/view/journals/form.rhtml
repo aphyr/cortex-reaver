@@ -2,7 +2,7 @@
 
 <%= errors_on @journal %>
 
-<form class="edit-form" action="<%= rs(@form_action) %>" method="post" enctype="multipart/form-data">
+<form class="edit-form" id="journal-edit-form" action="<%= rs(@form_action) %>" method="post" enctype="multipart/form-data">
   <%= form_p :title, :model => @journal %>
   <%= live_name_field @journal %>
   <%= live_tags_field @journal %>
@@ -12,4 +12,28 @@
   <%= attachment_form @journal %>
   <%= form_p :draft, :model => @journal, :type => 'checkbox', :description => 'This is a draft' %>
   <input type="submit" name="submit" />
+
+  <script type="text/javascript">
+    /* <![CDATA[ */
+
+
+
+    function saveJournal() {
+      localStorage.setItem('journal_id', <%= @journal.id %>);
+      localStorage.setItem('journal_title', $('#journal-edit-form #title').value);
+      localStorage.setItem('journal_name', $('#journal-edit-form #name').value);
+      localStorage.setItem('journal_tags', $('#journal-edit-form #tags').value);
+      localStorage.setItem('journal_body', $('#journal-edit-form #body').value);
+    }
+
+    function loadJournal() {
+      if (localStorage.getItem('journal_id') == <%= @journal.id %>) {
+        $('#journal-edit-form #title').value(localStorage.getItem('journal_title'));
+        $('#journal-edit-form #name').value(localStorage.getItem('journal_name'));
+        $('#journal-edit-form #tags').value(localStorage.getItem('journal_tags'));
+        $('#journal-edit-form #body').value(localStorage.getItem('journal_body'));
+      }
+
+      window.setInterval(saveJournal, 10000);
+    }
 </form>

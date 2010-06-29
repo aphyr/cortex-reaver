@@ -1,3 +1,8 @@
+/* Backgrounds */
+body.photographs {
+  background: url('/images/background_tile.png');
+}
+
 /* Adjust the sidebar colors some */
 body.photographs .box .actions li {
   background: #444;

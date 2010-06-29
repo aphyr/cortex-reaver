@@ -1,7 +1,6 @@
 /* Actions */
 ul.actions {
   margin: 0;
-  padding: 2px;
 }
 .actions li {
   color: #000;
@@ -12,11 +11,27 @@ ul.actions {
 .actions li a {
   color: #000;
 }
-.actions li.current {
-  background: #fff;
+
+/* Top actions */
+#top .actions {
 }
-.actions li.current a {
+
+#top .actions li {
+  display: inline;
+  border-bottom: 3px solid transparent;
+}
+
+#top .actions a {
+  padding: 6px;
   color: #000;
+}
+
+#top .actions li:hover {
+  border-bottom-color: #444 !important;
+}
+
+#top .actions li.current {
+  border-bottom-color: #888;
 }
 
 /* Footer actions on journals, pages, etc */

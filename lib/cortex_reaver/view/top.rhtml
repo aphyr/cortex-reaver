@@ -1,4 +1,5 @@
-<% if @model %>
-  <%= model_nav @model %>
-<% end %>
 <h1><a href="/"><%=h CortexReaver.config.site.name %></a></h1>
+
+<div class="sections">
+  <%= section_nav CortexReaver.config.view.sections %>
+</div>
