@@ -1,15 +1,15 @@
 .box {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .box .top {
   color: #000;
   font-size: 110%;
   margin-bottom: 4px;
+  font-weight: bolder;
 }
 
 .box .top a {
-  font-weight: bolder;
   color: #000;
 }
 

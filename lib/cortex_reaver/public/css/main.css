@@ -28,7 +28,7 @@ body {
   bottom: 0;
 }
 
-#top .sections {
+#top .actions {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -52,11 +52,7 @@ body {
   position: absolute;
   left: 0px;
   top: 100px;
-  right: 180px;
-}
-
-body.blank #main-container {
-  width: 900px;
+  right: 196px;
 }
 
 #main {

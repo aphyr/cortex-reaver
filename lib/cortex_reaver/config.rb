@@ -185,7 +185,7 @@ You can also just provide a regex for the path, in which case it is matched dire
         :desc => "What sizes of each photograph to maintain.",
         :default => {
           :thumbnail => '160x',
-          :grid => '150x150',
+          :grid => '140x140',
           :small => 'x512',
           :medium => 'x768',
           :large => 'x1024'

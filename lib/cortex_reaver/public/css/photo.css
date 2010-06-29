@@ -1,48 +1,32 @@
 /* Backgrounds */
-body.photographs {
+body.blank {
   background: url('/images/background_tile.png');
-}
-
-/* Adjust the sidebar colors some */
-body.photographs .box .actions li {
-  background: #444;
-}
-body.photographs .box .actions li.current {
-  background: #666;
-}
-body.photographs .box .actions li.current a {
-  color: #fff;
-}
-
-/* Dark main section */
-body.photographs #main-container {
-  background: transparent;
-}
-body.photographs #main {
-  background: #000;
 }
 
 /* Grid */
 .photographs.grid {
-  width: 764px;
+  margin: 10px -5px;
   padding: 0;
-  margin: 2px -2px 8px -2px;
 }
 
 .photographs.grid .thumb {
   display: block;
   float: left;
-  margin: 4px;
+  margin: 5px;
 }
 
 .photographs.grid .thumb > a {
-  width: 183px;
-  height: 183px;
-  background-color: #111;
+  width: 166px;
+  height: 166px;
   display: table-cell;
   vertical-align: middle;
+  background-color: #f0f0f0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff #ccc #aaa #ccc;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
+  -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.3);
 }
 
 .photographs.grid .thumb > a > img {

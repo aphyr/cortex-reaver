@@ -1,0 +1,26 @@
+.navigation.actions li {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.navigation.actions li:first-child {
+  margin-left: 0;
+}
+
+.navigation.actions a {
+  height: 34px;
+  width: 34px;
+  display: block;
+  text-indent: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: no-repeat center;
+}
+
+.navigation.actions a.up { background-image: url('/images/grid_34_light.png'); }
+.navigation.actions a.previous { background-image: url('/images/prev_34_light.png'); }
+.navigation.actions a.next { background-image: url('/images/next_34_light.png'); }
+
+.navigation.actions a.up:hover { background-image: url('/images/grid_34.png'); }
+.navigation.actions a.previous:hover { background-image: url('/images/prev_34.png'); }
+.navigation.actions a.next:hover { background-image: url('/images/next_34.png'); }

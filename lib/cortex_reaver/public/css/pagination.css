@@ -7,10 +7,10 @@
 .pagination.actions li {
   margin: 1px;
   padding: 0;
-  width: 38px;
-  background: #444;
+  width: 35px;
+  background: #ddd;
   display: inline-block;
-  color: white;
+  color: #000;
 }
 
 .pagination.actions li:first-child {
@@ -28,8 +28,6 @@
 }
 
 .pagination.actions li.elided {
-  background: transparent url('/images/elided.png') center;
-  background-repeat: repeat-y;
 }
 
 .pagination.actions li > * {
@@ -40,13 +38,22 @@
   width: 28px;
   line-height: 18px;
   text-decoration: none !important;
-  color: white !important;
+  color: #000 !important;
   overflow: hidden;
 }
 
-.pagination.actions li.current {
-  background-color: #168715;
+.pagination.actions li:hover, .pagination.actions li.current > *:hover {
+  background: #444;
 }
+
+.pagination.actions li > *:hover {
+  color: #fff !important;
+}
+
+.pagination.actions li.current {
+  background-color: #888;
+}
+
 
 .pagination.actions li > a.previous, .pagination.actions li > a.next {
   text-indent: -100px;

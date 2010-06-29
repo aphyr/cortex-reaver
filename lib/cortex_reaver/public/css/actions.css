@@ -1,6 +1,7 @@
 /* Actions */
 ul.actions {
   margin: 0;
+  padding: 0;
 }
 .actions li {
   color: #000;
@@ -13,24 +14,27 @@ ul.actions {
 }
 
 /* Top actions */
-#top .actions {
-}
-
 #top .actions li {
-  display: inline;
-  border-bottom: 3px solid transparent;
+  display: inline-block;
 }
 
-#top .actions a {
+#top .sections.actions li {
+  padding-bottom: 3px;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  top: 3px;
+}
+
+#top .sections.actions a {
   padding: 6px;
   color: #000;
 }
 
-#top .actions li:hover {
+#top .sections.actions li:hover {
   border-bottom-color: #444 !important;
 }
 
-#top .actions li.current {
+#top .sections.actions li.current {
   border-bottom-color: #888;
 }
 

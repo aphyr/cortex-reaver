@@ -1,14 +1,23 @@
 #top.photograph {
   width: 600px;
-  height: 60px;
-  position: static;
+  height: 80px;
+  position: relative;
   margin-left: auto;
   margin-right: auto;
+  border: none;
+}
+
+#top.photograph a {
+  color: #999;
+}
+
+#top.photograph .actions {
+  bottom: 10px;
 }
 
 .photograph.full {
   text-align: center;
-  margin: 0 auto;
+  margin: 20px auto;
   color: #fff;
 }
 
@@ -85,5 +94,9 @@
 }
 .frame input[type=submit]:hover {
   background: #333;
+  color: #fff;
+}
+
+body.blank #colophon a {
   color: #fff;
 }

@@ -1,4 +1,4 @@
-.comments {
+.text-entry .comments, .photograph .comments {
   margin-top: 20px;
   margin-bottom: 20px;
 }

@@ -1,8 +1,9 @@
 <div id="top" class="photograph">
+  <h1><a href="/"><%=h CortexReaver.config.site.name %></a></h1>
+
   <% if @model %>
     <%= model_nav @model %>
   <% end %>
-  <h1><a href="/"><%=h CortexReaver.config.site.name %></a></h1>
 </div>
 
 <div id="photograph_<%= @photograph.name %>" class="photograph full">

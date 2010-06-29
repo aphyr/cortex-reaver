@@ -21,19 +21,5 @@
     </div>
 
     <%= CortexReaver::MainController.render_view('tracker') %>
-
-    <script type="text/javascript">
-    /* <![CDATA[ */ 
-      $(document).ready(function() {
-        $('.pagination li').not('.elided').add('.actions > li').not('.current').not('.placeholder').each(function(i) {
-          $(this).fadeTo(0,0.8);
-          $(this).hover(
-            function() { $(this).fadeTo(0,1) },
-            function() { $(this).fadeTo(200,0.8) }
-          );
-        });
-      });
-    /* ]]> */
-    </script>
   </body>
 </html>
