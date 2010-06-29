@@ -26,14 +26,14 @@
 
 .box .text {
   background: #fff;
-  font-size: 80%;
+  font-size: 85%;
 }
 
 .box .text .date {
   display: block;
   font-size: 80%;
   text-align: right;
-  color: #aaa;
+  color: #999;
 }
 
 .box .photo {
