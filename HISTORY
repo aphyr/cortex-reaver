@@ -1,3 +1,12 @@
+Version 0.3.0
+  - General
+    - Fixed gemspec to include trollop
+    - Fixed a bug which broke new comment posting
+    - Fixed a bug where infer_date was always used, depending on browser.
+    - Fixed editing of comments
+  - View
+    - Completely revamped light, minimalist theme
+    - Removed inline JS from views
 Version 0.2.9
   - General
     - bin/cortex_reaver now uses subcommands: cortex_reaver start, stop, etc.
