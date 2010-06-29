@@ -32,6 +32,7 @@
   display: block;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
+  border-radius: 6px;
 }
 
 .frame a {

@@ -24,10 +24,12 @@
   color: #003;
   background: #e6e6ff;
   -webkit-box-shadow: 0 1px 2px #88a;
+  -moz-box-shadow: 0 1px 2px #88a;
 }
 body.photographs .flash.notice {
   background: #3C3C54;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
   color: #fff;
 }
 .flash.notice .icon {
@@ -38,11 +40,13 @@ body.photographs .flash.notice {
   color: #300;
   background: #ffe6e6;
   -webkit-box-shadow: 0 1px 2px #a88;
+  -moz-box-shadow: 0 1px 2px #a88;
 }
 body.photographs .flash.error {
   background: #541C1C;
   color: #fff;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
 }
 .flash.error .icon {
   background-position: -256px -32px;
