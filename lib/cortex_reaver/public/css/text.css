@@ -42,3 +42,7 @@ h1 a, h2 a, h3 a {
 .text-entry .byline {
   margin-bottom: 2em;
 }
+
+img.attachment {
+  width: 100%;
+}
