@@ -34,7 +34,7 @@ module CortexReaver
   require File.join(LIB_DIR, 'config')
 
   # Reload on sighup
-  trap 'HUP' do
+  trap 'USR1' do
     reload_app
   end
 
@@ -333,7 +333,7 @@ module CortexReaver
     
     begin
       # Try to shut down Ramaze nicely.
-      Process.kill('HUP', pid)
+      Process.kill('USR1', pid)
       puts "Done."
     rescue Errno::ESRCH
       # The process doesn't exist.
@@ -419,12 +419,13 @@ module CortexReaver
     end
 
     # Check schema
-    if check_schema and
-       Sequel::Migrator.get_current_migration_version(@db) !=
-       Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
-
-      raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
-    end
+    #TODO: Disabled due to migrator API changes.
+#    if check_schema and
+#       Sequel::Migrator.get_current_migration_version(@db) !=
+#       Sequel::Migrator.latest_migration_version(File.join(LIB_DIR, 'migrations'))
+#
+#      raise RuntimeError.new("database schema missing or out of date. Please run `cortex_reaver --migrate`.")
+#    end
   end
 
   def self.setup_cache
