@@ -171,14 +171,11 @@ You can also just provide a regex for the path, in which case it is matched dire
           'jquery.color.js',
           'jquery.dimensions.js',
           'jquery.hotkeys.js',
-          'cookie.js',
-          'color.js',
-          'cluster.js',
+          'cookie.js'
         ]
       js.define :last,
         :desc => "An Array of Javascript files to load last, in order.",
         :default => []
-
 
       define :photographs,
         :desc => "Photograph configuration options.",
