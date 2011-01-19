@@ -3,7 +3,7 @@ img {
   margin: 0;
 }
 
-a {
+a[href] {
   color: #213EAD;
   text-decoration: none;
 }
