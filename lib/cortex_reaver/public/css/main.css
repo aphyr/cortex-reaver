@@ -53,9 +53,9 @@ body {
 
 #boxes {
   position: absolute;
-  width: 170px;
+  width: 168px;
   top: 290px;
-  right: 10px;
+  right: 12px;
   z-index: 2;
 }
 
