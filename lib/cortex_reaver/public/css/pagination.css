@@ -8,7 +8,7 @@
   margin: 1px;
   padding: 0;
   width: 35px;
-  background: #ddd;
+  background: #CCD3DE;
   display: inline-block;
   color: #000;
 }
@@ -43,7 +43,7 @@
 }
 
 .pagination.actions li:hover, .pagination.actions li.current > *:hover {
-  background: #444;
+  background: #171A1F;
 }
 
 .pagination.actions li > *:hover {
@@ -51,7 +51,7 @@
 }
 
 .pagination.actions li.current {
-  background-color: #888;
+  background-color: #98A2B5;
 }
 
 
