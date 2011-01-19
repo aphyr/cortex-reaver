@@ -131,13 +131,22 @@ module CortexReaver
 
       # Write appropriate sizes to disk
       sizes.each do |size, geometry|
-        image.change_geometry(geometry) do |width, height|
-          attachment = attachment(size.to_s + '.jpg')
-          image.scale(width, height).write(attachment.local_path)
+        attachment = attachment(size.to_s + '.jpg')
+        
+        if size == :grid
+          resized = image.resize_to_fill(*geometry.split('x').map(&:to_i))
+        else
+          image.change_geometry(geometry) do |width, height|
+            resized = image.scale(width, height)
+          end
         end
+        
+        resized.write attachment.local_path
       end
         
       # Free IM stubs
+      image = nil
+      resized = nil
       GC.start
 
       true
