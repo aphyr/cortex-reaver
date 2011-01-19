@@ -1,41 +1,46 @@
 body {
-  background: #fff;
+  background: #171A1F;
   color: #000;
   margin: 0;
 }
 
 #content {
-  width: 900px;
+  width: 860px;
   position: relative;
   margin: auto;
 }
 
 #top {
   position: absolute;
-  height: 80px;
-  width: 900px;
+  top: 0px;
+  height: 280px;
+  width: 860px;
   left: 0px;
-  border-bottom: 1px solid #aaa;
+  background: url('/images/header.jpg');
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.7);
 }
 
 #top h1 {
   padding: 0;
   margin: 0;
-  font-size: 48px;
+  font-size: 38px;
   font-weight: 700;
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: 14px;
+  bottom: 10px;
+  text-shadow: rgba(0,0,0,1) 0 0 20px !important;
 }
 
 #top .actions {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 10px;
+  bottom: 10px;
+  text-transform: lowercase;
 }
 
 #top a {
-  color: #000;
+  color: #fff !important;
+  text-shadow: rgba(0,0,0,1) 0 0 4px;
 }
 #top a:hover {
   text-decoration: none;
@@ -44,18 +49,22 @@ body {
 #boxes {
   position: absolute;
   width: 170px;
-  top: 100px;
-  right: 0;
+  top: 290px;
+  right: 10px;
+  z-index: 2;
 }
 
 #main-container {
   position: absolute;
   left: 0px;
-  top: 100px;
-  right: 196px;
+  right: 0px;
+  top: 280px;
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  background: #fff;
 }
 
 #main {
-  background: #fff;
   min-height: 260px;
+  margin: 12px 196px 12px 12px;
+  color: #171A1F;
 }
