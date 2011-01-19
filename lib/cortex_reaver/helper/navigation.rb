@@ -72,7 +72,7 @@ module Ramaze
       # of the class (in which case the page which would contain that instance
       # is highlighted, or a page number. Limit determines how many numeric links
       # to include--use :all to include all pages.
-      def page_nav(klass, index = nil, limit = 17)
+      def page_nav(klass, index = nil, limit = 15)
         # Translate :first, :last into corresponding windows.
         case index
         when :first
