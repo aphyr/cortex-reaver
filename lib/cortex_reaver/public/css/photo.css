@@ -7,26 +7,20 @@ body.blank {
 .photographs.grid {
   margin: 10px -5px;
   padding: 0;
+  list-style-type: none;
 }
 
 .photographs.grid .thumb {
   display: block;
   float: left;
-  margin: 5px;
+  margin: 10px;
 }
 
 .photographs.grid .thumb > a {
-  width: 166px;
-  height: 166px;
+  width: 140px;
+  height: 140px;
   display: table-cell;
   vertical-align: middle;
-  background-color: #f0f0f0;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #fff #ccc #aaa #ccc;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
   -webkit-box-shadow: 0px 1px 8px rgba(0,0,0,0.3);
   -moz-box-shadow: 0px 1px 8px rgba(0,0,0,0.3);
   box-shadow: 0px 1px 8px rgba(0,0,0,0.3);
