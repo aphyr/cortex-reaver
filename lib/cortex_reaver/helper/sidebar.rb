@@ -26,13 +26,13 @@ module Ramaze
             end
           end
 
-          if Regexp.new("^#{pattern}$").match request.path_info
+          if Regexp.new("^#{pattern}$").match request.path
             true
           else
             false
           end
         when Regexp
-          if path.match request.path_info
+          if path.match request.path
             true
           else
             false
