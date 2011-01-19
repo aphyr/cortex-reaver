@@ -137,9 +137,6 @@ module CortexReaver
         end
       end
         
-      # Yep, GC time. Gotta clear out those imagemagick stubs.
-      GC.start
-
       # Free IM stubs
       GC.start
 
