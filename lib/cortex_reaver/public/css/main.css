@@ -38,8 +38,8 @@ body {
 
 #top .actions {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 8px;
+  bottom: 14px;
   text-transform: lowercase;
 }
 

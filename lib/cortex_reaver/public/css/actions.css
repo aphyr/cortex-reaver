@@ -18,24 +18,17 @@ ul.actions {
   display: inline-block;
 }
 
-#top .sections.actions li {
-  padding-bottom: 3px;
-  border-bottom: 3px solid transparent;
-  position: relative;
-  top: 3px;
-}
-
 #top .sections.actions a {
-  padding: 6px;
-  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-#top .sections.actions li:hover {
-  border-bottom-color: #444 !important;
+#top .sections.actions a:hover {
+  background: rgba(0,0,0,0.5);
 }
 
-#top .sections.actions li.current {
-  border-bottom-color: #888;
+#top .sections.actions li.current a {
+  background: rgba(0,0,0,0.5);
 }
 
 /* Footer actions on journals, pages, etc */
