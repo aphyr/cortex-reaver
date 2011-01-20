@@ -1,6 +1,6 @@
 /* Backgrounds */
 body.blank {
-  background-image: url('/images/background.jpg');
+  background: url('/images/background_tile.png');
 }
 
 /* Grid */
