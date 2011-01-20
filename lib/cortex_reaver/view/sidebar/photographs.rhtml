@@ -1,7 +1,6 @@
 <% photographs = CortexReaver::Photograph.recent.viewable_by(user).all %>
 <% if photographs.size > 0 %>
   <div class="photographs box">
-    <div class="top"><a href="/photographs">Images</a></div>
     <ul class="photographs strip">
       <% photographs.each do |photograph| %>
         <li class="photo thumb" id="photograph_<%= photograph.name %>">
