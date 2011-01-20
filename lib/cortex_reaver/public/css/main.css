@@ -27,12 +27,11 @@ body {
 #top h1 {
   padding: 0;
   margin: 0;
-  font-size: 44px;
-  text-transform: lowercase;
+  font-size: 40px;
   position: absolute;
   left: 14px;
   bottom: 10px;
-  text-shadow: rgba(0,0,0,1) 0 0 20px !important;
+  text-shadow: rgba(0,0,0,1) 0 0 10px !important;
 }
 
 #top .actions {
