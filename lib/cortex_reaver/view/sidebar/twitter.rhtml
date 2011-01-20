@@ -1,5 +1,4 @@
 <div class="twitter box">
-  <div class="top"><a href="http://twitter.com/<%= CortexReaver.config.plugins.twitter.username %>">Status</a></div>
   <ul class="text">
     <% tweets = CortexReaver::Plugins::Twitter.recent_tweets %>
     <% tweets.each do |tweet| %>
