@@ -7,8 +7,11 @@ code.block {
   margin: 1em 0;
   padding: 4pt;
   color: #fff;
-  background: #000;
+  background: #171A1F;
   white-space: pre-wrap;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 
 .Identifier { color: #00ffff; font-weight: bold; }
