@@ -1,6 +1,10 @@
 body {
   font-size: 13px;
-  font-family: sans-serif;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
 }
 
 h1 {
