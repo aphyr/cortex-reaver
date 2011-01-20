@@ -30,3 +30,8 @@ body.blank {
   display: block;
   margin: auto;
 }
+
+/* Rearrange sidebar a bit */
+.photographs #boxes {
+  width: 184px;
+}

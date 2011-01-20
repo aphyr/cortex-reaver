@@ -5,6 +5,7 @@
 .box .top {
   color: #000;
   font-size: 110%;
+  margin-top: 4px;
   margin-bottom: 4px;
   font-weight: bolder;
 }
