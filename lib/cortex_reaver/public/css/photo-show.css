@@ -5,6 +5,10 @@
   margin-left: auto;
   margin-right: auto;
   border: none;
+  background: transparent;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 #top.photograph a {
